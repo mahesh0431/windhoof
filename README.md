@@ -132,11 +132,22 @@ Then open the printed URL and click once to take pointer lock.
 | Move | `W` `A` `S` `D` |
 | Gallop | `Shift` |
 | Jump | `Space` |
+| Inspect / interact | `E` |
 | Call | `C` |
 | Return to safe ground | `R` |
 | Look | Mouse |
 | Pause and settings | `Esc` |
 | Diagnostics | `F3` |
+
+## Public test build
+
+- Play muted: <https://windhoof.mahesh-palavalli-tech.workers.dev/?mute=1>
+- Releases: <https://github.com/mahesh0431/windhoof/releases>
+
+The deployed build is currently a release candidate. Follow the authored road
+up Blackstone rather than attempting the steep face directly, and report what
+you experience during the ride; the blind 15-30 minute human gate is deliberately
+not replaced by automated steering.
 
 ## Local verification
 
