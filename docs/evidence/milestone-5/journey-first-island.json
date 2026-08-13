@@ -1,0 +1,91 @@
+{
+  "budgetSeconds": 600,
+  "manifestHash": "fnv1a64-2eae5335cb5544fc",
+  "tracesTotal": 5,
+  "tracesReached": 3,
+  "audio": {
+    "muted": true,
+    "contextsConstructed": 0
+  },
+  "unhandled": [],
+  "completedMandatory": 3,
+  "totalMandatory": 5,
+  "journeyComplete": false,
+  "summary": [
+    "manifest fnv1a64-2eae5335cb5544fc",
+    "traces ridden to: 3/5",
+    "  reached: storm-beach-hoofprints, longgrass-resting-circle-trace, river-spring-tracks",
+    "  not reached: blackstone-living-herd, fernwood-caught-hair",
+    "mandatory complete 3/5",
+    "audio contexts 0"
+  ],
+  "beats": [
+    {
+      "id": "storm-beach-hoofprints",
+      "label": "01-storm-beach-hoofprints",
+      "legSeconds": 38,
+      "legMetres": 73,
+      "completionKind": "interact",
+      "offeredInteraction": true,
+      "calledOut": false,
+      "state": "completed",
+      "completedMandatory": 1,
+      "totalMandatory": 5,
+      "objectiveId": null,
+      "standing": {
+        "x": -64.6,
+        "z": -321.4
+      },
+      "regionId": "saltwind-coast"
+    },
+    {
+      "id": "longgrass-resting-circle-trace",
+      "label": "02-longgrass-resting-circle-trace",
+      "legSeconds": 181,
+      "legMetres": 387,
+      "completionKind": "linger",
+      "offeredInteraction": false,
+      "calledOut": false,
+      "state": "visited",
+      "completedMandatory": 1,
+      "totalMandatory": 5,
+      "objectiveId": "longgrass-resting-circle-trace",
+      "standing": {
+        "x": 223.9,
+        "z": -75.1
+      },
+      "regionId": "longgrass-plain"
+    },
+    {
+      "id": "river-spring-tracks",
+      "label": "04-river-spring-tracks",
+      "legSeconds": 123,
+      "legMetres": 291,
+      "completionKind": "call",
+      "offeredInteraction": false,
+      "calledOut": true,
+      "state": "completed",
+      "completedMandatory": 3,
+      "totalMandatory": 5,
+      "objectiveId": null,
+      "standing": {
+        "x": -188.1,
+        "z": 156.6
+      },
+      "regionId": "river-hollow"
+    }
+  ],
+  "reached": [
+    "storm-beach-hoofprints",
+    "longgrass-resting-circle-trace",
+    "river-spring-tracks"
+  ],
+  "notReached": [
+    "blackstone-living-herd",
+    "fernwood-caught-hair"
+  ],
+  "findings": [
+    "could not ride to blackstone-living-herd: no-progress, 103 m short after 181s"
+  ],
+  "consoleErrors": []
+}

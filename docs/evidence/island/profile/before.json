@@ -1,0 +1,89 @@
+{
+  "label": "before",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "sampleCount": 2493,
+  "manifestHash": "fnv1a64-668be734b5438411",
+  "groundCoverTufts": 65692,
+  "groundCoverTriangles": 201467,
+  "drawCalls": {
+    "median": 113,
+    "p95": 123,
+    "max": 124
+  },
+  "triangles": {
+    "median": 341774,
+    "p95": 406091,
+    "max": 406451
+  },
+  "swiftshaderFps": {
+    "median": 2.2096801790949843,
+    "p05": 1.7561501622934095,
+    "min": 1.7380222502087035
+  },
+  "phases": [
+    {
+      "name": "spawn-idle",
+      "drawCalls": 123,
+      "triangles": 406451,
+      "fps": 89.9,
+      "regionId": "saltwind-coast",
+      "position": {
+        "x": 13.6,
+        "y": 6.1,
+        "z": -163.8
+      }
+    },
+    {
+      "name": "coast-gallop",
+      "drawCalls": 101,
+      "triangles": 252276,
+      "fps": 59.8,
+      "regionId": "saltwind-coast",
+      "position": {
+        "x": 13.9,
+        "y": 6.2,
+        "z": -163.4
+      }
+    },
+    {
+      "name": "plain-anchor",
+      "drawCalls": 113,
+      "triangles": 341774,
+      "fps": 2.2,
+      "regionId": "longgrass-opening",
+      "position": {
+        "x": 16.2,
+        "y": 12.2,
+        "z": -16.5
+      }
+    },
+    {
+      "name": "fernwood-anchor",
+      "drawCalls": 92,
+      "triangles": 181446,
+      "fps": 4.7,
+      "regionId": "fernwood-edge",
+      "position": {
+        "x": -9.9,
+        "y": 18,
+        "z": 134.3
+      }
+    },
+    {
+      "name": "overlook-sweep-peak",
+      "drawCalls": 124,
+      "triangles": 398223,
+      "fps": 5,
+      "regionId": "fernwood-edge",
+      "position": {
+        "x": -10.2,
+        "y": 18,
+        "z": 137.9
+      }
+    }
+  ],
+  "consoleErrors": []
+}

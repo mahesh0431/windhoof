@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://windhoof.local/schemas/world-spec-v4.json",
+  "title": "Windhoof WorldSpec v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "generatorVersion",
+    "worldId",
+    "seed",
+    "presentation",
+    "island",
+    "spawn",
+    "topology",
+    "regions",
+    "requiredConnections",
+    "discoveries",
+    "journeyEvents"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 4 },
+    "generatorVersion": { "type": "string", "minLength": 1 },
+    "worldId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+    "presentation": { "$ref": "world-spec.schema.json#/$defs/presentation" },
+    "island": { "$ref": "world-spec.schema.json#/$defs/island" },
+    "spawn": { "$ref": "world-spec.schema.json#/$defs/spawn" },
+    "topology": { "$ref": "#/$defs/topology" },
+    "regions": {
+      "type": "array",
+      "minItems": 5,
+      "items": { "$ref": "#/$defs/region" }
+    },
+    "requiredConnections": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/connection" }
+    },
+    "discoveries": {
+      "type": "array",
+      "minItems": 5,
+      "items": { "$ref": "world-spec.schema.json#/$defs/discovery" }
+    },
+    "journeyEvents": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "world-spec.schema.json#/$defs/journeyEvent" }
+    }
+  },
+  "$defs": {
+    "topology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coastalLoopRegionIds", "centralHighlandRegionId"],
+      "properties": {
+        "coastalLoopRegionIds": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "centralHighlandRegionId": { "type": "string", "minLength": 1 }
+      }
+    },
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "role",
+        "anchorMeters",
+        "coverage",
+        "elevationMeters",
+        "moisture",
+        "maxSlopeDegrees",
+        "adjacentTo",
+        "tags",
+        "visualIntent",
+        "terrainIntent"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "role": { "type": "string", "minLength": 1 },
+        "anchorMeters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "z"],
+          "properties": { "x": { "type": "number" }, "z": { "type": "number" } }
+        },
+        "coverage": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "elevationMeters": { "$ref": "world-spec.schema.json#/$defs/range" },
+        "moisture": { "$ref": "world-spec.schema.json#/$defs/range" },
+        "maxSlopeDegrees": { "type": "number", "minimum": 0, "maximum": 60 },
+        "adjacentTo": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "visualIntent": { "$ref": "world-spec.schema.json#/$defs/visualIntent" },
+        "terrainIntent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["anchorElevationMeters", "influenceRadiusMeters"],
+          "properties": {
+            "anchorElevationMeters": { "type": "number" },
+            "influenceRadiusMeters": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        }
+      }
+    },
+    "connection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "fromRegionId",
+        "toRegionId",
+        "minimumWidthMeters",
+        "maximumSlopeDegrees",
+        "mandatory",
+        "kind",
+        "role",
+        "viaMeters"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "fromRegionId": { "type": "string", "minLength": 1 },
+        "toRegionId": { "type": "string", "minLength": 1 },
+        "minimumWidthMeters": { "type": "number", "exclusiveMinimum": 0 },
+        "maximumSlopeDegrees": { "type": "number", "minimum": 0, "maximum": 45 },
+        "mandatory": { "type": "boolean" },
+        "kind": { "enum": ["safe", "expressive"] },
+        "role": { "enum": ["coastal-loop", "regional-link", "interior-shortcut"] },
+        "viaMeters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["x", "z"],
+            "properties": { "x": { "type": "number" }, "z": { "type": "number" } }
+          }
+        }
+      }
+    }
+  }
+}

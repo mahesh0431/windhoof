@@ -1,0 +1,1280 @@
+{
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "layout": {
+    "manifestHash": "fnv1a64-75ef4f476903558d",
+    "scenes": {
+      "spring-resting-hollow": {
+        "x": 27.7,
+        "z": 146.2,
+        "visitRadiusMeters": 12,
+        "mandatory": true
+      },
+      "first-herd-trace": {
+        "x": -58.3,
+        "z": 103.2,
+        "visitRadiusMeters": 11,
+        "mandatory": true
+      },
+      "first-overlook": {
+        "x": 89.7,
+        "z": 90.2,
+        "visitRadiusMeters": 14,
+        "mandatory": true
+      },
+      "plain-wildlife-crossing": {
+        "x": 58.1,
+        "z": -0.8,
+        "visitRadiusMeters": 24,
+        "mandatory": false
+      }
+    },
+    "separations": [
+      {
+        "from": "spring-resting-hollow",
+        "to": "first-herd-trace",
+        "metres": 96.2
+      },
+      {
+        "from": "spring-resting-hollow",
+        "to": "first-overlook",
+        "metres": 83.5
+      },
+      {
+        "from": "first-herd-trace",
+        "to": "first-overlook",
+        "metres": 148.6
+      }
+    ]
+  },
+  "beats": [
+    {
+      "name": "01-arrival",
+      "note": "A fresh island. The journey line points inland.",
+      "screenshot": "01-arrival.png",
+      "position": {
+        "x": 13.6,
+        "z": -163.8
+      },
+      "regionId": "saltwind-coast",
+      "journey": {
+        "objectiveKind": "journey-event",
+        "objectiveId": "first-answering-call",
+        "known": [],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 0,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "ready",
+        "lastSavedTick": null,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": true,
+        "goalText": "Ride inland, then call for the herd",
+        "promptVisible": false,
+        "promptText": "",
+        "discoveryVisible": false,
+        "discoveryName": "",
+        "discoveryBody": "",
+        "bearingVisible": false,
+        "bearingDistance": "",
+        "saveVisible": false,
+        "noticeVisible": false,
+        "noticeText": "",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "Nothing found yet. The island is bigger than it looks.",
+        "journeyItems": []
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "02-crossing",
+      "note": "Animals crossing the plain.",
+      "screenshot": "02-crossing.png",
+      "position": {
+        "x": 54.9,
+        "z": -12.3
+      },
+      "regionId": "longgrass-opening",
+      "journey": {
+        "objectiveKind": "journey-event",
+        "objectiveId": "first-answering-call",
+        "known": [
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          }
+        ],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 0,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "ready",
+        "lastSavedTick": null,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "Ride inland, then call for the herd",
+        "promptVisible": false,
+        "promptText": "",
+        "discoveryVisible": false,
+        "discoveryName": "The crossing",
+        "discoveryBody": "Small animals break from the grass and stream away downwind.",
+        "bearingVisible": false,
+        "bearingDistance": "",
+        "saveVisible": false,
+        "noticeVisible": false,
+        "noticeText": "",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "0 of 3 places known.",
+        "journeyItems": [
+          {
+            "name": "The crossing",
+            "state": "completed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "02b-sequence-break",
+      "note": "Found out of order, and handled as such.",
+      "screenshot": "02b-sequence-break.png",
+      "position": {
+        "x": 54.9,
+        "z": -12.3
+      },
+      "regionId": "longgrass-opening",
+      "journey": {
+        "objectiveKind": "journey-event",
+        "objectiveId": "first-answering-call",
+        "known": [
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          }
+        ],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 0,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "ready",
+        "lastSavedTick": null,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "Ride inland, then call for the herd",
+        "promptVisible": false,
+        "promptText": "",
+        "discoveryVisible": false,
+        "discoveryName": "The crossing",
+        "discoveryBody": "Small animals break from the grass and stream away downwind.",
+        "bearingVisible": false,
+        "bearingDistance": "",
+        "saveVisible": false,
+        "noticeVisible": false,
+        "noticeText": "",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "0 of 3 places known.",
+        "journeyItems": [
+          {
+            "name": "The crossing",
+            "state": "completed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "03-inland",
+      "note": "At the edge of the fernwood, within earshot.",
+      "screenshot": "03-inland.png",
+      "position": {
+        "x": 15.3,
+        "z": 33.9
+      },
+      "regionId": "longgrass-opening",
+      "journey": {
+        "objectiveKind": "journey-event",
+        "objectiveId": "first-answering-call",
+        "known": [
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          }
+        ],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 0,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "ready",
+        "lastSavedTick": null,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "Ride inland, then call for the herd",
+        "promptVisible": false,
+        "promptText": "",
+        "discoveryVisible": false,
+        "discoveryName": "The crossing",
+        "discoveryBody": "Small animals break from the grass and stream away downwind.",
+        "bearingVisible": false,
+        "bearingDistance": "",
+        "saveVisible": false,
+        "noticeVisible": false,
+        "noticeText": "",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "0 of 3 places known.",
+        "journeyItems": [
+          {
+            "name": "The crossing",
+            "state": "completed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "04-call",
+      "note": "The call goes out, and nothing answers yet.",
+      "screenshot": "04-call.png",
+      "position": {
+        "x": 15.3,
+        "z": 33.9
+      },
+      "regionId": "longgrass-opening",
+      "journey": {
+        "objectiveKind": "journey-event",
+        "objectiveId": "first-answering-call",
+        "known": [
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          }
+        ],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 0,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "ready",
+        "lastSavedTick": null,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "Ride inland, then call for the herd",
+        "promptVisible": false,
+        "promptText": "",
+        "discoveryVisible": false,
+        "discoveryName": "The crossing",
+        "discoveryBody": "Small animals break from the grass and stream away downwind.",
+        "bearingVisible": false,
+        "bearingDistance": "",
+        "saveVisible": false,
+        "noticeVisible": true,
+        "noticeText": "Your call goes out over the grass. Nothing answers - yet.",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "0 of 3 places known.",
+        "journeyItems": [
+          {
+            "name": "The crossing",
+            "state": "completed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "05-answer",
+      "note": "The answer, and the bearing it came from.",
+      "screenshot": "05-answer.png",
+      "position": {
+        "x": 15.3,
+        "z": 33.9
+      },
+      "regionId": "longgrass-opening",
+      "journey": {
+        "objectiveKind": "discovery",
+        "objectiveId": "first-herd-trace",
+        "known": [
+          {
+            "id": "first-herd-trace",
+            "kind": "herd-trace",
+            "state": "revealed"
+          },
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          },
+          {
+            "id": "spring-resting-hollow",
+            "kind": "resting-hollow",
+            "state": "revealed"
+          }
+        ],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 0,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "ready",
+        "lastSavedTick": null,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": true,
+        "goalText": "Follow the trampled grass",
+        "promptVisible": false,
+        "promptText": "",
+        "discoveryVisible": false,
+        "discoveryName": "The crossing",
+        "discoveryBody": "Small animals break from the grass and stream away downwind.",
+        "bearingVisible": true,
+        "bearingDistance": "away",
+        "saveVisible": false,
+        "noticeVisible": true,
+        "noticeText": "Far off, something answers.",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "0 of 3 places known.",
+        "journeyItems": [
+          {
+            "name": "Trodden ground",
+            "state": "revealed"
+          },
+          {
+            "name": "The crossing",
+            "state": "completed"
+          },
+          {
+            "name": "The spring",
+            "state": "revealed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "06-trace-approach",
+      "note": "Standing at the trodden ground.",
+      "screenshot": "06-trace-approach.png",
+      "position": {
+        "x": -56.9,
+        "z": 98.5
+      },
+      "regionId": "fernwood-edge",
+      "journey": {
+        "objectiveKind": "discovery",
+        "objectiveId": "first-herd-trace",
+        "known": [
+          {
+            "id": "first-herd-trace",
+            "kind": "herd-trace",
+            "state": "visited"
+          },
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          },
+          {
+            "id": "spring-resting-hollow",
+            "kind": "resting-hollow",
+            "state": "revealed"
+          }
+        ],
+        "interactionId": "first-herd-trace",
+        "interactionKind": "inspect",
+        "completedMandatory": 0,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "ready",
+        "lastSavedTick": null,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "Follow the trampled grass",
+        "promptVisible": true,
+        "promptText": "Look closer at trodden ground",
+        "discoveryVisible": false,
+        "discoveryName": "The crossing",
+        "discoveryBody": "Small animals break from the grass and stream away downwind.",
+        "bearingVisible": false,
+        "bearingDistance": "away",
+        "saveVisible": false,
+        "noticeVisible": false,
+        "noticeText": "Far off, something answers.",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "0 of 3 places known.",
+        "journeyItems": [
+          {
+            "name": "Trodden ground",
+            "state": "visited"
+          },
+          {
+            "name": "The crossing",
+            "state": "completed"
+          },
+          {
+            "name": "The spring",
+            "state": "revealed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "07-trace-found",
+      "note": "Looking closer at the trace.",
+      "screenshot": "07-trace-found.png",
+      "position": {
+        "x": -56.9,
+        "z": 98.5
+      },
+      "regionId": "fernwood-edge",
+      "journey": {
+        "objectiveKind": "discovery",
+        "objectiveId": "spring-resting-hollow",
+        "known": [
+          {
+            "id": "first-herd-trace",
+            "kind": "herd-trace",
+            "state": "completed"
+          },
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          },
+          {
+            "id": "spring-resting-hollow",
+            "kind": "resting-hollow",
+            "state": "revealed"
+          }
+        ],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 1,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "saved",
+        "lastSavedTick": 2961,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": true,
+        "goalText": "Find the water you can hear",
+        "promptVisible": false,
+        "promptText": "Look closer at trodden ground",
+        "discoveryVisible": true,
+        "discoveryName": "Trodden ground",
+        "discoveryBody": "Hoofprints, and the grass still bent. Others came through here.",
+        "bearingVisible": false,
+        "bearingDistance": "away",
+        "saveVisible": true,
+        "noticeVisible": false,
+        "noticeText": "Far off, something answers.",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "1 of 3 places known.",
+        "journeyItems": [
+          {
+            "name": "Trodden ground",
+            "state": "completed"
+          },
+          {
+            "name": "The crossing",
+            "state": "completed"
+          },
+          {
+            "name": "The spring",
+            "state": "revealed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "08-spring",
+      "note": "The resting hollow.",
+      "screenshot": "08-spring.png",
+      "position": {
+        "x": 24.6,
+        "z": 143.3
+      },
+      "regionId": "fernwood-edge",
+      "journey": {
+        "objectiveKind": "discovery",
+        "objectiveId": "spring-resting-hollow",
+        "known": [
+          {
+            "id": "first-herd-trace",
+            "kind": "herd-trace",
+            "state": "completed"
+          },
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          },
+          {
+            "id": "spring-resting-hollow",
+            "kind": "resting-hollow",
+            "state": "visited"
+          }
+        ],
+        "interactionId": "spring-resting-hollow",
+        "interactionKind": "rest",
+        "completedMandatory": 1,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "saved",
+        "lastSavedTick": 2961,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "Find the water you can hear",
+        "promptVisible": true,
+        "promptText": "Rest at the spring",
+        "discoveryVisible": false,
+        "discoveryName": "Trodden ground",
+        "discoveryBody": "Hoofprints, and the grass still bent. Others came through here.",
+        "bearingVisible": false,
+        "bearingDistance": "away",
+        "saveVisible": false,
+        "noticeVisible": false,
+        "noticeText": "Far off, something answers.",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "1 of 3 places known.",
+        "journeyItems": [
+          {
+            "name": "Trodden ground",
+            "state": "completed"
+          },
+          {
+            "name": "The crossing",
+            "state": "completed"
+          },
+          {
+            "name": "The spring",
+            "state": "visited"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "09-rest",
+      "note": "Resting at the spring, and the island remembering.",
+      "screenshot": "09-rest.png",
+      "position": {
+        "x": 24.6,
+        "z": 143.3
+      },
+      "regionId": "fernwood-edge",
+      "journey": {
+        "objectiveKind": null,
+        "objectiveId": null,
+        "known": [
+          {
+            "id": "first-herd-trace",
+            "kind": "herd-trace",
+            "state": "completed"
+          },
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          },
+          {
+            "id": "spring-resting-hollow",
+            "kind": "resting-hollow",
+            "state": "completed"
+          }
+        ],
+        "interactionId": "spring-resting-hollow",
+        "interactionKind": "rest",
+        "completedMandatory": 2,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "saved",
+        "lastSavedTick": 4395,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": true,
+        "goalText": "Nothing calls to you just now. Ride, and see what you find",
+        "promptVisible": true,
+        "promptText": "Rest at the spring",
+        "discoveryVisible": true,
+        "discoveryName": "The spring",
+        "discoveryBody": "Cold water in a hollow of stone. A place to stand a while.",
+        "bearingVisible": false,
+        "bearingDistance": "away",
+        "saveVisible": true,
+        "noticeVisible": true,
+        "noticeText": "You stand a while. The water is cold.",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "2 of 3 places known.",
+        "journeyItems": [
+          {
+            "name": "Trodden ground",
+            "state": "completed"
+          },
+          {
+            "name": "The crossing",
+            "state": "completed"
+          },
+          {
+            "name": "The spring",
+            "state": "completed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "10-overlook",
+      "note": "The overlook, and the end of the arc.",
+      "screenshot": "10-overlook.png",
+      "position": {
+        "x": 84.8,
+        "z": 93.9
+      },
+      "regionId": "fernwood-edge",
+      "journey": {
+        "objectiveKind": null,
+        "objectiveId": null,
+        "known": [
+          {
+            "id": "first-herd-trace",
+            "kind": "herd-trace",
+            "state": "completed"
+          },
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          },
+          {
+            "id": "spring-resting-hollow",
+            "kind": "resting-hollow",
+            "state": "completed"
+          },
+          {
+            "id": "first-overlook",
+            "kind": "overlook",
+            "state": "completed"
+          }
+        ],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 3,
+        "totalMandatory": 3,
+        "complete": true,
+        "persistenceStatus": "saved",
+        "lastSavedTick": 5259,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "Climb to the bright break in the trees",
+        "promptVisible": false,
+        "promptText": "Rest at the spring",
+        "discoveryVisible": true,
+        "discoveryName": "The island, entire",
+        "discoveryBody": "You have the water, the trail, and the high ground. The herd is out there somewhere.",
+        "bearingVisible": false,
+        "bearingDistance": "away",
+        "saveVisible": true,
+        "noticeVisible": false,
+        "noticeText": "You stand a while. The water is cold.",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "You have seen what this island had to show you.",
+        "journeyItems": [
+          {
+            "name": "Trodden ground",
+            "state": "completed"
+          },
+          {
+            "name": "The crossing",
+            "state": "completed"
+          },
+          {
+            "name": "The spring",
+            "state": "completed"
+          },
+          {
+            "name": "The overlook",
+            "state": "completed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "11-pause",
+      "note": "The pause surface, holding the journey so far.",
+      "screenshot": "11-pause.png",
+      "position": {
+        "x": 84.8,
+        "z": 93.9
+      },
+      "regionId": "fernwood-edge",
+      "journey": {
+        "objectiveKind": null,
+        "objectiveId": null,
+        "known": [
+          {
+            "id": "first-herd-trace",
+            "kind": "herd-trace",
+            "state": "completed"
+          },
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          },
+          {
+            "id": "spring-resting-hollow",
+            "kind": "resting-hollow",
+            "state": "completed"
+          },
+          {
+            "id": "first-overlook",
+            "kind": "overlook",
+            "state": "completed"
+          }
+        ],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 3,
+        "totalMandatory": 3,
+        "complete": true,
+        "persistenceStatus": "saved",
+        "lastSavedTick": 5259,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "Climb to the bright break in the trees",
+        "promptVisible": false,
+        "promptText": "Rest at the spring",
+        "discoveryVisible": false,
+        "discoveryName": "The island, entire",
+        "discoveryBody": "You have the water, the trail, and the high ground. The herd is out there somewhere.",
+        "bearingVisible": false,
+        "bearingDistance": "away",
+        "saveVisible": false,
+        "noticeVisible": false,
+        "noticeText": "You stand a while. The water is cold.",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "You have seen what this island had to show you.",
+        "journeyItems": [
+          {
+            "name": "Trodden ground",
+            "state": "completed"
+          },
+          {
+            "name": "The crossing",
+            "state": "completed"
+          },
+          {
+            "name": "The spring",
+            "state": "completed"
+          },
+          {
+            "name": "The overlook",
+            "state": "completed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "12-reset",
+      "note": "Returned to safe ground, journey intact.",
+      "screenshot": "12-reset.png",
+      "position": {
+        "x": 84.8,
+        "z": 93.9
+      },
+      "regionId": "fernwood-edge",
+      "journey": {
+        "objectiveKind": null,
+        "objectiveId": null,
+        "known": [
+          {
+            "id": "first-herd-trace",
+            "kind": "herd-trace",
+            "state": "completed"
+          },
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          },
+          {
+            "id": "spring-resting-hollow",
+            "kind": "resting-hollow",
+            "state": "completed"
+          },
+          {
+            "id": "first-overlook",
+            "kind": "overlook",
+            "state": "completed"
+          }
+        ],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 3,
+        "totalMandatory": 3,
+        "complete": true,
+        "persistenceStatus": "saved",
+        "lastSavedTick": 5259,
+        "startKind": "fresh",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "Climb to the bright break in the trees",
+        "promptVisible": false,
+        "promptText": "Rest at the spring",
+        "discoveryVisible": true,
+        "discoveryName": "The island, entire",
+        "discoveryBody": "You have the water, the trail, and the high ground. The herd is out there somewhere.",
+        "bearingVisible": false,
+        "bearingDistance": "away",
+        "saveVisible": false,
+        "noticeVisible": true,
+        "noticeText": "Back on safe ground",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "You have seen what this island had to show you.",
+        "journeyItems": [
+          {
+            "name": "Trodden ground",
+            "state": "completed"
+          },
+          {
+            "name": "The crossing",
+            "state": "completed"
+          },
+          {
+            "name": "The spring",
+            "state": "completed"
+          },
+          {
+            "name": "The overlook",
+            "state": "completed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "13-resume",
+      "note": "The island remembers.",
+      "screenshot": "13-resume.png",
+      "position": {
+        "x": 84.8,
+        "z": 93.9
+      },
+      "regionId": "fernwood-edge",
+      "journey": {
+        "objectiveKind": null,
+        "objectiveId": null,
+        "known": [
+          {
+            "id": "first-herd-trace",
+            "kind": "herd-trace",
+            "state": "completed"
+          },
+          {
+            "id": "plain-wildlife-crossing",
+            "kind": "wildlife-event",
+            "state": "completed"
+          },
+          {
+            "id": "spring-resting-hollow",
+            "kind": "resting-hollow",
+            "state": "completed"
+          },
+          {
+            "id": "first-overlook",
+            "kind": "overlook",
+            "state": "completed"
+          }
+        ],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 3,
+        "totalMandatory": 3,
+        "complete": true,
+        "persistenceStatus": "saved",
+        "lastSavedTick": 5259,
+        "startKind": "resumed",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "",
+        "promptVisible": false,
+        "promptText": "",
+        "discoveryVisible": true,
+        "discoveryName": "The island, entire",
+        "discoveryBody": "You have the water, the trail, and the high ground. The herd is out there somewhere.",
+        "bearingVisible": false,
+        "bearingDistance": "",
+        "saveVisible": false,
+        "noticeVisible": true,
+        "noticeText": "The island remembers you — 4 of 4 places known.",
+        "storageVisible": false,
+        "storageTitle": "",
+        "storageReason": "",
+        "storageActions": [
+          "",
+          "Ride on"
+        ],
+        "journeySummary": "You have seen what this island had to show you.",
+        "journeyItems": [
+          {
+            "name": "Trodden ground",
+            "state": "completed"
+          },
+          {
+            "name": "The crossing",
+            "state": "completed"
+          },
+          {
+            "name": "The spring",
+            "state": "completed"
+          },
+          {
+            "name": "The overlook",
+            "state": "completed"
+          }
+        ]
+      },
+      "ok": true,
+      "problem": null,
+      "restoredFrom": {
+        "completedBefore": 3
+      }
+    },
+    {
+      "name": "14-quarantined",
+      "note": "A ride this island can no longer use, kept rather than erased.",
+      "screenshot": "14-quarantined.png",
+      "position": {
+        "x": 13.6,
+        "z": -163.8
+      },
+      "regionId": "saltwind-coast",
+      "journey": {
+        "objectiveKind": "journey-event",
+        "objectiveId": "first-answering-call",
+        "known": [],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 0,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "incompatible",
+        "lastSavedTick": null,
+        "startKind": "quarantined",
+        "persistenceWritesEnabled": false
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": true,
+        "goalText": "Ride inland, then call for the herd",
+        "promptVisible": false,
+        "promptText": "",
+        "discoveryVisible": false,
+        "discoveryName": "",
+        "discoveryBody": "",
+        "bearingVisible": false,
+        "bearingDistance": "",
+        "saveVisible": false,
+        "noticeVisible": false,
+        "noticeText": "",
+        "storageVisible": true,
+        "storageTitle": "A ride this island no longer fits",
+        "storageReason": "This island has been remade since your last ride.",
+        "storageActions": [
+          "Begin a new ride",
+          "Not yet"
+        ],
+        "journeySummary": "Nothing found yet. The island is bigger than it looks.",
+        "journeyItems": []
+      },
+      "ok": true,
+      "problem": null
+    },
+    {
+      "name": "15-accepted",
+      "note": "Begun again, and remembered from here.",
+      "screenshot": "15-accepted.png",
+      "position": {
+        "x": 13.6,
+        "z": -163.8
+      },
+      "regionId": "saltwind-coast",
+      "journey": {
+        "objectiveKind": "journey-event",
+        "objectiveId": "first-answering-call",
+        "known": [],
+        "interactionId": null,
+        "interactionKind": null,
+        "completedMandatory": 0,
+        "totalMandatory": 3,
+        "complete": false,
+        "persistenceStatus": "saved",
+        "lastSavedTick": 66,
+        "startKind": "quarantined",
+        "persistenceWritesEnabled": true
+      },
+      "audio": {
+        "muted": true,
+        "contextsConstructed": 0,
+        "contextCreated": false,
+        "running": false
+      },
+      "ui": {
+        "goalVisible": false,
+        "goalText": "Ride inland, then call for the herd",
+        "promptVisible": false,
+        "promptText": "",
+        "discoveryVisible": false,
+        "discoveryName": "",
+        "discoveryBody": "",
+        "bearingVisible": false,
+        "bearingDistance": "",
+        "saveVisible": true,
+        "noticeVisible": true,
+        "noticeText": "Begun again. This ride will be remembered from here.",
+        "storageVisible": false,
+        "storageTitle": "A ride this island no longer fits",
+        "storageReason": "This island has been remade since your last ride.",
+        "storageActions": [
+          "Begin a new ride",
+          "Not yet"
+        ],
+        "journeySummary": "Nothing found yet. The island is bigger than it looks.",
+        "journeyItems": []
+      },
+      "ok": true,
+      "problem": null
+    }
+  ],
+  "failures": [],
+  "consoleErrors": []
+}

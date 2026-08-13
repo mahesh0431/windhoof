@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 3,
+  "generatorVersion": "0.4.0",
+  "worldId": "windhoof-vertical-slice",
+  "seed": 483921,
+  "presentation": {
+    "mood": "stylized naturalism; isolated at the storm beach and warmer toward the inland herd traces",
+    "atmosphere": "clear salt air, readable long-distance silhouettes, restrained painterly haze",
+    "lighting": "late warm sun with cool sky fill and strong horse-scale terrain modelling",
+    "palette": ["storm-blue", "wet-sand", "longgrass-gold", "fern-green", "sunlit-stone"]
+  },
+  "island": {
+    "sizeMeters": 512,
+    "seaLevelMeters": 0,
+    "chunkSizeMeters": 128,
+    "terrainSamplesPerEdge": 65
+  },
+  "spawn": {
+    "regionId": "saltwind-coast",
+    "clearanceRadiusMeters": 4,
+    "maxSlopeDegrees": 8
+  },
+  "regions": [
+    {
+      "id": "saltwind-coast",
+      "role": "quiet storm-washed opening and precise movement",
+      "anchorMeters": { "x": 13.6, "z": -163.8 },
+      "coverage": 0.3,
+      "elevationMeters": [0.5, 14],
+      "moisture": [0.15, 0.65],
+      "maxSlopeDegrees": 18,
+      "adjacentTo": ["longgrass-opening"],
+      "tags": ["beach", "dunes", "tracks", "opening"],
+      "visualIntent": {
+        "terrainFamily": "coastal",
+        "silhouette": "low storm beach and wind-cut dunes opening toward one inland gap",
+        "scatterFamilies": ["weathered-rock", "marram", "drift-debris"],
+        "scatterDensity": 0.35
+      }
+    },
+    {
+      "id": "longgrass-opening",
+      "role": "first uninterrupted gallop and broad orientation",
+      "anchorMeters": { "x": 16.1, "z": -12.8 },
+      "coverage": 0.35,
+      "elevationMeters": [8, 36],
+      "moisture": [0.2, 0.6],
+      "maxSlopeDegrees": 22,
+      "adjacentTo": ["saltwind-coast", "fernwood-edge"],
+      "tags": ["grassland", "gallop", "sightlines"],
+      "visualIntent": {
+        "terrainFamily": "grassland",
+        "silhouette": "broad longgrass run framed by sparse boulder and gorse rhythms",
+        "scatterFamilies": ["longgrass", "gorse", "field-boulder"],
+        "scatterDensity": 0.5
+      }
+    },
+    {
+      "id": "fernwood-edge",
+      "role": "controlled turning, first jump, call response, and discovery",
+      "anchorMeters": { "x": -10.3, "z": 138.2 },
+      "coverage": 0.35,
+      "elevationMeters": [18, 54],
+      "moisture": [0.55, 1],
+      "maxSlopeDegrees": 28,
+      "adjacentTo": ["longgrass-opening"],
+      "tags": ["forest", "stream", "spring", "overlook"],
+      "visualIntent": {
+        "terrainFamily": "woodland",
+        "silhouette": "dark fern edge rising to a bright ridge break above the canopy",
+        "scatterFamilies": ["fern", "sapling", "moss-rock", "old-trunk"],
+        "scatterDensity": 0.68
+      }
+    }
+  ],
+  "requiredConnections": [
+    {
+      "id": "coast-to-plain-safe-route",
+      "fromRegionId": "saltwind-coast",
+      "toRegionId": "longgrass-opening",
+      "minimumWidthMeters": 8,
+      "maximumSlopeDegrees": 16,
+      "mandatory": true
+    },
+    {
+      "id": "plain-to-forest-safe-route",
+      "fromRegionId": "longgrass-opening",
+      "toRegionId": "fernwood-edge",
+      "minimumWidthMeters": 6,
+      "maximumSlopeDegrees": 20,
+      "mandatory": true
+    }
+  ],
+  "discoveries": [
+    {
+      "id": "spring-resting-hollow",
+      "type": "resting-hollow",
+      "regionId": "fernwood-edge",
+      "offsetFromRegionAnchorMeters": { "x": 38, "z": 8 },
+      "mandatory": true,
+      "journeyOrder": 20,
+      "progression": {
+        "prerequisiteIds": [],
+        "reveal": { "kind": "event" },
+        "visitRadiusMeters": 12,
+        "completion": { "kind": "interact", "interaction": "rest" },
+        "autosave": true
+      },
+      "signals": [
+        {
+          "kind": "sound",
+          "description": "running water audible from the forest approach"
+        },
+        {
+          "kind": "tracks",
+          "description": "hoofprints converge toward the spring"
+        }
+      ]
+    },
+    {
+      "id": "first-herd-trace",
+      "type": "herd-trace",
+      "regionId": "fernwood-edge",
+      "offsetFromRegionAnchorMeters": { "x": -48, "z": -35 },
+      "mandatory": true,
+      "journeyOrder": 10,
+      "progression": {
+        "prerequisiteIds": [],
+        "reveal": { "kind": "event" },
+        "visitRadiusMeters": 11,
+        "completion": { "kind": "interact", "interaction": "inspect" },
+        "autosave": true
+      },
+      "signals": [
+        {
+          "kind": "sound",
+          "description": "an answering call follows the player's whinny"
+        },
+        {
+          "kind": "motion",
+          "description": "birds lift from the trees in the direction of the spring"
+        }
+      ]
+    },
+    {
+      "id": "first-overlook",
+      "type": "overlook",
+      "regionId": "fernwood-edge",
+      "offsetFromRegionAnchorMeters": { "x": 100, "z": -48 },
+      "mandatory": true,
+      "journeyOrder": 30,
+      "progression": {
+        "prerequisiteIds": ["spring-resting-hollow", "first-herd-trace"],
+        "reveal": { "kind": "proximity", "radiusMeters": 55 },
+        "visitRadiusMeters": 14,
+        "completion": { "kind": "linger", "ticks": 120 },
+        "autosave": true
+      },
+      "signals": [
+        {
+          "kind": "silhouette",
+          "description": "a bright ridge break is visible above the canopy"
+        },
+        {
+          "kind": "light",
+          "description": "late sunlight catches the overlook grass"
+        }
+      ]
+    },
+    {
+      "id": "plain-wildlife-crossing",
+      "type": "wildlife-event",
+      "regionId": "longgrass-opening",
+      "offsetFromRegionAnchorMeters": { "x": 42, "z": 12 },
+      "mandatory": false,
+      "journeyOrder": 15,
+      "progression": {
+        "prerequisiteIds": [],
+        "reveal": { "kind": "proximity", "radiusMeters": 65 },
+        "visitRadiusMeters": 24,
+        "completion": { "kind": "proximity" },
+        "autosave": false
+      },
+      "signals": [
+        {
+          "kind": "wildlife",
+          "description": "small animals cross the plain toward shelter"
+        },
+        {
+          "kind": "motion",
+          "description": "grass movement reveals their route before they appear"
+        }
+      ]
+    }
+  ],
+  "journeyEvents": [
+    {
+      "id": "first-answering-call",
+      "type": "call-response",
+      "anchorDiscoveryId": "first-herd-trace",
+      "prerequisiteDiscoveryIds": [],
+      "triggerRadiusMeters": 110,
+      "responseDelayTicks": 90,
+      "revealDiscoveryIds": ["first-herd-trace", "spring-resting-hollow"]
+    }
+  ]
+}

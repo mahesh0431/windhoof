@@ -1,0 +1,88 @@
+{
+  "budgetSeconds": 400,
+  "skipped": [],
+  "manifestHash": "fnv1a64-2eae5335cb5544fc",
+  "bootMilliseconds": 6576,
+  "chunks": {
+    "mode": "full-world",
+    "totalChunks": 64,
+    "requestedChunks": 0,
+    "preparedChunks": 0,
+    "activeChunks": 64,
+    "cooldownChunks": 0,
+    "disposedChunks": 0,
+    "physicsReadyChunks": 64,
+    "renderReadyChunks": 64,
+    "physicsRetains": 64,
+    "renderRetains": 64,
+    "longestPreparationMilliseconds": 10.300000011920929,
+    "totalPreparationMilliseconds": 263.2999999523163
+  },
+  "preparation": {
+    "jobCount": 172,
+    "longestMilliseconds": 93.69999998807907,
+    "longestName": "collision-world",
+    "totalMilliseconds": 988.6999998688698
+  },
+  "worstJobs": [
+    "ground-cover-island-tufts 30.9ms",
+    "field-route-distance-50 10.0ms",
+    "field-route-distance-43 9.9ms",
+    "field-route-distance-46 9.8ms",
+    "field-route-distance-51 9.8ms",
+    "field-route-distance-56 9.8ms",
+    "field-route-distance-41 9.8ms",
+    "field-route-distance-44 9.7ms"
+  ],
+  "draws": {
+    "boot": 167,
+    "end": 151
+  },
+  "triangles": {
+    "boot": 669068,
+    "end": 623073
+  },
+  "groundCover": {
+    "tufts": 246141,
+    "triangles": 750340
+  },
+  "audio": {
+    "muted": true,
+    "contextsConstructed": 0
+  },
+  "unhandled": [],
+  "visits": [
+    {
+      "region": "blackstone-crown",
+      "arrived": true,
+      "legSeconds": 200,
+      "legMetres": 420,
+      "reason": null,
+      "standing": {
+        "x": -1,
+        "z": 48.8,
+        "y": 62.7
+      },
+      "reportedRegion": "blackstone-crown",
+      "drawCalls": 134,
+      "triangles": 508555
+    }
+  ],
+  "summary": [
+    "manifest fnv1a64-2eae5335cb5544fc  boot 6.6s",
+    "chunks 64/64  jobs 172 worst collision-world 93.7ms",
+    "draws 167 -> 151   triangles 669068 -> 623073",
+    "ground cover 246141 tufts / 750340 triangles",
+    "audio contexts 0",
+    "  job ground-cover-island-tufts 30.9ms",
+    "  job field-route-distance-50 10.0ms",
+    "  job field-route-distance-43 9.9ms",
+    "  job field-route-distance-46 9.8ms",
+    "  job field-route-distance-51 9.8ms",
+    "  job field-route-distance-56 9.8ms",
+    "  job field-route-distance-41 9.8ms",
+    "  job field-route-distance-44 9.7ms"
+  ],
+  "findings": [],
+  "consoleErrors": []
+}

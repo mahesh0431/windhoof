@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" data-windhoof="loading">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="Windhoof Horse Lab - a young wild horse on simple test terrain."
+    />
+    <title>Windhoof · Horse Lab</title>
+  </head>
+  <body>
+    <!--
+      role="application" tells assistive technology to pass keystrokes through
+      rather than intercepting them for browse mode, which is what an
+      interactive 3D view needs. role="img" would describe it as a static
+      picture and swallow the controls.
+    -->
+    <canvas
+      id="windhoof-canvas"
+      role="application"
+      tabindex="0"
+      aria-label="Windhoof Horse Lab. Ride with W A S D, hold Shift to gallop, press Escape to pause."
+    ></canvas>
+    <div id="windhoof-ui"></div>
+    <noscript>
+      <div class="wh-noscript">
+        <p>Windhoof is a browser game and needs JavaScript and WebGL 2 to run.</p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/app/main.ts"></script>
+  </body>
+</html>

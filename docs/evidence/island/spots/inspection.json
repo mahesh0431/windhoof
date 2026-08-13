@@ -1,0 +1,207 @@
+{
+  "capturedAt": "2026-08-13T00:09:25.807Z",
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "manifestHash": "fnv1a64-301783e38bfbc055",
+  "stalls": [
+    {
+      "label": "-1,128",
+      "x": -8.45,
+      "y": 19.03,
+      "z": 139.66,
+      "remaining": 13.47,
+      "speed": 2.2,
+      "regionId": "fernwood-edge"
+    }
+  ],
+  "failures": [],
+  "consoleErrors": [],
+  "captures": [
+    {
+      "name": "07-safe-route",
+      "note": "On the worn safe route climbing off the coast",
+      "state": {
+        "frame": 164,
+        "elapsedSeconds": 16.16749999999996,
+        "mode": "playing",
+        "tick": 970,
+        "position": {
+          "x": 17.695098876953125,
+          "y": 10.172846031188964,
+          "z": -91.2750244140625
+        },
+        "yaw": 0.027139842465182085,
+        "speed": 5,
+        "verticalVelocity": 0,
+        "gait": "trot",
+        "grounded": true,
+        "lastGroundedTick": 970,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 13.591103553771973,
+            "y": 8.184998703002929,
+            "z": -163.7449951171875
+          },
+          "yaw": 0.08662246381963534
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.581249999999999,
+        "cameraObstructed": false,
+        "drawCalls": 115,
+        "triangles": 363081,
+        "rigBodyHeight": 0.02493664289652624,
+        "rigSpineFlex": 0.024823737901409196,
+        "debrisLive": 12,
+        "stage": "island",
+        "regionId": "longgrass-opening",
+        "manifestHash": "fnv1a64-301783e38bfbc055",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "08-longgrass",
+      "note": "The longgrass opening and its boulder rhythms, from the route",
+      "state": {
+        "frame": 323,
+        "elapsedSeconds": 32.06750000000019,
+        "mode": "playing",
+        "tick": 1924,
+        "position": {
+          "x": 16.076904296875,
+          "y": 12.317998123168945,
+          "z": -12.961073875427246
+        },
+        "yaw": -0.0490901492875544,
+        "speed": 2.620000000000001,
+        "verticalVelocity": 0,
+        "gait": "walk",
+        "grounded": true,
+        "lastGroundedTick": 1924,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 13.591103553771973,
+            "y": 8.184998703002929,
+            "z": -163.7449951171875
+          },
+          "yaw": 0.08662246381963534
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.498003151424806,
+        "cameraObstructed": false,
+        "drawCalls": 107,
+        "triangles": 306770,
+        "rigBodyHeight": -0.025359264055857405,
+        "rigSpineFlex": 0.03999020138974705,
+        "debrisLive": 6,
+        "stage": "island",
+        "regionId": "longgrass-opening",
+        "manifestHash": "fnv1a64-301783e38bfbc055",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "09-fernwood-approach",
+      "note": "The fern edge rising ahead of the plain",
+      "state": {
+        "frame": 512,
+        "elapsedSeconds": 50.967500000000456,
+        "mode": "playing",
+        "tick": 3058,
+        "position": {
+          "x": -2.1981847286224365,
+          "y": 16.214495849609374,
+          "z": 74.37875366210938
+        },
+        "yaw": -0.16703774678591543,
+        "speed": 5,
+        "verticalVelocity": 0,
+        "gait": "trot",
+        "grounded": true,
+        "lastGroundedTick": 3058,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 16.01295280456543,
+            "y": 12.317998123168945,
+            "z": -11.920392990112305
+          },
+          "yaw": -0.25717332053127073
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.581249999999999,
+        "cameraObstructed": false,
+        "drawCalls": 99,
+        "triangles": 229137,
+        "rigBodyHeight": -0.006080428475056415,
+        "rigSpineFlex": -0.006362612439308477,
+        "debrisLive": 12,
+        "stage": "island",
+        "regionId": "longgrass-opening",
+        "manifestHash": "fnv1a64-301783e38bfbc055",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "10-fernwood",
+      "note": "Fernwood ground cover and canopy",
+      "state": {
+        "frame": 663,
+        "elapsedSeconds": 66.06750000000052,
+        "mode": "playing",
+        "tick": 3964,
+        "position": {
+          "x": -10.322249412536621,
+          "y": 19.028094482421874,
+          "z": 138.96900939941406
+        },
+        "yaw": -0.09741139020025358,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 3964,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": -10.322249412536621,
+            "y": 19.028094482421874,
+            "z": 138.96900939941406
+          },
+          "yaw": -0.09741139020025358
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.301423571002869,
+        "cameraObstructed": false,
+        "drawCalls": 96,
+        "triangles": 211782,
+        "rigBodyHeight": -0.0033844087236438365,
+        "rigSpineFlex": 0.00015901129856878027,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "fernwood-edge",
+        "manifestHash": "fnv1a64-301783e38bfbc055",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    }
+  ]
+}

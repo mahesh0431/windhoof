@@ -1,0 +1,1185 @@
+/*
+ * Windhoof interface styling.
+ *
+ * Direction: the interface is weather, not a dashboard. Surfaces are warm,
+ * translucent, and soft-edged so they read as part of a late-afternoon
+ * landscape rather than as an application chrome layer sitting on top of one.
+ * During ordinary riding almost nothing is drawn, and what is drawn stays out
+ * of the centre and lower-middle of the view where the horse and the ground
+ * ahead live.
+ *
+ * Type is system-only. No downloaded font means no provenance question and no
+ * blocking network request before the first frame.
+ */
+
+:root {
+  --wh-text-scale: 1;
+
+  --wh-ink: #f4ece0;
+  --wh-ink-soft: rgba(244, 236, 224, 0.78);
+  /* Raised from 0.46: at that alpha the settings hint text and the resting gait
+     strip were below a comfortable contrast ratio on their own backgrounds. */
+  --wh-ink-faint: rgba(244, 236, 224, 0.62);
+  --wh-dusk: rgba(26, 30, 32, 0.72);
+  --wh-dusk-deep: rgba(18, 22, 24, 0.9);
+  --wh-warm: #e4b876;
+  --wh-warm-soft: rgba(228, 184, 118, 0.28);
+  --wh-grass: #9dbb6e;
+
+  --wh-display: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --wh-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --wh-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #10161a;
+  color: var(--wh-ink);
+  font-family: var(--wh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+#windhoof-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.wh-ui {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  font-size: calc(16px * var(--wh-text-scale));
+  z-index: 10;
+  user-select: none;
+}
+
+.wh-ui button,
+.wh-ui input,
+.wh-ui select {
+  font: inherit;
+  color: inherit;
+}
+
+/* One visible focus ring for every interactive control. Without this a keyboard
+   player could move through the settings panel with no idea where they were. */
+.wh-ui :focus-visible {
+  outline: 2px solid var(--wh-warm);
+  outline-offset: 3px;
+  border-radius: 0.35rem;
+}
+
+.wh-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------- hints -- */
+
+.wh-hint {
+  position: absolute;
+  top: 4.2vh;
+  left: 50%;
+  transform: translate(-50%, -0.5rem);
+  padding: 0.5rem 1.15rem;
+  border-radius: 999px;
+  background: var(--wh-dusk);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  border: 1px solid rgba(244, 236, 224, 0.12);
+  font-size: 0.9em;
+  letter-spacing: 0.045em;
+  color: var(--wh-ink-soft);
+  opacity: 0;
+  transition:
+    opacity 620ms var(--wh-ease),
+    transform 620ms var(--wh-ease);
+  white-space: nowrap;
+}
+
+.wh-hint[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Transient acknowledgements: a state change the player must not miss, said
+   once and then gone. Distinct from hints so the two never stack. */
+.wh-notice {
+  position: absolute;
+  top: 11vh;
+  left: 50%;
+  transform: translate(-50%, -0.4rem);
+  font-family: var(--wh-display);
+  font-size: 1.05em;
+  letter-spacing: 0.06em;
+  color: var(--wh-ink);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.65);
+  opacity: 0;
+  transition:
+    opacity 420ms var(--wh-ease),
+    transform 420ms var(--wh-ease);
+}
+
+.wh-notice[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* --------------------------------------------------------------- vignette -- */
+
+.wh-vignette {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 260ms var(--wh-ease);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 42%,
+    rgba(24, 12, 6, 0.55) 100%
+  );
+}
+
+.wh-vignette[data-state="stumble"] {
+  opacity: 1;
+}
+
+.wh-vignette[data-state="reset"] {
+  opacity: 1;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 244, 220, 0.16) 0%,
+    rgba(255, 236, 196, 0) 62%
+  );
+}
+
+/* ------------------------------------------------------------ gait strip -- */
+
+.wh-gait {
+  position: absolute;
+  left: 2.4vw;
+  bottom: 3.4vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  opacity: 0.26;
+  transition: opacity 900ms var(--wh-ease);
+}
+
+.wh-gait[data-emphasis="true"] {
+  opacity: 1;
+}
+
+.wh-gait[data-persistent="true"] {
+  opacity: 0.72;
+}
+
+.wh-gait[hidden] {
+  display: none;
+}
+
+.wh-gait-ticks {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.28rem;
+  height: 1.5rem;
+}
+
+.wh-gait-tick {
+  width: 0.3rem;
+  border-radius: 999px;
+  background: rgba(244, 236, 224, 0.3);
+  transition:
+    background-color 220ms var(--wh-ease),
+    height 320ms var(--wh-ease);
+}
+
+.wh-gait-tick[data-active="true"] {
+  background: var(--wh-warm);
+  box-shadow: 0 0 12px rgba(228, 184, 118, 0.55);
+}
+
+.wh-gait-tick[data-reached="true"] {
+  background: rgba(228, 184, 118, 0.55);
+}
+
+.wh-gait-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  font-size: 0.72em;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--wh-ink-soft);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+}
+
+.wh-gait-speed {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  color: var(--wh-ink-faint);
+  /* The label row is uppercased; a unit symbol is not. "M/S" is not a unit. */
+  text-transform: none;
+}
+
+/* ------------------------------------------------------- pointer prompt -- */
+
+/*
+ * Pointer-focus prompt.
+ *
+ * It has two forms on purpose. Before the player has moved it is a centred
+ * invitation over a light scrim. Once they are riding it shrinks to a corner
+ * pill with no scrim: a keyboard-only player can play the whole game without
+ * ever taking pointer lock, and dimming their view forever because they never
+ * clicked would be a bug, not a nudge.
+ */
+.wh-focus {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  padding: 0;
+  background: rgba(12, 16, 18, 0.38);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  /* `visibility` is switched with a zero-length transition, delayed only when
+     hiding. Animating it instead leaves the element computed as hidden for the
+     first frames after it is shown, which silently rejects `focus()`. */
+  transition:
+    opacity 300ms var(--wh-ease),
+    background-color 400ms var(--wh-ease),
+    visibility 0s linear 300ms;
+  pointer-events: auto;
+  cursor: pointer;
+  color: inherit;
+  text-align: center;
+}
+
+.wh-focus[data-visible="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 300ms var(--wh-ease),
+    background-color 400ms var(--wh-ease),
+    visibility 0s linear 0s;
+}
+
+.wh-focus[data-compact="true"] {
+  /* Top left. The diagnostics overlay owns the top right, and these two can be
+     on screen at the same time during a playtest. */
+  inset: 1.6vh auto auto 1.4vw;
+  display: block;
+  width: max-content;
+  background: var(--wh-dusk);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  border: 1px solid rgba(244, 236, 224, 0.12);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+}
+
+.wh-focus-inner {
+  font-family: var(--wh-display);
+  letter-spacing: 0.08em;
+}
+
+.wh-focus-inner strong {
+  display: block;
+  font-size: 1.5em;
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+}
+
+.wh-focus-inner span {
+  font-family: var(--wh-body);
+  font-size: 0.85em;
+  color: var(--wh-ink-soft);
+  letter-spacing: 0.05em;
+}
+
+.wh-focus[data-compact="true"] .wh-focus-inner strong {
+  font-family: var(--wh-body);
+  font-size: 0.85em;
+  letter-spacing: 0.045em;
+  margin-bottom: 0;
+  color: var(--wh-ink-soft);
+}
+
+.wh-focus[data-compact="true"] .wh-focus-inner span {
+  display: none;
+}
+
+/* ----------------------------------------------------------------- pause -- */
+
+.wh-pause {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  /* A definite row is what makes the panel's percentage max-height resolve. An
+     auto-sized row leaves the percentage indefinite, so the panel grows past
+     the window and the settings list never becomes scrollable. */
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+  padding: 4vh 4vw;
+  background: linear-gradient(
+    to bottom,
+    rgba(14, 19, 22, 0.62),
+    rgba(20, 16, 12, 0.78)
+  );
+  backdrop-filter: blur(14px) saturate(0.7);
+  -webkit-backdrop-filter: blur(14px) saturate(0.7);
+  opacity: 0;
+  visibility: hidden;
+  /* See the note on .wh-focus: showing must make the dialog focusable in the
+     same style recalculation, or moving focus to Resume is rejected. */
+  transition:
+    opacity 320ms var(--wh-ease),
+    visibility 0s linear 320ms;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.wh-pause[data-visible="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 320ms var(--wh-ease),
+    visibility 0s linear 0s;
+}
+
+/*
+ * The panel scrolls internally rather than the overlay scrolling as a whole, so
+ * the title and Resume stay put on a short window. Letting a centred overlay
+ * overflow instead pushes the primary action off the top of the screen.
+ */
+.wh-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(46rem, 100%);
+  max-height: 100%;
+  padding: clamp(1.5rem, 3vw, 2.6rem);
+  border-radius: 1.15rem;
+  background: rgba(30, 27, 24, 0.62);
+  border: 1px solid rgba(228, 184, 118, 0.16);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+}
+
+.wh-panel-scroll {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(228, 184, 118, 0.45) transparent;
+  /* Fades the last row when there is more below, so a cut-off list reads as
+     scrollable rather than as the end of the settings. */
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 1.5rem), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.5rem), transparent);
+  padding-bottom: 1.5rem;
+}
+
+.wh-panel-title {
+  font-family: var(--wh-display);
+  font-size: 1.9em;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.25rem;
+}
+
+.wh-panel-subtitle {
+  margin: 0 0 1.6rem;
+  font-size: 0.88em;
+  color: var(--wh-ink-soft);
+  letter-spacing: 0.03em;
+  line-height: 1.55;
+}
+
+.wh-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-bottom: 1.4rem;
+}
+
+.wh-button {
+  appearance: none;
+  border: 1px solid rgba(244, 236, 224, 0.18);
+  background: rgba(244, 236, 224, 0.07);
+  color: var(--wh-ink);
+  padding: 0.62rem 1.25rem;
+  border-radius: 0.7rem;
+  font-size: 0.9em;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition:
+    background-color 200ms var(--wh-ease),
+    border-color 200ms var(--wh-ease),
+    transform 200ms var(--wh-ease);
+}
+
+.wh-button:hover,
+.wh-button:focus-visible {
+  background: rgba(228, 184, 118, 0.18);
+  border-color: rgba(228, 184, 118, 0.45);
+  outline: none;
+}
+
+.wh-button:active {
+  transform: translateY(1px);
+}
+
+.wh-button[data-variant="primary"] {
+  background: rgba(228, 184, 118, 0.22);
+  border-color: rgba(228, 184, 118, 0.5);
+}
+
+.wh-tabs {
+  display: flex;
+  gap: 1.4rem;
+  border-bottom: 1px solid rgba(244, 236, 224, 0.12);
+  margin-bottom: 1.3rem;
+}
+
+.wh-tab {
+  appearance: none;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0 0 0.6rem;
+  font-size: 0.76em;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  color: var(--wh-ink-faint);
+  cursor: pointer;
+  transition: color 200ms var(--wh-ease), border-color 200ms var(--wh-ease);
+}
+
+.wh-tab[aria-selected="true"] {
+  color: var(--wh-ink);
+  border-bottom-color: var(--wh-warm);
+}
+
+.wh-tabpanel[hidden] {
+  display: none;
+}
+
+/* --------------------------------------------------------------- fields -- */
+
+.wh-field {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 15rem) 3.4rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(244, 236, 224, 0.06);
+  font-size: 0.87em;
+}
+
+.wh-field:last-child {
+  border-bottom: none;
+}
+
+.wh-field-label {
+  color: var(--wh-ink-soft);
+  letter-spacing: 0.03em;
+}
+
+.wh-field-hint {
+  display: block;
+  font-size: 0.8em;
+  color: var(--wh-ink-faint);
+  margin-top: 0.15rem;
+  letter-spacing: 0.02em;
+}
+
+.wh-field-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--wh-ink-faint);
+  font-size: 0.9em;
+}
+
+.wh-ui input[type="range"] {
+  width: 100%;
+  accent-color: var(--wh-warm);
+  cursor: pointer;
+}
+
+.wh-ui input[type="checkbox"] {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--wh-warm);
+  cursor: pointer;
+  justify-self: start;
+}
+
+.wh-ui select {
+  background: rgba(20, 22, 24, 0.8);
+  border: 1px solid rgba(244, 236, 224, 0.18);
+  border-radius: 0.45rem;
+  padding: 0.35rem 0.5rem;
+  cursor: pointer;
+}
+
+.wh-keys {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.55rem 1.6rem;
+  font-size: 0.87em;
+  margin: 0;
+}
+
+.wh-key-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.32rem 0;
+  border-bottom: 1px solid rgba(244, 236, 224, 0.06);
+}
+
+.wh-key-row dt {
+  color: var(--wh-ink-soft);
+}
+
+.wh-key-row dd {
+  margin: 0;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.88em;
+  letter-spacing: 0.06em;
+  color: var(--wh-warm);
+}
+
+/* ---------------------------------------------------------- diagnostics -- */
+
+.wh-diagnostics {
+  position: absolute;
+  top: 1.6vh;
+  right: 1.4vw;
+  min-width: 15rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.6rem;
+  background: rgba(10, 13, 15, 0.72);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  border: 1px solid rgba(244, 236, 224, 0.1);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.7em;
+  line-height: 1.65;
+  color: var(--wh-ink-soft);
+}
+
+.wh-diagnostics[hidden] {
+  display: none;
+}
+
+.wh-diagnostics-title {
+  font-size: 0.85em;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--wh-ink-faint);
+  margin-bottom: 0.4rem;
+}
+
+.wh-diagnostics-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+
+.wh-diagnostics-row span:last-child {
+  color: var(--wh-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.wh-diagnostics-row[data-warn="true"] span:last-child {
+  color: #e8a25f;
+}
+
+/* -------------------------------------------------------------- loading -- */
+
+.wh-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(160deg, #1b2429, #2a2118);
+  transition: opacity 700ms var(--wh-ease);
+  pointer-events: auto;
+}
+
+.wh-loading[data-done="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wh-loading-inner {
+  text-align: center;
+}
+
+.wh-loading-title {
+  font-family: var(--wh-display);
+  font-size: 2.4em;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  margin: 0 0 0.4rem;
+  color: var(--wh-ink);
+}
+
+.wh-loading-note {
+  font-size: 0.82em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wh-ink-faint);
+}
+
+.wh-error {
+  max-width: 34rem;
+  max-height: 40vh;
+  overflow: auto;
+  text-align: left;
+  font-size: 0.85em;
+  line-height: 1.6;
+  color: #f0c69a;
+  white-space: pre-wrap;
+}
+
+/*
+ * Styled on a wrapper inside <noscript>, never on the element itself: the user
+ * agent hides `noscript` when scripting is enabled, and an author rule on the
+ * element would override that and show the fallback to everyone.
+ */
+.wh-noscript {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  text-align: center;
+  background: #10161a;
+  color: var(--wh-ink);
+  font-family: var(--wh-body);
+  line-height: 1.6;
+}
+
+/* -------------------------------------------------------- reduced motion -- */
+
+.wh-ui[data-reduced-motion="true"] *,
+.wh-ui[data-reduced-motion="true"] {
+  transition-duration: 90ms !important;
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wh-ui * {
+    transition-duration: 90ms !important;
+  }
+}
+
+/*
+ * Place name.
+ *
+ * Shown once, the first time the player enters somewhere with a name. Bottom
+ * right with the rest of the resting-state chrome, so the centre and the ground
+ * ahead stay clear, and slow enough on both edges that it reads as the world
+ * naming itself rather than as a notification.
+ */
+.wh-place {
+  position: absolute;
+  right: 2.4vw;
+  bottom: 3.4vh;
+  text-align: right;
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 1200ms var(--wh-ease),
+    transform 1200ms var(--wh-ease);
+}
+.wh-place[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+.wh-place-name {
+  font-family: var(--wh-display);
+  font-size: 1.5em;
+  letter-spacing: 0.09em;
+  color: var(--wh-ink);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--wh-warm-soft);
+}
+
+.wh-ui[data-reduced-motion="true"] .wh-place {
+  transition-duration: 260ms;
+  transform: none;
+}
+
+/* ------------------------------------------------------------- journey -- */
+/*
+ * The journey layer.
+ *
+ * Everything here is edge-anchored and transient. The rule the whole design
+ * follows: while the player is riding, the middle of the screen and the ground
+ * ahead of the horse must be clear, so a goal line lives low-left, a found
+ * place low-centre but under the horizon, and the contextual offer just above
+ * the gait strip where the player's eye already goes.
+ */
+
+.wh-goal {
+  position: absolute;
+  left: 2.4vw;
+  /*
+   * Clear of the gait strip, which shares this corner and this anchor.
+   * They were both sitting on `bottom: 3.4vh`, so a goal line long enough to
+   * wrap - "Nothing calls to you just now. Ride, and see what you find" is the
+   * worst of them - laid its second row straight across the speed readout and
+   * both went to mush. The offset is the strip's own height plus a little air;
+   * when the strip is hidden the line simply sits in clear space, which costs
+   * nothing because there is nothing under it to notice.
+   */
+  bottom: calc(3.4vh + 3.6rem);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  max-width: min(34ch, 42vw);
+  opacity: 0;
+  transform: translateY(0.4rem);
+  transition:
+    opacity 900ms var(--wh-ease),
+    transform 900ms var(--wh-ease);
+}
+.wh-goal[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+.wh-goal-mark {
+  color: var(--wh-warm);
+  font-size: 1.1em;
+  line-height: 1;
+}
+.wh-goal-text {
+  font-family: var(--wh-display);
+  font-size: 1.05em;
+  color: var(--wh-ink-soft);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
+}
+
+/*
+ * The answering call, seen rather than heard.
+ *
+ * A ring around the centre with a mark rotated to the bearing. It is drawn at
+ * the edge of a large circle so it never sits over the horse, and it points
+ * behind the player as readily as ahead - which is the case that matters, since
+ * the herd answers from somewhere the player is not already looking.
+ */
+.wh-bearing {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(52vh, 40vw);
+  height: min(52vh, 40vw);
+  margin-left: calc(min(52vh, 40vw) / -2);
+  margin-top: calc(min(52vh, 40vw) / -2);
+  opacity: 0;
+  transition: opacity 700ms var(--wh-ease);
+  pointer-events: none;
+}
+.wh-bearing[data-visible="true"] {
+  opacity: 1;
+}
+.wh-bearing-arrow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.6em;
+  height: 1.6em;
+  margin: -0.8em 0 0 -0.8em;
+  /* Rotate about the centre, then push out to the ring: one transform does
+     both the direction and the placement. */
+  transform: rotate(var(--wh-bearing, 0deg)) translateY(calc(min(52vh, 40vw) / -2 + 1.4em));
+  transition: transform 420ms var(--wh-ease);
+}
+.wh-bearing-glyph {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--wh-warm);
+  font-size: 0.9em;
+  text-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+  animation: wh-bearing-pulse 2.4s var(--wh-ease) infinite;
+}
+.wh-bearing-distance {
+  position: absolute;
+  left: 50%;
+  top: 105%;
+  /* Counter-rotated by exactly the bearing, so the caption stays level while
+     the mark it belongs to swings around the ring. */
+  transform: translateX(-50%) rotate(calc(-1 * var(--wh-bearing, 0deg)));
+  font-size: 0.72em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--wh-ink-faint);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+}
+.wh-bearing[data-behind="true"] .wh-bearing-distance::after {
+  content: " · turn around";
+}
+@keyframes wh-bearing-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.wh-discovery {
+  position: absolute;
+  left: 50%;
+  /* Sits across the lower middle, which is where the eye already is. Lifting it
+     clear of the horse was tried and reverted: with the wash behind it the line
+     reads fine over the animal, and the higher position drifts into sky, where
+     it stops feeling like something the ground said. */
+  top: 62%;
+  transform: translate(-50%, 0.6rem);
+  width: min(46ch, 76vw);
+  text-align: center;
+  opacity: 0;
+  transition:
+    opacity 1100ms var(--wh-ease),
+    transform 1100ms var(--wh-ease);
+  pointer-events: none;
+}
+.wh-discovery[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+/*
+ * A breath of shade behind the words.
+ *
+ * A drop shadow alone holds up over fernwood and fails over pale sand, which is
+ * exactly where the last discovery of the arc is read. This is a soft radial
+ * wash rather than a panel: it has no edge to notice, so the moment still reads
+ * as something the island said rather than as a box the interface opened.
+ */
+.wh-discovery::before {
+  content: "";
+  position: absolute;
+  inset: -2.4rem -4rem;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(12, 14, 12, 0.5) 0%,
+    rgba(12, 14, 12, 0.28) 45%,
+    rgba(12, 14, 12, 0) 72%
+  );
+  pointer-events: none;
+}
+.wh-discovery-name {
+  font-family: var(--wh-display);
+  font-size: 1.75em;
+  letter-spacing: 0.05em;
+  color: var(--wh-ink);
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.85);
+}
+.wh-discovery-body {
+  margin-top: 0.35rem;
+  font-size: 0.98em;
+  line-height: 1.45;
+  color: var(--wh-ink-soft);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.85);
+}
+
+.wh-prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 12vh;
+  transform: translate(-50%, 0.4rem);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.9rem 0.4rem 0.5rem;
+  border-radius: 999px;
+  background: var(--wh-dusk);
+  border: 1px solid var(--wh-warm-soft);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition:
+    opacity 320ms var(--wh-ease),
+    transform 320ms var(--wh-ease);
+  pointer-events: none;
+}
+.wh-prompt[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.wh-prompt-key {
+  display: grid;
+  place-items: center;
+  min-width: 1.9em;
+  height: 1.9em;
+  padding: 0 0.4em;
+  border-radius: 0.4em;
+  background: rgba(244, 236, 224, 0.92);
+  color: #1a1e20;
+  font-family: var(--wh-body);
+  font-size: 0.86em;
+  font-weight: 700;
+}
+.wh-prompt-text {
+  font-size: 0.98em;
+  color: var(--wh-ink);
+}
+
+.wh-save {
+  position: absolute;
+  right: 2.4vw;
+  top: 2.6vh;
+  font-size: 0.76em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wh-ink-faint);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 700ms var(--wh-ease);
+}
+.wh-save[data-visible="true"] {
+  opacity: 1;
+}
+
+/* The full picture, on demand, inside the pause surface. */
+.wh-journey {
+  margin-bottom: 1.4rem;
+}
+.wh-journey-title {
+  margin: 0 0 0.3rem;
+  font-family: var(--wh-display);
+  font-size: 1.15em;
+  color: var(--wh-ink);
+}
+.wh-journey-summary {
+  margin: 0 0 0.7rem;
+  font-size: 0.92em;
+  color: var(--wh-ink-faint);
+}
+.wh-journey-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+.wh-journey-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  background: rgba(244, 236, 224, 0.05);
+  border-left: 2px solid transparent;
+}
+.wh-journey-item[data-state="completed"] {
+  border-left-color: var(--wh-warm);
+}
+.wh-journey-item[data-state="revealed"] {
+  opacity: 0.72;
+}
+.wh-journey-item-name {
+  color: var(--wh-ink);
+}
+.wh-journey-item-state {
+  color: var(--wh-ink-faint);
+  font-size: 0.86em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.wh-ui[data-reduced-motion="true"] .wh-goal,
+.wh-ui[data-reduced-motion="true"] .wh-discovery,
+.wh-ui[data-reduced-motion="true"] .wh-prompt {
+  transition-duration: 240ms;
+  transform: none;
+}
+.wh-ui[data-reduced-motion="true"] .wh-discovery,
+.wh-ui[data-reduced-motion="true"] .wh-prompt {
+  /* These are centred by transform, so reduced motion must keep the centring
+     while dropping only the travel. */
+  transform: translate(-50%, 0);
+}
+.wh-ui[data-reduced-motion="true"] .wh-bearing-glyph {
+  animation: none;
+  opacity: 1;
+}
+
+/*
+ * The storage decision.
+ *
+ * Weighted like the pause surface rather than like a notice, because it is a
+ * question and not an announcement: until it is answered, this ride is not
+ * being written down. It sits low and narrow rather than filling the screen -
+ * the island is still there behind it and still worth looking at.
+ */
+.wh-storage {
+  position: absolute;
+  /* Above the focus scrim: this is a question, and the scrim is an invitation. */
+  z-index: 5;
+  left: 50%;
+  bottom: 8vh;
+  transform: translate(-50%, 1rem);
+  width: min(48ch, 88vw);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 420ms var(--wh-ease),
+    transform 420ms var(--wh-ease);
+}
+.wh-storage[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+.wh-storage-panel {
+  padding: 1.1rem 1.3rem 1rem;
+  border-radius: 0.9rem;
+  background: var(--wh-dusk-deep);
+  border: 1px solid var(--wh-warm-soft);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+.wh-storage-title {
+  margin: 0 0 0.2rem;
+  font-family: var(--wh-display);
+  font-size: 1.2em;
+  color: var(--wh-ink);
+}
+.wh-storage-reason {
+  margin: 0 0 0.4rem;
+  font-size: 0.95em;
+  color: var(--wh-warm);
+}
+.wh-storage-body {
+  margin: 0 0 0.9rem;
+  font-size: 0.94em;
+  line-height: 1.5;
+  color: var(--wh-ink-soft);
+}
+.wh-storage-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.wh-ui[data-reduced-motion="true"] .wh-storage {
+  transition-duration: 200ms;
+  transform: translate(-50%, 0);
+}
+
+/* --- graphics recovery ---------------------------------------------------
+   A full cover rather than a corner card. Every state behind it is blank,
+   frozen, or a frame the player must not act on, so hiding it is the honest
+   presentation - and the cover is what says "stopped" rather than "broken".
+
+   Sits above the pause panel and the focus scrim: a lost context outranks
+   anything else the interface could be saying, including an invitation to
+   click into a canvas that cannot draw. */
+.wh-graphics {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  /* `.wh-ui` is transparent to the pointer and every interactive surface opts
+     back in. Without this the resume button is covered by the canvas and the
+     only way out of a restored context cannot be clicked. */
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: rgba(9, 12, 14, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  /* Same zero-length visibility switch as the focus scrim: animating it leaves
+     the panel computed as hidden for the first frames, which silently rejects
+     the `focus()` that puts the player on the resume button. */
+  transition:
+    opacity 320ms var(--wh-ease),
+    visibility 0s linear 320ms;
+}
+.wh-graphics[data-visible="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+.wh-graphics-panel {
+  width: min(46ch, 90vw);
+  padding: 1.4rem 1.5rem 1.3rem;
+  border-radius: 1rem;
+  text-align: center;
+  background: var(--wh-dusk-deep);
+  border: 1px solid var(--wh-warm-soft);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+}
+.wh-graphics-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--wh-display);
+  font-size: 1.35em;
+  color: var(--wh-ink);
+}
+.wh-graphics-body {
+  margin: 0 0 1.1rem;
+  font-size: 0.96em;
+  line-height: 1.55;
+  color: var(--wh-ink-soft);
+}
+/* The two waiting states get a slow breath so the panel does not read as a
+   still image of a hung game. It is the only motion on screen while the
+   context is gone, and it stops the moment there is something to press. */
+.wh-graphics[data-status="context-lost"] .wh-graphics-title,
+.wh-graphics[data-status="restoring"] .wh-graphics-title {
+  animation: wh-graphics-breath 3.4s ease-in-out infinite;
+}
+@keyframes wh-graphics-breath {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.wh-ui[data-reduced-motion="true"] .wh-graphics {
+  transition-duration: 150ms;
+}
+.wh-ui[data-reduced-motion="true"] .wh-graphics-title {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wh-graphics-title {
+    animation: none;
+  }
+}

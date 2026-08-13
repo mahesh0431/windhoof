@@ -1,0 +1,439 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://windhoof.local/schemas/world-spec-v3.json",
+  "title": "Windhoof WorldSpec v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "generatorVersion",
+    "worldId",
+    "seed",
+    "presentation",
+    "island",
+    "spawn",
+    "regions",
+      "requiredConnections",
+      "discoveries",
+      "journeyEvents"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 3
+    },
+    "generatorVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "worldId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "presentation": {
+      "$ref": "#/$defs/presentation"
+    },
+    "island": {
+      "$ref": "#/$defs/island"
+    },
+    "spawn": {
+      "$ref": "#/$defs/spawn"
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/region"
+      }
+    },
+    "requiredConnections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/connection"
+      }
+    },
+    "discoveries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/discovery"
+      }
+    },
+    "journeyEvents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/journeyEvent"
+      }
+    }
+  },
+  "$defs": {
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mood", "atmosphere", "lighting", "palette"],
+      "properties": {
+        "mood": { "type": "string", "minLength": 1 },
+        "atmosphere": { "type": "string", "minLength": 1 },
+        "lighting": { "type": "string", "minLength": 1 },
+        "palette": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "range": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "number" },
+        { "type": "number" }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "island": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sizeMeters",
+        "seaLevelMeters",
+        "chunkSizeMeters",
+        "terrainSamplesPerEdge"
+      ],
+      "properties": {
+        "sizeMeters": {
+          "type": "integer",
+          "minimum": 128
+        },
+        "seaLevelMeters": {
+          "type": "number"
+        },
+        "chunkSizeMeters": {
+          "type": "integer",
+          "minimum": 32
+        },
+        "terrainSamplesPerEdge": {
+          "type": "integer",
+          "minimum": 3
+        }
+      }
+    },
+    "spawn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["regionId", "clearanceRadiusMeters", "maxSlopeDegrees"],
+      "properties": {
+        "regionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "clearanceRadiusMeters": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maxSlopeDegrees": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 45
+        }
+      }
+    },
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "role",
+        "anchorMeters",
+        "coverage",
+        "elevationMeters",
+        "moisture",
+        "maxSlopeDegrees",
+        "adjacentTo",
+        "tags",
+        "visualIntent"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "anchorMeters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "z"],
+          "properties": {
+            "x": { "type": "number" },
+            "z": { "type": "number" }
+          }
+        },
+        "coverage": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "elevationMeters": {
+          "$ref": "#/$defs/range"
+        },
+        "moisture": {
+          "$ref": "#/$defs/range"
+        },
+        "maxSlopeDegrees": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 60
+        },
+        "adjacentTo": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "visualIntent": {
+          "$ref": "#/$defs/visualIntent"
+        }
+      }
+    },
+    "visualIntent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["terrainFamily", "silhouette", "scatterFamilies", "scatterDensity"],
+      "properties": {
+        "terrainFamily": { "enum": ["coastal", "grassland", "woodland"] },
+        "silhouette": { "type": "string", "minLength": 1 },
+        "scatterFamilies": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "scatterDensity": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "connection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "fromRegionId",
+        "toRegionId",
+        "minimumWidthMeters",
+        "maximumSlopeDegrees",
+        "mandatory"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "fromRegionId": {
+          "type": "string"
+        },
+        "toRegionId": {
+          "type": "string"
+        },
+        "minimumWidthMeters": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maximumSlopeDegrees": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 45
+        },
+        "mandatory": {
+          "type": "boolean"
+        }
+      }
+    },
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "description"],
+      "properties": {
+        "kind": {
+          "enum": ["silhouette", "sound", "tracks", "wildlife", "light", "motion"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "regionId",
+        "offsetFromRegionAnchorMeters",
+        "mandatory",
+        "journeyOrder",
+        "progression",
+        "signals"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "type": {
+          "enum": [
+            "herd-trace",
+            "resting-hollow",
+            "overlook",
+            "wildlife-event",
+            "human-structure",
+            "shortcut",
+            "environmental-event"
+          ]
+        },
+        "regionId": {
+          "type": "string"
+        },
+        "offsetFromRegionAnchorMeters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "z"],
+          "properties": {
+            "x": { "type": "number" },
+            "z": { "type": "number" }
+          }
+        },
+        "mandatory": {
+          "type": "boolean"
+        },
+        "journeyOrder": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "progression": {
+          "$ref": "#/$defs/discoveryProgression"
+        },
+        "signals": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/signal"
+          }
+        }
+      }
+    },
+    "discoveryProgression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prerequisiteIds",
+        "reveal",
+        "visitRadiusMeters",
+        "completion",
+        "autosave"
+      ],
+      "properties": {
+        "prerequisiteIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "reveal": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "radiusMeters"],
+              "properties": {
+                "kind": { "const": "proximity" },
+                "radiusMeters": { "type": "number", "exclusiveMinimum": 0 }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind"],
+              "properties": { "kind": { "const": "event" } }
+            }
+          ]
+        },
+        "visitRadiusMeters": { "type": "number", "exclusiveMinimum": 0 },
+        "completion": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind"],
+              "properties": { "kind": { "enum": ["proximity", "call"] } }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "interaction"],
+              "properties": {
+                "kind": { "const": "interact" },
+                "interaction": { "enum": ["inspect", "rest"] }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "ticks"],
+              "properties": {
+                "kind": { "const": "linger" },
+                "ticks": { "type": "integer", "minimum": 1 }
+              }
+            }
+          ]
+        },
+        "autosave": { "type": "boolean" }
+      }
+    },
+    "journeyEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "anchorDiscoveryId",
+        "prerequisiteDiscoveryIds",
+        "triggerRadiusMeters",
+        "responseDelayTicks",
+        "revealDiscoveryIds"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "type": { "const": "call-response" },
+        "anchorDiscoveryId": { "type": "string" },
+        "prerequisiteDiscoveryIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "triggerRadiusMeters": { "type": "number", "exclusiveMinimum": 0 },
+        "responseDelayTicks": { "type": "integer", "minimum": 1 },
+        "revealDiscoveryIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

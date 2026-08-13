@@ -1,0 +1,848 @@
+{
+  "capturedAt": "2026-08-12T23:30:43.702Z",
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+  "stalls": [
+    {
+      "x": 29.07,
+      "y": 6.27,
+      "z": -183.94,
+      "speed": 16,
+      "regionId": "saltwind-coast"
+    }
+  ],
+  "consoleErrors": [],
+  "captures": [
+    {
+      "name": "01-arrival",
+      "note": "Opening frame on the storm beach; the place names itself",
+      "state": {
+        "frame": 12,
+        "elapsedSeconds": 1.0132999999999996,
+        "mode": "playing",
+        "tick": 60,
+        "position": {
+          "x": 13.583000183105469,
+          "y": 7.285099220275879,
+          "z": -163.83999633789062
+        },
+        "yaw": 0,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 60,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 13.583000183105469,
+            "y": 7.285099220275879,
+            "z": -163.83999633789062
+          },
+          "yaw": 0
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.300000000000001,
+        "cameraObstructed": false,
+        "drawCalls": 94,
+        "triangles": 199230,
+        "rigBodyHeight": 0.011911131601988456,
+        "rigSpineFlex": 0,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "saltwind-coast",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "02-shoreline",
+      "note": "Facing the sea from the coast: wet sand, surf band, haze",
+      "state": {
+        "frame": 37,
+        "elapsedSeconds": 2.9528000000000008,
+        "mode": "playing",
+        "tick": 177,
+        "position": {
+          "x": 13.583000183105469,
+          "y": 7.285099220275879,
+          "z": -163.83999633789062
+        },
+        "yaw": 0,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 177,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 13.583000183105469,
+            "y": 7.285099220275879,
+            "z": -163.83999633789062
+          },
+          "yaw": 0
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.299999999999999,
+        "cameraObstructed": false,
+        "drawCalls": 81,
+        "triangles": 108138,
+        "rigBodyHeight": -0.010588643807786376,
+        "rigSpineFlex": 0,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "saltwind-coast",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "03-boundary",
+      "note": "Held at the sea boundary on the compiled dry shelf",
+      "state": {
+        "frame": 1080,
+        "elapsedSeconds": 45.80829999999991,
+        "mode": "playing",
+        "tick": 2748,
+        "position": {
+          "x": 29.182016372680664,
+          "y": 0.15508968830108638,
+          "z": -222.8187255859375
+        },
+        "yaw": 3.115850030106918,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 2748,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 13.619211196899414,
+            "y": 7.2851001739501955,
+            "z": -163.7236785888672
+          },
+          "yaw": 0.4348399999999977
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.300000000000117,
+        "cameraObstructed": false,
+        "drawCalls": 79,
+        "triangles": 91754,
+        "rigBodyHeight": 0.008132496526135425,
+        "rigSpineFlex": 4.410050954800729e-19,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "saltwind-coast",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "04-coast-scatter",
+      "note": "Weathered rock and marram filling a coastal footprint",
+      "state": {
+        "frame": 1267,
+        "elapsedSeconds": 58.922999999999966,
+        "mode": "playing",
+        "tick": 3535,
+        "position": {
+          "x": 3.3514156341552734,
+          "y": 7.2162525177001955,
+          "z": -142.43197631835938
+        },
+        "yaw": -0.2942102554485295,
+        "speed": 0.8066666666666684,
+        "verticalVelocity": 0,
+        "gait": "walk",
+        "grounded": true,
+        "lastGroundedTick": 3535,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 13.619211196899414,
+            "y": 7.2851001739501955,
+            "z": -163.7236785888672
+          },
+          "yaw": 0.4348399999999977
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.403551237918412,
+        "cameraObstructed": false,
+        "drawCalls": 95,
+        "triangles": 199230,
+        "rigBodyHeight": 0.0067756939669172565,
+        "rigSpineFlex": 0.07483357230001647,
+        "debrisLive": 5,
+        "stage": "island",
+        "regionId": "saltwind-coast",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "05-gallop",
+      "note": "Full gallop along the storm beach",
+      "state": {
+        "frame": 1337,
+        "elapsedSeconds": 62.80379999999997,
+        "mode": "playing",
+        "tick": 3768,
+        "position": {
+          "x": 25.86248779296875,
+          "y": 8.487633895874023,
+          "z": -136.2697296142578
+        },
+        "yaw": 1.3447533180198974,
+        "speed": 14.350000000000039,
+        "verticalVelocity": 0,
+        "gait": "gallop",
+        "grounded": true,
+        "lastGroundedTick": 3768,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 13.619211196899414,
+            "y": 7.2851001739501955,
+            "z": -163.7236785888672
+          },
+          "yaw": 0.4348399999999977
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.968286811469984,
+        "cameraObstructed": false,
+        "drawCalls": 87,
+        "triangles": 149098,
+        "rigBodyHeight": -0.008650751363513676,
+        "rigSpineFlex": -0.11731279769777887,
+        "debrisLive": 16,
+        "stage": "island",
+        "regionId": "saltwind-coast",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "06-gallop-profile",
+      "note": "Gallop stride from the side, suspension phase (framed=true)",
+      "state": {
+        "frame": 1357,
+        "elapsedSeconds": 63.79849999999995,
+        "mode": "playing",
+        "tick": 3827,
+        "position": {
+          "x": 40.765724182128906,
+          "y": 8.766028594970702,
+          "z": -132.84242248535156
+        },
+        "yaw": 1.3447533180198974,
+        "speed": 16,
+        "verticalVelocity": 0,
+        "gait": "gallop",
+        "grounded": true,
+        "lastGroundedTick": 3827,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 13.619211196899414,
+            "y": 7.2851001739501955,
+            "z": -163.7236785888672
+          },
+          "yaw": 0.4348399999999977
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 7.161054230068673,
+        "cameraObstructed": false,
+        "drawCalls": 84,
+        "triangles": 124522,
+        "rigBodyHeight": 0.29288930299722254,
+        "rigSpineFlex": 0.1580451305280878,
+        "debrisLive": 16,
+        "stage": "island",
+        "regionId": "saltwind-coast",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "07-safe-route",
+      "note": "On the worn safe route climbing off the coast",
+      "state": {
+        "frame": 1807,
+        "elapsedSeconds": 90.1148999999999,
+        "mode": "playing",
+        "tick": 5406,
+        "position": {
+          "x": 17.696449279785156,
+          "y": 14.384151649475097,
+          "z": -91.22173309326172
+        },
+        "yaw": 0.027185942240318894,
+        "speed": 5,
+        "verticalVelocity": 0,
+        "gait": "trot",
+        "grounded": true,
+        "lastGroundedTick": 5406,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 13.619211196899414,
+            "y": 7.2851001739501955,
+            "z": -163.7236785888672
+          },
+          "yaw": 0.4348399999999977
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.58125,
+        "cameraObstructed": false,
+        "drawCalls": 93,
+        "triangles": 182846,
+        "rigBodyHeight": 0.06383765294513057,
+        "rigSpineFlex": 0.039009616560965084,
+        "debrisLive": 6,
+        "stage": "island",
+        "regionId": "longgrass-opening",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "08-longgrass",
+      "note": "The longgrass opening and its boulder rhythms, from the route",
+      "state": {
+        "frame": 2094,
+        "elapsedSeconds": 108.83629999999971,
+        "mode": "playing",
+        "tick": 6530,
+        "position": {
+          "x": 16.029006958007812,
+          "y": 22.035094451904296,
+          "z": -11.668192863464355
+        },
+        "yaw": -0.035198448953350336,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 6530,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 16.029006958007812,
+            "y": 22.035094451904296,
+            "z": -11.668192863464355
+          },
+          "yaw": -0.035198448953350336
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.300350978602322,
+        "cameraObstructed": false,
+        "drawCalls": 88,
+        "triangles": 165482,
+        "rigBodyHeight": -0.0009475799912140185,
+        "rigSpineFlex": 0.000014200496339383738,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "longgrass-opening",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "09-fernwood-approach",
+      "note": "The fern edge rising ahead of the plain",
+      "state": {
+        "frame": 2450,
+        "elapsedSeconds": 127.74109999999979,
+        "mode": "playing",
+        "tick": 7664,
+        "position": {
+          "x": -2.2976837158203125,
+          "y": 30.220936965942382,
+          "z": 74.96744537353516
+        },
+        "yaw": -0.16698734060946663,
+        "speed": 5,
+        "verticalVelocity": 0,
+        "gait": "trot",
+        "grounded": true,
+        "lastGroundedTick": 7664,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 16.011072158813477,
+            "y": 22.035098266601562,
+            "z": -11.590622901916504
+          },
+          "yaw": -0.26295695026800026
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.581249999999999,
+        "cameraObstructed": false,
+        "drawCalls": 89,
+        "triangles": 142846,
+        "rigBodyHeight": -0.02525879267598055,
+        "rigSpineFlex": -0.026364006424377244,
+        "debrisLive": 12,
+        "stage": "island",
+        "regionId": "longgrass-opening",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "10-fernwood-camera",
+      "note": "In the fernwood, no obstruction registered",
+      "state": {
+        "frame": 2832,
+        "elapsedSeconds": 146.94210000000007,
+        "mode": "playing",
+        "tick": 8816,
+        "position": {
+          "x": -10.319600105285645,
+          "y": 36.035098266601565,
+          "z": 139.03265380859375
+        },
+        "yaw": -0.08657170666995206,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 8816,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": -10.319600105285645,
+            "y": 36.035098266601565,
+            "z": 139.03265380859375
+          },
+          "yaw": -0.08657170666995206
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.300000007195536,
+        "cameraObstructed": false,
+        "drawCalls": 84,
+        "triangles": 118250,
+        "rigBodyHeight": 0.002891444242402799,
+        "rigSpineFlex": 2.1068698071258752e-13,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "fernwood-edge",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "11-overlook",
+      "note": "The overlook cairn on the fernwood ridge",
+      "state": {
+        "frame": 2924,
+        "elapsedSeconds": 152.75760000000008,
+        "mode": "playing",
+        "tick": 9165,
+        "position": {
+          "x": -4.8080596923828125,
+          "y": 36.035098266601565,
+          "z": 134.40467834472656
+        },
+        "yaw": 2.576795591887741,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 9165,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": -4.8080596923828125,
+            "y": 36.035098266601565,
+            "z": 134.40467834472656
+          },
+          "yaw": 2.576795591887741
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.305307597199152,
+        "cameraObstructed": false,
+        "drawCalls": 93,
+        "triangles": 183806,
+        "rigBodyHeight": -0.011928968495242291,
+        "rigSpineFlex": 0.0016204028122795877,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "fernwood-edge",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "12-long-view",
+      "note": "The long view back down the island from the overlook",
+      "state": {
+        "frame": 2955,
+        "elapsedSeconds": 155.07600000000005,
+        "mode": "playing",
+        "tick": 9304,
+        "position": {
+          "x": -4.8080596923828125,
+          "y": 36.035098266601565,
+          "z": 134.40467834472656
+        },
+        "yaw": 2.576795591887741,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 9304,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": -4.8080596923828125,
+            "y": 36.035098266601565,
+            "z": 134.40467834472656
+          },
+          "yaw": 2.576795591887741
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.3000050616600705,
+        "cameraObstructed": false,
+        "drawCalls": 95,
+        "triangles": 200190,
+        "rigBodyHeight": 0.01152407644740662,
+        "rigSpineFlex": 1.4870925088520883e-8,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "fernwood-edge",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "13-spring",
+      "note": "The spring: still water ringed with stone",
+      "state": {
+        "frame": 2980,
+        "elapsedSeconds": 157.05200000000005,
+        "mode": "playing",
+        "tick": 9423,
+        "position": {
+          "x": -4.8080596923828125,
+          "y": 36.035098266601565,
+          "z": 134.40467834472656
+        },
+        "yaw": 2.576795591887741,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 9423,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": -4.8080596923828125,
+            "y": 36.035098266601565,
+            "z": 134.40467834472656
+          },
+          "yaw": 2.576795591887741
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.300000013483271,
+        "cameraObstructed": false,
+        "drawCalls": 95,
+        "triangles": 200190,
+        "rigBodyHeight": -0.011993333561224378,
+        "rigSpineFlex": 7.599829444840065e-13,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "fernwood-edge",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "14-herd-trace",
+      "note": "Where the herd rested: the debris they left",
+      "state": {
+        "frame": 3005,
+        "elapsedSeconds": 159.03940000000011,
+        "mode": "playing",
+        "tick": 9542,
+        "position": {
+          "x": -4.8080596923828125,
+          "y": 36.035098266601565,
+          "z": 134.40467834472656
+        },
+        "yaw": 2.576795591887741,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 9542,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": -4.8080596923828125,
+            "y": 36.035098266601565,
+            "z": 134.40467834472656
+          },
+          "yaw": 2.576795591887741
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.30000000003471,
+        "cameraObstructed": false,
+        "drawCalls": 95,
+        "triangles": 200190,
+        "rigBodyHeight": 0.011341007382872009,
+        "rigSpineFlex": 3.657762422972857e-17,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "fernwood-edge",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "15-diagnostics",
+      "note": "Diagnostics overlay on compiled ground",
+      "state": {
+        "frame": 3021,
+        "elapsedSeconds": 160.35260000000014,
+        "mode": "playing",
+        "tick": 9621,
+        "position": {
+          "x": -4.8080596923828125,
+          "y": 36.035098266601565,
+          "z": 134.40467834472656
+        },
+        "yaw": 2.576795591887741,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 9621,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": -4.8080596923828125,
+            "y": 36.035098266601565,
+            "z": 134.40467834472656
+          },
+          "yaw": 2.576795591887741
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.300000000000675,
+        "cameraObstructed": false,
+        "drawCalls": 95,
+        "triangles": 200190,
+        "rigBodyHeight": 0.0003103488404382461,
+        "rigSpineFlex": 5.131198652994197e-20,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "fernwood-edge",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "16-idle",
+      "note": "Standing still",
+      "state": {
+        "frame": 3061,
+        "elapsedSeconds": 163.62970000000013,
+        "mode": "playing",
+        "tick": 9817,
+        "position": {
+          "x": -4.8080596923828125,
+          "y": 36.035098266601565,
+          "z": 134.40467834472656
+        },
+        "yaw": 2.576795591887741,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 9817,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": -4.8080596923828125,
+            "y": 36.035098266601565,
+            "z": 134.40467834472656
+          },
+          "yaw": 2.576795591887741
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.3,
+        "cameraObstructed": false,
+        "drawCalls": 95,
+        "triangles": 200190,
+        "rigBodyHeight": 0.011983778864784229,
+        "rigSpineFlex": 3.9427299937514366e-27,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "fernwood-edge",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "17-profile",
+      "note": "Horse silhouette against compiled terrain",
+      "state": {
+        "frame": 3102,
+        "elapsedSeconds": 166.44140000000016,
+        "mode": "playing",
+        "tick": 9986,
+        "position": {
+          "x": -4.8080596923828125,
+          "y": 36.035098266601565,
+          "z": 134.40467834472656
+        },
+        "yaw": 2.576795591887741,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 9986,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": -4.8080596923828125,
+            "y": 36.035098266601565,
+            "z": 134.40467834472656
+          },
+          "yaw": 2.576795591887741
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.300000000000001,
+        "cameraObstructed": false,
+        "drawCalls": 91,
+        "triangles": 167422,
+        "rigBodyHeight": -0.008123827570407383,
+        "rigSpineFlex": 3.130698291160223e-33,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "fernwood-edge",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    },
+    {
+      "name": "18-pause",
+      "note": "Pause and settings surface",
+      "state": {
+        "frame": 3116,
+        "elapsedSeconds": 167.3908000000002,
+        "mode": "paused",
+        "tick": 10013,
+        "position": {
+          "x": -4.8080596923828125,
+          "y": 36.035098266601565,
+          "z": 134.40467834472656
+        },
+        "yaw": 2.576795591887741,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 10013,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": -4.8080596923828125,
+            "y": 36.035098266601565,
+            "z": 134.40467834472656
+          },
+          "yaw": 2.576795591887741
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "cameraDistance": 6.300000000000001,
+        "cameraObstructed": false,
+        "drawCalls": 91,
+        "triangles": 167422,
+        "rigBodyHeight": 0.006913528352311549,
+        "rigSpineFlex": 2.669189493739242e-35,
+        "debrisLive": 0,
+        "stage": "island",
+        "regionId": "fernwood-edge",
+        "manifestHash": "fnv1a64-cc64b1b23cf41f15",
+        "terrainTriangles": 131072,
+        "sceneryElements": 123,
+        "boundaryRadius": 225.28
+      }
+    }
+  ]
+}

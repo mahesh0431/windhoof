@@ -1,0 +1,81 @@
+{
+  "manifestHash": "fnv1a64-75ef4f476903558d",
+  "overlook": {
+    "id": "first-overlook",
+    "kind": "overlook",
+    "mandatory": true,
+    "visitRadiusMeters": 14,
+    "position": {
+      "x": 89.7,
+      "y": 18,
+      "z": 90.2
+    }
+  },
+  "standing": {
+    "position": {
+      "x": 87.87274932861328,
+      "y": 17.89111442565918,
+      "z": 84.13114166259766
+    },
+    "regionId": "fernwood-edge",
+    "grounded": true,
+    "cameraDistance": 6.308437830503154,
+    "cameraObstructed": false
+  },
+  "bearings": [
+    {
+      "angleDegrees": 0,
+      "horizonFraction": 0
+    },
+    {
+      "angleDegrees": 45,
+      "horizonFraction": 0
+    },
+    {
+      "angleDegrees": 90,
+      "horizonFraction": 0
+    },
+    {
+      "angleDegrees": 135,
+      "horizonFraction": 0
+    },
+    {
+      "angleDegrees": 180,
+      "horizonFraction": 0
+    },
+    {
+      "angleDegrees": 225,
+      "horizonFraction": 0
+    },
+    {
+      "angleDegrees": 270,
+      "horizonFraction": 0
+    },
+    {
+      "angleDegrees": 315,
+      "horizonFraction": 0
+    }
+  ],
+  "skyMean": 0,
+  "audio": {
+    "muted": true,
+    "contextsConstructed": 0,
+    "contextCreated": false,
+    "running": false
+  },
+  "screenshots": [
+    "overlook-view-inland.png",
+    "overlook-view-seaward.png"
+  ],
+  "problems": [
+    "only 0% of the view is open on average; this does not read as high ground"
+  ],
+  "verdict": [
+    "overlook (89.7, 18.0, 90.2)",
+    "standing y=17.9 region=fernwood-edge grounded=true cameraObstructed=false",
+    "open view: mean 0% over 8 bearings",
+    "audio contexts: 0",
+    "VERDICT: FAILED\n  only 0% of the view is open on average; this does not read as high ground"
+  ],
+  "consoleErrors": []
+}

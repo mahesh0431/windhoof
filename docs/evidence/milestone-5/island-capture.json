@@ -1,0 +1,1088 @@
+{
+  "budgetSeconds": 540,
+  "captureBudgetSeconds": 25,
+  "manifestHash": "fnv1a64-2eae5335cb5544fc",
+  "bootMilliseconds": 6883,
+  "chunks": {
+    "mode": "full-world",
+    "totalChunks": 64,
+    "requestedChunks": 0,
+    "preparedChunks": 0,
+    "activeChunks": 64,
+    "cooldownChunks": 0,
+    "disposedChunks": 0,
+    "physicsReadyChunks": 64,
+    "renderReadyChunks": 64,
+    "physicsRetains": 64,
+    "renderRetains": 64,
+    "longestPreparationMilliseconds": 9.199999988079071,
+    "totalPreparationMilliseconds": 231.20000004768372
+  },
+  "preparation": {
+    "jobCount": 183,
+    "longestMilliseconds": 27,
+    "longestName": "ground-cover-island-tufts",
+    "totalMilliseconds": 986.6999998092651
+  },
+  "worstJobs": [
+    "ground-cover-island-tufts 27.0ms",
+    "field-route-distance-47 9.9ms",
+    "field-route-distance-53 9.9ms",
+    "field-route-distance-46 9.8ms",
+    "field-route-distance-50 9.8ms",
+    "field-route-distance-51 9.8ms",
+    "field-route-distance-54 9.8ms",
+    "field-route-distance-56 9.7ms",
+    "field-route-distance-57 9.7ms",
+    "field-route-distance-43 9.6ms"
+  ],
+  "draws": {
+    "boot": 178,
+    "end": 178
+  },
+  "triangles": {
+    "boot": 674311,
+    "end": 674311
+  },
+  "groundCover": {
+    "tufts": 223923,
+    "triangles": 683166
+  },
+  "audio": {
+    "muted": true,
+    "contextsConstructed": 0
+  },
+  "unhandled": [],
+  "graphics": {
+    "exercised": true,
+    "seen": [
+      "ready",
+      "context-lost",
+      "restored-paused",
+      "ready"
+    ],
+    "resumedByPlayerButton": true,
+    "frameAfter": 347
+  },
+  "summary": [
+    "manifest fnv1a64-2eae5335cb5544fc  boot 6.9s",
+    "chunks 64/64  jobs 183 worst ground-cover-island-tufts 27.0ms",
+    "draws 178 -> 178   triangles 674311 -> 674311",
+    "ground cover 223923 tufts / 683166 triangles",
+    "audio contexts 0",
+    "  job ground-cover-island-tufts 27.0ms",
+    "  job field-route-distance-47 9.9ms",
+    "  job field-route-distance-53 9.9ms",
+    "  job field-route-distance-46 9.8ms",
+    "  job field-route-distance-50 9.8ms",
+    "  job field-route-distance-51 9.8ms",
+    "  job field-route-distance-54 9.8ms",
+    "  job field-route-distance-56 9.7ms",
+    "  job field-route-distance-57 9.7ms",
+    "  job field-route-distance-43 9.6ms"
+  ],
+  "captures": [
+    {
+      "label": "region-01-saltwind-coast-a",
+      "subject": "saltwind-coast",
+      "kind": "region",
+      "at": {
+        "x": 0,
+        "z": -340
+      },
+      "placement": {
+        "from": {
+          "x": 54.8,
+          "y": 21.7,
+          "z": -275
+        },
+        "lookAt": {
+          "x": 0,
+          "y": 12,
+          "z": -340
+        },
+        "groundAtSubject": 6,
+        "groundAtEye": 7.7,
+        "bearing": 0.7
+      },
+      "seconds": 3.5,
+      "drawCalls": 105,
+      "triangles": 300020
+    },
+    {
+      "label": "region-01-saltwind-coast-b",
+      "subject": "saltwind-coast",
+      "kind": "region",
+      "at": {
+        "x": 0,
+        "z": -340
+      },
+      "placement": {
+        "from": {
+          "x": -76.8,
+          "y": 20.3,
+          "z": -303.5
+        },
+        "lookAt": {
+          "x": 0,
+          "y": 12,
+          "z": -340
+        },
+        "groundAtSubject": 6,
+        "groundAtEye": 6.3,
+        "bearing": 5.16
+      },
+      "seconds": 3.5,
+      "drawCalls": 110,
+      "triangles": 363903
+    },
+    {
+      "label": "region-02-longgrass-plain-a",
+      "subject": "longgrass-plain",
+      "kind": "region",
+      "at": {
+        "x": 310,
+        "z": -120
+      },
+      "placement": {
+        "from": {
+          "x": 364.8,
+          "y": 36,
+          "z": -55
+        },
+        "lookAt": {
+          "x": 310,
+          "y": 28,
+          "z": -120
+        },
+        "groundAtSubject": 22,
+        "groundAtEye": 7.9,
+        "bearing": 0.7
+      },
+      "seconds": 5.1,
+      "drawCalls": 136,
+      "triangles": 614500
+    },
+    {
+      "label": "region-02-longgrass-plain-b",
+      "subject": "longgrass-plain",
+      "kind": "region",
+      "at": {
+        "x": 310,
+        "z": -120
+      },
+      "placement": {
+        "from": {
+          "x": 338.5,
+          "y": 36,
+          "z": -200.1
+        },
+        "lookAt": {
+          "x": 310,
+          "y": 28,
+          "z": -120
+        },
+        "groundAtSubject": 22,
+        "groundAtEye": 4.8,
+        "bearing": 2.8
+      },
+      "seconds": 5.3,
+      "drawCalls": 110,
+      "triangles": 640162
+    },
+    {
+      "label": "region-03-fernwood-a",
+      "subject": "fernwood",
+      "kind": "region",
+      "at": {
+        "x": 275,
+        "z": 220
+      },
+      "placement": {
+        "from": {
+          "x": 340,
+          "y": 46,
+          "z": 165.2
+        },
+        "lookAt": {
+          "x": 275,
+          "y": 38,
+          "z": 220
+        },
+        "groundAtSubject": 32,
+        "groundAtEye": 10,
+        "bearing": 2.27
+      },
+      "seconds": 4.6,
+      "drawCalls": 88,
+      "triangles": 492711
+    },
+    {
+      "label": "region-03-fernwood-b",
+      "subject": "fernwood",
+      "kind": "region",
+      "at": {
+        "x": 275,
+        "z": 220
+      },
+      "placement": {
+        "from": {
+          "x": 303.5,
+          "y": 46,
+          "z": 139.9
+        },
+        "lookAt": {
+          "x": 275,
+          "y": 38,
+          "z": 220
+        },
+        "groundAtSubject": 32,
+        "groundAtEye": 14.8,
+        "bearing": 2.8
+      },
+      "seconds": 4.2,
+      "drawCalls": 68,
+      "triangles": 407770
+    },
+    {
+      "label": "region-04-river-hollow-a",
+      "subject": "river-hollow",
+      "kind": "region",
+      "at": {
+        "x": -260,
+        "z": 220
+      },
+      "placement": {
+        "from": {
+          "x": -205.2,
+          "y": 28,
+          "z": 285
+        },
+        "lookAt": {
+          "x": -260,
+          "y": 20,
+          "z": 220
+        },
+        "groundAtSubject": 14,
+        "groundAtEye": 9.8,
+        "bearing": 0.7
+      },
+      "seconds": 4.1,
+      "drawCalls": 80,
+      "triangles": 477006
+    },
+    {
+      "label": "region-04-river-hollow-b",
+      "subject": "river-hollow",
+      "kind": "region",
+      "at": {
+        "x": -260,
+        "z": 220
+      },
+      "placement": {
+        "from": {
+          "x": -231.5,
+          "y": 28.9,
+          "z": 139.9
+        },
+        "lookAt": {
+          "x": -260,
+          "y": 20,
+          "z": 220
+        },
+        "groundAtSubject": 14,
+        "groundAtEye": 14.9,
+        "bearing": 2.8
+      },
+      "seconds": 3.7,
+      "drawCalls": 58,
+      "triangles": 332004
+    },
+    {
+      "label": "region-05-blackstone-crown-a",
+      "subject": "blackstone-crown",
+      "kind": "region",
+      "at": {
+        "x": 0,
+        "z": 80
+      },
+      "placement": {
+        "from": {
+          "x": 54.8,
+          "y": 82,
+          "z": 145
+        },
+        "lookAt": {
+          "x": 0,
+          "y": 74,
+          "z": 80
+        },
+        "groundAtSubject": 68,
+        "groundAtEye": 40.6,
+        "bearing": 0.7
+      },
+      "seconds": 4.7,
+      "drawCalls": 128,
+      "triangles": 587501
+    },
+    {
+      "label": "region-05-blackstone-crown-b",
+      "subject": "blackstone-crown",
+      "kind": "region",
+      "at": {
+        "x": 0,
+        "z": 80
+      },
+      "placement": {
+        "from": {
+          "x": 28.5,
+          "y": 82,
+          "z": -0.1
+        },
+        "lookAt": {
+          "x": 0,
+          "y": 74,
+          "z": 80
+        },
+        "groundAtSubject": 68,
+        "groundAtEye": 39.3,
+        "bearing": 2.8
+      },
+      "seconds": 4.8,
+      "drawCalls": 82,
+      "triangles": 516763
+    },
+    {
+      "label": "scene-storm-beach-hoofprints-a",
+      "subject": "storm-beach-hoofprints",
+      "kind": "herd-trace",
+      "at": {
+        "x": -70,
+        "z": -320
+      },
+      "placement": {
+        "from": {
+          "x": -44.9,
+          "y": 12.5,
+          "z": -313
+        },
+        "lookAt": {
+          "x": -70,
+          "y": 8.3,
+          "z": -320
+        },
+        "groundAtSubject": 6.5,
+        "groundAtEye": 5.2,
+        "bearing": 1.3
+      },
+      "seconds": 3.7,
+      "drawCalls": 64,
+      "triangles": 317366
+    },
+    {
+      "label": "scene-storm-beach-hoofprints-b",
+      "subject": "storm-beach-hoofprints",
+      "kind": "herd-trace",
+      "at": {
+        "x": -70,
+        "z": -320
+      },
+      "placement": {
+        "from": {
+          "x": -92.5,
+          "y": 12.5,
+          "z": -333.1
+        },
+        "lookAt": {
+          "x": -70,
+          "y": 8.3,
+          "z": -320
+        },
+        "groundAtSubject": 6.5,
+        "groundAtEye": 4.7,
+        "bearing": 4.19
+      },
+      "seconds": 4.4,
+      "drawCalls": 149,
+      "triangles": 568889
+    },
+    {
+      "label": "scene-storm-beach-hoofprints-c",
+      "subject": "storm-beach-hoofprints",
+      "kind": "herd-trace",
+      "at": {
+        "x": -70,
+        "z": -320
+      },
+      "placement": {
+        "from": {
+          "x": -88.3,
+          "y": 12.5,
+          "z": -301.6
+        },
+        "lookAt": {
+          "x": -70,
+          "y": 8.3,
+          "z": -320
+        },
+        "groundAtSubject": 6.5,
+        "groundAtEye": 6.3,
+        "bearing": 5.5
+      },
+      "seconds": 3.4,
+      "drawCalls": 102,
+      "triangles": 323148
+    },
+    {
+      "label": "scene-longgrass-resting-circle-trace-a",
+      "subject": "longgrass-resting-circle-trace",
+      "kind": "herd-trace",
+      "at": {
+        "x": 230,
+        "z": -70
+      },
+      "placement": {
+        "from": {
+          "x": 255.1,
+          "y": 37.7,
+          "z": -63
+        },
+        "lookAt": {
+          "x": 230,
+          "y": 17.9,
+          "z": -70
+        },
+        "groundAtSubject": 16.1,
+        "groundAtEye": 31.7,
+        "bearing": 1.3
+      },
+      "seconds": 5.3,
+      "drawCalls": 101,
+      "triangles": 685513
+    },
+    {
+      "label": "scene-longgrass-resting-circle-trace-b",
+      "subject": "longgrass-resting-circle-trace",
+      "kind": "herd-trace",
+      "at": {
+        "x": 230,
+        "z": -70
+      },
+      "placement": {
+        "from": {
+          "x": 223.4,
+          "y": 22.1,
+          "z": -95.1
+        },
+        "lookAt": {
+          "x": 230,
+          "y": 17.9,
+          "z": -70
+        },
+        "groundAtSubject": 16.1,
+        "groundAtEye": 15.4,
+        "bearing": 3.4
+      },
+      "seconds": 5,
+      "drawCalls": 82,
+      "triangles": 497790
+    },
+    {
+      "label": "scene-longgrass-resting-circle-trace-c",
+      "subject": "longgrass-resting-circle-trace",
+      "kind": "herd-trace",
+      "at": {
+        "x": 230,
+        "z": -70
+      },
+      "placement": {
+        "from": {
+          "x": 211.7,
+          "y": 22.1,
+          "z": -51.6
+        },
+        "lookAt": {
+          "x": 230,
+          "y": 17.9,
+          "z": -70
+        },
+        "groundAtSubject": 16.1,
+        "groundAtEye": 14.5,
+        "bearing": 5.5
+      },
+      "seconds": 4.5,
+      "drawCalls": 66,
+      "triangles": 411326
+    },
+    {
+      "label": "scene-fernwood-caught-hair-a",
+      "subject": "fernwood-caught-hair",
+      "kind": "herd-trace",
+      "at": {
+        "x": 215,
+        "z": 170
+      },
+      "placement": {
+        "from": {
+          "x": 240.1,
+          "y": 30.7,
+          "z": 177
+        },
+        "lookAt": {
+          "x": 215,
+          "y": 24.9,
+          "z": 170
+        },
+        "groundAtSubject": 23.1,
+        "groundAtEye": 24.7,
+        "bearing": 1.3
+      },
+      "seconds": 4.6,
+      "drawCalls": 120,
+      "triangles": 716442
+    },
+    {
+      "label": "scene-fernwood-caught-hair-b",
+      "subject": "fernwood-caught-hair",
+      "kind": "herd-trace",
+      "at": {
+        "x": 215,
+        "z": 170
+      },
+      "placement": {
+        "from": {
+          "x": 208.4,
+          "y": 29.1,
+          "z": 144.9
+        },
+        "lookAt": {
+          "x": 215,
+          "y": 24.9,
+          "z": 170
+        },
+        "groundAtSubject": 23.1,
+        "groundAtEye": 19.9,
+        "bearing": 3.4
+      },
+      "seconds": 4.8,
+      "drawCalls": 72,
+      "triangles": 376888
+    },
+    {
+      "label": "scene-fernwood-caught-hair-c",
+      "subject": "fernwood-caught-hair",
+      "kind": "herd-trace",
+      "at": {
+        "x": 215,
+        "z": 170
+      },
+      "placement": {
+        "from": {
+          "x": 196.7,
+          "y": 47.7,
+          "z": 188.4
+        },
+        "lookAt": {
+          "x": 215,
+          "y": 24.9,
+          "z": 170
+        },
+        "groundAtSubject": 23.1,
+        "groundAtEye": 41.7,
+        "bearing": 5.5
+      },
+      "seconds": 4,
+      "drawCalls": 82,
+      "triangles": 472613
+    },
+    {
+      "label": "scene-river-spring-tracks-a",
+      "subject": "river-spring-tracks",
+      "kind": "herd-trace",
+      "at": {
+        "x": -195,
+        "z": 160
+      },
+      "placement": {
+        "from": {
+          "x": -169.9,
+          "y": 33.3,
+          "z": 167
+        },
+        "lookAt": {
+          "x": -195,
+          "y": 17.3,
+          "z": 160
+        },
+        "groundAtSubject": 15.5,
+        "groundAtEye": 27.3,
+        "bearing": 1.3
+      },
+      "seconds": 4.3,
+      "drawCalls": 71,
+      "triangles": 416255
+    },
+    {
+      "label": "scene-river-spring-tracks-b",
+      "subject": "river-spring-tracks",
+      "kind": "herd-trace",
+      "at": {
+        "x": -195,
+        "z": 160
+      },
+      "placement": {
+        "from": {
+          "x": -201.6,
+          "y": 21.5,
+          "z": 134.9
+        },
+        "lookAt": {
+          "x": -195,
+          "y": 17.3,
+          "z": 160
+        },
+        "groundAtSubject": 15.5,
+        "groundAtEye": 15,
+        "bearing": 3.4
+      },
+      "seconds": 4.3,
+      "drawCalls": 74,
+      "triangles": 453824
+    },
+    {
+      "label": "scene-river-spring-tracks-c",
+      "subject": "river-spring-tracks",
+      "kind": "herd-trace",
+      "at": {
+        "x": -195,
+        "z": 160
+      },
+      "placement": {
+        "from": {
+          "x": -213.3,
+          "y": 21.5,
+          "z": 178.4
+        },
+        "lookAt": {
+          "x": -195,
+          "y": 17.3,
+          "z": 160
+        },
+        "groundAtSubject": 15.5,
+        "groundAtEye": 14.9,
+        "bearing": 5.5
+      },
+      "seconds": 4.6,
+      "drawCalls": 157,
+      "triangles": 712181
+    },
+    {
+      "label": "scene-blackstone-living-herd-a",
+      "subject": "blackstone-living-herd",
+      "kind": "herd-trace",
+      "at": {
+        "x": 0,
+        "z": 115
+      },
+      "placement": {
+        "from": {
+          "x": 25.1,
+          "y": 67.6,
+          "z": 122
+        },
+        "lookAt": {
+          "x": 0,
+          "y": 63.4,
+          "z": 115
+        },
+        "groundAtSubject": 61.6,
+        "groundAtEye": 56.5,
+        "bearing": 1.3
+      },
+      "seconds": 5.4,
+      "drawCalls": 88,
+      "triangles": 567156
+    },
+    {
+      "label": "scene-blackstone-living-herd-b",
+      "subject": "blackstone-living-herd",
+      "kind": "herd-trace",
+      "at": {
+        "x": 0,
+        "z": 115
+      },
+      "placement": {
+        "from": {
+          "x": -6.6,
+          "y": 72.2,
+          "z": 89.9
+        },
+        "lookAt": {
+          "x": 0,
+          "y": 63.4,
+          "z": 115
+        },
+        "groundAtSubject": 61.6,
+        "groundAtEye": 66.2,
+        "bearing": 3.4
+      },
+      "seconds": 4.9,
+      "drawCalls": 73,
+      "triangles": 485185
+    },
+    {
+      "label": "scene-blackstone-living-herd-c",
+      "subject": "blackstone-living-herd",
+      "kind": "herd-trace",
+      "at": {
+        "x": 0,
+        "z": 115
+      },
+      "placement": {
+        "from": {
+          "x": -18.3,
+          "y": 67.6,
+          "z": 133.4
+        },
+        "lookAt": {
+          "x": 0,
+          "y": 63.4,
+          "z": 115
+        },
+        "groundAtSubject": 61.6,
+        "groundAtEye": 53.4,
+        "bearing": 5.5
+      },
+      "seconds": 5.2,
+      "drawCalls": 136,
+      "triangles": 622795
+    },
+    {
+      "label": "scene-longgrass-resting-hollow-a",
+      "subject": "longgrass-resting-hollow",
+      "kind": "resting-hollow",
+      "at": {
+        "x": 340,
+        "z": -190
+      },
+      "placement": {
+        "from": {
+          "x": 327.2,
+          "y": 11.5,
+          "z": -212.6
+        },
+        "lookAt": {
+          "x": 340,
+          "y": 7.3,
+          "z": -190
+        },
+        "groundAtSubject": 5.5,
+        "groundAtEye": 4.6,
+        "bearing": 3.66
+      },
+      "seconds": 4.9,
+      "drawCalls": 75,
+      "triangles": 417693
+    },
+    {
+      "label": "scene-longgrass-resting-hollow-b",
+      "subject": "longgrass-resting-hollow",
+      "kind": "resting-hollow",
+      "at": {
+        "x": 340,
+        "z": -190
+      },
+      "placement": {
+        "from": {
+          "x": 317.5,
+          "y": 12.5,
+          "z": -203.1
+        },
+        "lookAt": {
+          "x": 340,
+          "y": 7.3,
+          "z": -190
+        },
+        "groundAtSubject": 5.5,
+        "groundAtEye": 6.5,
+        "bearing": 4.19
+      },
+      "seconds": 3.2,
+      "drawCalls": 53,
+      "triangles": 309554
+    },
+    {
+      "label": "scene-longgrass-resting-hollow-c",
+      "subject": "longgrass-resting-hollow",
+      "kind": "resting-hollow",
+      "at": {
+        "x": 340,
+        "z": -190
+      },
+      "placement": {
+        "from": {
+          "x": 321.7,
+          "y": 15.3,
+          "z": -171.6
+        },
+        "lookAt": {
+          "x": 340,
+          "y": 7.3,
+          "z": -190
+        },
+        "groundAtSubject": 5.5,
+        "groundAtEye": 9.3,
+        "bearing": 5.5
+      },
+      "seconds": 2.4,
+      "drawCalls": 45,
+      "triangles": 233529
+    },
+    {
+      "label": "scene-river-spring-hollow-a",
+      "subject": "river-spring-hollow",
+      "kind": "resting-hollow",
+      "at": {
+        "x": -300,
+        "z": 220
+      },
+      "placement": {
+        "from": {
+          "x": -274.9,
+          "y": 13.7,
+          "z": 227
+        },
+        "lookAt": {
+          "x": -300,
+          "y": 8.3,
+          "z": 220
+        },
+        "groundAtSubject": 6.5,
+        "groundAtEye": 7.7,
+        "bearing": 1.3
+      },
+      "seconds": 3.2,
+      "drawCalls": 58,
+      "triangles": 314632
+    },
+    {
+      "label": "scene-river-spring-hollow-b",
+      "subject": "river-spring-hollow",
+      "kind": "resting-hollow",
+      "at": {
+        "x": -300,
+        "z": 220
+      },
+      "placement": {
+        "from": {
+          "x": -306.6,
+          "y": 13.4,
+          "z": 194.9
+        },
+        "lookAt": {
+          "x": -300,
+          "y": 8.3,
+          "z": 220
+        },
+        "groundAtSubject": 6.5,
+        "groundAtEye": 7.4,
+        "bearing": 3.4
+      },
+      "seconds": 2.9,
+      "drawCalls": 60,
+      "triangles": 328669
+    },
+    {
+      "label": "scene-river-spring-hollow-c",
+      "subject": "river-spring-hollow",
+      "kind": "resting-hollow",
+      "at": {
+        "x": -300,
+        "z": 220
+      },
+      "placement": {
+        "from": {
+          "x": -299.9,
+          "y": 12.5,
+          "z": 246
+        },
+        "lookAt": {
+          "x": -300,
+          "y": 8.3,
+          "z": 220
+        },
+        "groundAtSubject": 6.5,
+        "groundAtEye": 5.1,
+        "bearing": 6.29
+      },
+      "seconds": 5,
+      "drawCalls": 139,
+      "triangles": 608200
+    },
+    {
+      "label": "scene-fernwood-river-shortcut-a",
+      "subject": "fernwood-river-shortcut",
+      "kind": "shortcut",
+      "at": {
+        "x": 155,
+        "z": 240
+      },
+      "placement": {
+        "from": {
+          "x": 180.1,
+          "y": 25,
+          "z": 247
+        },
+        "lookAt": {
+          "x": 155,
+          "y": 20.8,
+          "z": 240
+        },
+        "groundAtSubject": 19,
+        "groundAtEye": 18.3,
+        "bearing": 1.3
+      },
+      "seconds": 4.9,
+      "drawCalls": 97,
+      "triangles": 632352
+    },
+    {
+      "label": "scene-fernwood-river-shortcut-b",
+      "subject": "fernwood-river-shortcut",
+      "kind": "shortcut",
+      "at": {
+        "x": 155,
+        "z": 240
+      },
+      "placement": {
+        "from": {
+          "x": 148.4,
+          "y": 25,
+          "z": 214.9
+        },
+        "lookAt": {
+          "x": 155,
+          "y": 20.8,
+          "z": 240
+        },
+        "groundAtSubject": 19,
+        "groundAtEye": 18.1,
+        "bearing": 3.4
+      },
+      "seconds": 3.9,
+      "drawCalls": 55,
+      "triangles": 319343
+    },
+    {
+      "label": "scene-fernwood-river-shortcut-c",
+      "subject": "fernwood-river-shortcut",
+      "kind": "shortcut",
+      "at": {
+        "x": 155,
+        "z": 240
+      },
+      "placement": {
+        "from": {
+          "x": 136.7,
+          "y": 25,
+          "z": 258.4
+        },
+        "lookAt": {
+          "x": 155,
+          "y": 20.8,
+          "z": 240
+        },
+        "groundAtSubject": 19,
+        "groundAtEye": 16.8,
+        "bearing": 5.5
+      },
+      "seconds": 4.8,
+      "drawCalls": 94,
+      "triangles": 557732
+    },
+    {
+      "label": "scene-longgrass-blackstone-shortcut-a",
+      "subject": "longgrass-blackstone-shortcut",
+      "kind": "shortcut",
+      "at": {
+        "x": 190,
+        "z": -20
+      },
+      "placement": {
+        "from": {
+          "x": 215.1,
+          "y": 36.5,
+          "z": -13
+        },
+        "lookAt": {
+          "x": 190,
+          "y": 32.3,
+          "z": -20
+        },
+        "groundAtSubject": 30.5,
+        "groundAtEye": 14.3,
+        "bearing": 1.3
+      },
+      "seconds": 5.3,
+      "drawCalls": 144,
+      "triangles": 678667
+    },
+    {
+      "label": "scene-longgrass-blackstone-shortcut-b",
+      "subject": "longgrass-blackstone-shortcut",
+      "kind": "shortcut",
+      "at": {
+        "x": 190,
+        "z": -20
+      },
+      "placement": {
+        "from": {
+          "x": 183.4,
+          "y": 36.5,
+          "z": -45.1
+        },
+        "lookAt": {
+          "x": 190,
+          "y": 32.3,
+          "z": -20
+        },
+        "groundAtSubject": 30.5,
+        "groundAtEye": 12.3,
+        "bearing": 3.4
+      },
+      "seconds": 5.2,
+      "drawCalls": 81,
+      "triangles": 508207
+    },
+    {
+      "label": "scene-longgrass-blackstone-shortcut-c",
+      "subject": "longgrass-blackstone-shortcut",
+      "kind": "shortcut",
+      "at": {
+        "x": 190,
+        "z": -20
+      },
+      "placement": {
+        "from": {
+          "x": 171.7,
+          "y": 50.6,
+          "z": -1.6
+        },
+        "lookAt": {
+          "x": 190,
+          "y": 32.3,
+          "z": -20
+        },
+        "groundAtSubject": 30.5,
+        "groundAtEye": 44.6,
+        "bearing": 5.5
+      },
+      "seconds": 5,
+      "drawCalls": 79,
+      "triangles": 499680
+    }
+  ],
+  "skipped": [],
+  "findings": [],
+  "consoleErrors": []
+}

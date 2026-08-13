@@ -1,0 +1,7 @@
+allowBuilds:
+  esbuild: true
+  workerd: true
+minimumReleaseAgeExclude:
+  - globals@17.11.0
+  - miniflare@5.20260811.0-alpha
+  - wrangler@4.122.0
