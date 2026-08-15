@@ -12,6 +12,8 @@ export interface PresentationSettings {
   readonly fieldOfView: number;
   readonly cameraFollowStrength: number;
   readonly reducedMotion: boolean;
+  /** The finishing pass: colour grade and vignette. Best graphics by default. */
+  readonly postFx: boolean;
   readonly masterVolume: number;
   readonly ambienceVolume: number;
   readonly horseVolume: number;
@@ -36,6 +38,7 @@ export function defaultPresentationSettings(): PresentationSettings {
     // Respect the operating system preference on first run rather than making
     // the player discover the setting after being made uncomfortable.
     reducedMotion: prefersReducedMotion,
+    postFx: true,
     masterVolume: 0.7,
     ambienceVolume: 0.8,
     horseVolume: 0.9,

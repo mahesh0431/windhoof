@@ -23,6 +23,7 @@ import { HorseGaitAnimator } from "../render/horse/horseGaitAnimator";
 import { createHoofContacts } from "../render/horse/hoofContacts";
 import { createHorseRig } from "../render/horse/horseVisual";
 import { createRenderer } from "../render/renderer";
+import { createPostFx } from "../render/postFx";
 import { LongrideAudio } from "../audio/longrideAudio";
 import { RuntimeMetrics } from "../diagnostics/runtimeMetrics";
 import { PresentationSettingsStore } from "../ui/presentationSettings";
@@ -128,6 +129,7 @@ export async function startIsland(
   );
 
   const { renderer, camera, resize, dispose: disposeRenderer } = createRenderer(canvas);
+  const postFx = createPostFx(renderer);
 
   /**
    * Assigned once the scene and simulation it drives actually exist.
@@ -915,7 +917,8 @@ export async function startIsland(
       audio.land(true);
       chaseCamera.impulse(1);
     }
-    renderer.render(scene.scene, camera);
+    postFx.setEnabled(settings.value.postFx);
+    postFx.render(scene.scene, camera);
 
     // --- interface ----------------------------------------------------------
     ui.update({
@@ -957,6 +960,7 @@ export async function startIsland(
       running = false;
       graphicsRecovery?.dispose();
       harness.dispose();
+      postFx.dispose();
       unsubscribeSettings();
       bindings.detach();
       canvas.removeEventListener("click", requestFocus);

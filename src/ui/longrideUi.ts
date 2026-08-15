@@ -1298,7 +1298,7 @@ function buildSettingsFields(
   };
 
   const addToggle = (
-    key: "invertLookY" | "reducedMotion" | "showDiagnostics",
+    key: "invertLookY" | "reducedMotion" | "showDiagnostics" | "postFx",
     label: string,
     hintText: string,
   ) => {
@@ -1356,6 +1356,11 @@ function buildSettingsFields(
     "reducedMotion",
     "Reduced motion",
     "Softens camera shake, lean, and field-of-view change",
+  );
+  addToggle(
+    "postFx",
+    "Enhanced graphics",
+    "Colour grade and vignette; turn off on slower machines",
   );
 
   const gaitField = el("div", "lr-field");
