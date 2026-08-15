@@ -25,12 +25,25 @@ import type { HorseRig } from "./horseVisual";
  * different mind.
  */
 
-export type WildHorseMood = "calm" | "watching" | "warning" | "kicking" | "settling";
+export type WildHorseMood =
+  | "calm"
+  | "watching"
+  | "warning"
+  | "kicking"
+  | "settling"
+  | "curious"
+  | "trusting";
 
 /** Beyond this the horse ignores the player entirely. */
 export const NOTICE_RADIUS = 11;
 /** Inside this it stops watching and starts warning. */
 const WARN_RADIUS = 5.2;
+/** A player quieter than this reads as company rather than as a threat. */
+const QUIET_SPEED = 3.2;
+/** Seconds of quiet company at watching range before curiosity wins. */
+const CURIOSITY_SECONDS = 4;
+/** Seconds of curious company before the horse decides you belong. */
+const TRUST_SECONDS = 5;
 /** Inside this, and behind the horse, it kicks. */
 const KICK_RADIUS = 3.4;
 /** How long it must be left alone before it will kick again. */
@@ -49,6 +62,8 @@ const KICK_PITCH = 0.38;
 export interface WildHorseSense {
   /** Metres from the horse to the player. */
   readonly distance: number;
+  /** The player's speed, in metres a second. Trust is only offered to a walker. */
+  readonly playerSpeed: number;
   /**
    * Where the player is relative to the way the horse is facing, in radians.
    * Zero is straight ahead; +/-pi is directly behind.
@@ -74,6 +89,8 @@ export class WildHorseAnimator {
   private mood: WildHorseMood = "calm";
   private phase = 0;
   private cooldown = 0;
+  /** Seconds of continuous quiet company; the road from watching to trusting. */
+  private company = 0;
   private breath = 0;
   private yaw = 0;
   private alarm = 0;
@@ -117,6 +134,7 @@ export class WildHorseAnimator {
 
   public reset(yaw: number): void {
     this.yaw = yaw;
+    this.company = 0;
     this.mood = "calm";
     this.phase = 0;
     this.cooldown = 0;
@@ -146,7 +164,9 @@ export class WildHorseAnimator {
         ? 1
         : this.mood === "watching"
           ? 0.45
-          : 0;
+          : this.mood === "curious"
+            ? 0.2
+            : 0;
     this.alarm = damp(this.alarm, wantsAlarm, 3.6, dt);
 
     switch (this.mood) {
@@ -154,9 +174,50 @@ export class WildHorseAnimator {
         if (sense.distance < NOTICE_RADIUS) this.mood = "watching";
         break;
 
-      case "watching":
-        if (sense.distance > NOTICE_RADIUS * 1.15) this.mood = "calm";
-        else if (sense.distance < WARN_RADIUS) this.mood = "warning";
+      case "watching": {
+        if (sense.distance > NOTICE_RADIUS * 1.15) {
+          this.mood = "calm";
+          this.company = 0;
+          break;
+        }
+        if (sense.distance < WARN_RADIUS && sense.playerSpeed > QUIET_SPEED) {
+          this.mood = "warning";
+          this.company = 0;
+          break;
+        }
+        // Quiet company builds; noise resets the clock but not the mood. A
+        // rider who walks in, stands, and waits is offered curiosity.
+        const quiet = sense.playerSpeed < QUIET_SPEED;
+        this.company = quiet ? this.company + dt : 0;
+        if (this.company > CURIOSITY_SECONDS && sense.distance < NOTICE_RADIUS) {
+          this.mood = "curious";
+          this.company = 0;
+        }
+        break;
+      }
+
+      case "curious": {
+        // Galloping at a curious horse squanders it.
+        if (sense.playerSpeed > QUIET_SPEED * 1.6) {
+          this.mood = "watching";
+          this.company = 0;
+          break;
+        }
+        if (sense.distance > NOTICE_RADIUS * 1.3) {
+          this.mood = "calm";
+          this.company = 0;
+          break;
+        }
+        this.company += dt;
+        if (this.company > TRUST_SECONDS) {
+          this.mood = "trusting";
+          this.company = 0;
+        }
+        break;
+      }
+
+      case "trusting":
+        // Trust, once given, is kept. The herd layer owns what happens next.
         break;
 
       case "warning": {
@@ -201,7 +262,8 @@ export class WildHorseAnimator {
   }
 
   private driveYaw(sense: WildHorseSense, dt: number): void {
-    if (this.mood === "calm" || this.mood === "kicking") return;
+    if (this.mood === "calm" || this.mood === "kicking" || this.mood === "trusting")
+      return;
     // Watching, it turns to look at you. Warning, it turns its quarters to you -
     // which is the whole tell, and the reason a player who reads it gets out of
     // the way and one who does not gets kicked.

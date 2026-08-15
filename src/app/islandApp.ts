@@ -873,6 +873,7 @@ export async function startIsland(
           x: horse.position.x,
           y: horse.position.y,
           z: horse.position.z,
+          speed: horse.speed,
           deltaSeconds: paused ? 0 : delta,
         },
       );
@@ -899,6 +900,7 @@ export async function startIsland(
           x: horse.position.x,
           y: horse.position.y,
           z: horse.position.z,
+          speed: horse.speed,
           deltaSeconds: paused ? 0 : delta,
         },
       );

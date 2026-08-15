@@ -433,7 +433,7 @@ export async function createIslandScene(
       // herd is posed, and nothing decides to kick anybody.
       wildlife.update(
         elapsedSeconds,
-        player ?? { x: focusX, y: focusY, z: focusZ, deltaSeconds: 0 },
+        player ?? { x: focusX, y: focusY, z: focusZ, speed: 0, deltaSeconds: 0 },
       );
       sea.update(elapsedSeconds);
       journey.update(elapsedSeconds);

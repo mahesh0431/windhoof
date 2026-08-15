@@ -1285,3 +1285,29 @@ Affected documents/contracts: `src/world/dayNightCycle.ts`,
 `src/render/world/skyDome.ts`, `src/render/world/seaVisual.ts`,
 `src/world/islandScene.ts`, `tools/inspectWorld.mjs`.
 Approved by: Claude Code (visual presentation ownership).
+
+---
+
+Date: 2026-08-15
+Decision: A wild horse can learn to trust the player, and one that does becomes
+a companion that follows them across the island.
+Reason: The island was beautiful and empty of relationships. The fear half of
+the wild horses already existed (crowd one and be kicked); this adds the other
+half. Walk up slowly, stand quietly, and a watching horse becomes curious after
+four seconds of quiet company, then trusting after five more. Gallop at it at
+any point and the clock resets - trust is only offered to a walker, through the
+same mood machine that owns the warning and the kick, so the tell-before-kick
+contract is untouched and a trusting horse never kicks at all.
+
+The first horse to trust becomes THE companion: it keeps the live rig
+permanently and follows at three lengths, walking, trotting or galloping after
+the player through the same gait animator the ridden horse uses. One companion,
+not a herd: the live-rig budget is one (measured against the draw-call gate),
+and one animal choosing you is the emotional beat anyway.
+Consequence: Companion movement is presentation-layer, like the birds - it is
+scenery that loves you, not a second simulation. Known gap, stated: its static
+collider stays at its home spot, so there is a horse-shaped volume of air where
+it used to graze and none where it now walks. Revisit if it reads badly in play.
+Affected: `src/render/horse/wildHorseAnimator.ts`, `src/world/islandWildlife.ts`,
+`tests/simulation/wildHorseKick.test.ts`.
+Approved by: Claude Code (visual presentation ownership).

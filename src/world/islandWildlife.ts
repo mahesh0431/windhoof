@@ -13,6 +13,8 @@ import {
 import type { WorldManifest } from "../game/world/compiler/worldTypes";
 import { mergeGeometries } from "../render/geometryUtils";
 import { createHorseRig } from "../render/horse/horseVisual";
+import { HorseGaitAnimator } from "../render/horse/horseGaitAnimator";
+import { MathUtils } from "three";
 import {
   NOTICE_RADIUS,
   WildHorseAnimator,
@@ -86,6 +88,8 @@ export interface PlayerSense {
   readonly x: number;
   readonly y: number;
   readonly z: number;
+  /** Metres a second; the herd offers trust to a walker, never to a galloper. */
+  readonly speed: number;
   readonly deltaSeconds: number;
 }
 
@@ -246,9 +250,10 @@ export function createIslandWildlife(
 
   /** One horse, whether it is currently a matrix in a buffer or a real rig. */
   interface WildHorse {
-    readonly x: number;
-    readonly y: number;
-    readonly z: number;
+    /** Mutable: a companion follows the player; everything else stands still. */
+    x: number;
+    y: number;
+    z: number;
     readonly scale: number;
     readonly coat: Color;
     readonly grazing: boolean;
@@ -351,8 +356,22 @@ export function createIslandWildlife(
       .slice(0, LIVE_HORSE_BUDGET)
       .map((entry) => entry.horse);
 
+  /**
+   * The one horse that has decided the player belongs.
+   *
+   * A companion keeps the live rig permanently and follows the player across
+   * the island. One, not a herd, because the live-rig budget is one - measured
+   * against the draw-call gate - and one animal choosing you is the emotional
+   * beat anyway; a crowd would dilute it.
+   */
+  let companion: WildHorse | null = null;
+
   const updateHorses = (player: PlayerSense): void => {
     const wanted = new Set(nearestHorses(player.x, player.z));
+    if (companion) {
+      wanted.clear();
+      wanted.add(companion);
+    }
 
     // Anything that has walked out of range goes back to being a matrix, at
     // whatever heading it turned to while it was awake.
@@ -375,8 +394,13 @@ export function createIslandWildlife(
     }
 
     for (const live of liveHorses) {
-      const kick = live.update(player);
+      const kick = live.update(player, live.horse === companion, (x, z) =>
+        field.heightAt(x, z),
+      );
       if (kick) kicks.push(kick);
+      if (!companion && live.mood === "trusting" && live.horse) {
+        companion = live.horse as WildHorse;
+      }
     }
   };
 
@@ -526,10 +550,14 @@ class LiveHorse {
   private readonly materials: MeshStandardMaterial[] = [];
   private readonly baseColours: Color[] = [];
   private animator = new WildHorseAnimator(0.45, 0.62);
+  private readonly gaits = new HorseGaitAnimator();
+  private followYaw = 0;
+  private followSpeed = 0;
   public horse: {
-    readonly x: number;
-    readonly y: number;
-    readonly z: number;
+    /** Mutable: a companion walks, and its position IS these fields. */
+    x: number;
+    y: number;
+    z: number;
     readonly scale: number;
     readonly coat: Color;
     yaw: number;
@@ -576,6 +604,8 @@ class LiveHorse {
     this.rig.root.visible = true;
     this.animator = new WildHorseAnimator(pose[0], pose[1], this.index * 3.1);
     this.animator.reset(horse.yaw);
+    this.followYaw = horse.yaw;
+    this.followSpeed = 0;
     this.animator.pose(this.rig);
     group.add(this.rig.root);
   }
@@ -586,9 +616,17 @@ class LiveHorse {
     group.remove(this.rig.root);
   }
 
-  public update(player: PlayerSense): WildHorseKick | null {
+  public update(
+    player: PlayerSense,
+    isCompanion = false,
+    heightAt?: (x: number, z: number) => number,
+  ): WildHorseKick | null {
     const horse = this.horse;
     if (!horse) return null;
+    if (isCompanion && heightAt) {
+      this.follow(player, heightAt);
+      return null;
+    }
     const toPlayerX = player.x - horse.x;
     const toPlayerZ = player.z - horse.z;
     const distance = Math.hypot(toPlayerX, toPlayerZ);
@@ -599,6 +637,7 @@ class LiveHorse {
     const strike = this.animator.update(this.rig, {
       distance,
       bearing,
+      playerSpeed: player.speed,
       deltaSeconds: player.deltaSeconds,
     });
     if (!strike.connected || distance < 0.001) return null;
@@ -610,6 +649,66 @@ class LiveHorse {
       y: horse.y,
       z: horse.z,
     };
+  }
+
+  /**
+   * A companion's whole life: walk to where the player is going, and stop a
+   * respectful length short of them.
+   *
+   * Presentation-layer movement, like the birds - a companion is scenery that
+   * loves you, not a second simulation. It slows into its stop over the last
+   * lengths so it arrives rather than halts, and it drives the same gait
+   * animator the player's horse uses, so its walk is a real walk and its
+   * gallop after a galloping player is a real gallop.
+   */
+  private follow(
+    player: PlayerSense,
+    heightAt: (x: number, z: number) => number,
+  ): void {
+    const horse = this.horse;
+    if (!horse) return;
+    const dt = Math.max(0.0001, player.deltaSeconds);
+    const dx = player.x - horse.x;
+    const dz = player.z - horse.z;
+    const distance = Math.hypot(dx, dz);
+    // Follow speed: hold station at three lengths, close at up to a canter,
+    // and stretch to a gallop only when genuinely left behind.
+    const speed = MathUtils.clamp((distance - 4.2) * 0.9, 0, 13);
+    if (speed > 0.05 && distance > 0.001) {
+      const heading = Math.atan2(dx, dz);
+      const turn = Math.atan2(
+        Math.sin(heading - this.followYaw),
+        Math.cos(heading - this.followYaw),
+      );
+      this.followYaw += turn * Math.min(1, dt * 3.2);
+      horse.x += Math.sin(this.followYaw) * speed * dt;
+      horse.z += Math.cos(this.followYaw) * speed * dt;
+      horse.y = heightAt(horse.x, horse.z);
+      horse.yaw = this.followYaw;
+    }
+    this.followSpeed = MathUtils.damp(this.followSpeed, speed, 4, dt);
+    this.rig.root.position.set(horse.x, horse.y, horse.z);
+    this.rig.root.rotation.y = this.followYaw;
+    this.gaits.update(this.rig, {
+      speed: this.followSpeed,
+      gait:
+        this.followSpeed < 0.15
+          ? "idle"
+          : this.followSpeed < 3.4
+            ? "walk"
+            : this.followSpeed < 8
+              ? "trot"
+              : "gallop",
+      grounded: true,
+      verticalVelocity: 0,
+      condition: "normal",
+      yawRate: 0,
+      acceleration: 0,
+      groundPitch: 0,
+      groundRoll: 0,
+      deltaSeconds: dt,
+      reducedMotion: false,
+    });
   }
 
   public dispose(): void {

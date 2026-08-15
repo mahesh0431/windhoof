@@ -85,6 +85,7 @@ function hold(
     const strike = animator.update(rig, {
       distance,
       bearing: worldHeading - animator.facing,
+      playerSpeed: 6,
       deltaSeconds: step,
     });
     if (strike.connected) struck = true;
@@ -130,6 +131,7 @@ describe("a wild horse defending its space", () => {
       animator.update(rig, {
         distance,
         bearing: 0 - animator.facing,
+        playerSpeed: 6,
         deltaSeconds: step,
       });
       const mood = animator.currentMood;
@@ -181,6 +183,7 @@ describe("a wild horse defending its space", () => {
       const strike = animator.update(rig, {
         distance: 2.2,
         bearing: 0 - animator.facing,
+        playerSpeed: 6,
         deltaSeconds: step,
       });
       if (strike.connected) strikes += 1;
@@ -267,5 +270,75 @@ describe("being kicked", () => {
     state = applyHorseShove(state, { x: 0, z: 0, speed: 7 });
     expect(state.condition).toBe("normal");
     expect(state.shoveX).toBe(0);
+  });
+});
+
+describe("earning a wild horse's trust", () => {
+  /** Stand quietly at a distance for a while. */
+  function keepCompany(
+    animator: WildHorseAnimator,
+    rig: ReturnType<typeof createHorseRig>,
+    distance: number,
+    seconds: number,
+    playerSpeed = 0.5,
+  ): void {
+    const step = 1 / 60;
+    for (let elapsed = 0; elapsed < seconds; elapsed += step) {
+      animator.update(rig, {
+        distance,
+        bearing: 0 - animator.facing,
+        playerSpeed,
+        deltaSeconds: step,
+      });
+    }
+  }
+
+  it("offers trust to a rider who walks in and waits", () => {
+    const rig = createHorseRig();
+    const animator = new WildHorseAnimator(0.45, 0.62);
+    animator.reset(0);
+
+    keepCompany(animator, rig, 8, 12);
+
+    expect(animator.currentMood).toBe("trusting");
+    rig.dispose();
+  });
+
+  it("never offers trust to a galloper", () => {
+    const rig = createHorseRig();
+    const animator = new WildHorseAnimator(0.45, 0.62);
+    animator.reset(0);
+
+    keepCompany(animator, rig, 8, 12, 12);
+
+    expect(animator.currentMood).toBe("watching");
+    rig.dispose();
+  });
+
+  it("takes curiosity back if the rider startles it", () => {
+    const rig = createHorseRig();
+    const animator = new WildHorseAnimator(0.45, 0.62);
+    animator.reset(0);
+
+    keepCompany(animator, rig, 8, 5.5);
+    expect(animator.currentMood).toBe("curious");
+    keepCompany(animator, rig, 8, 1, 12);
+
+    expect(animator.currentMood).toBe("watching");
+    rig.dispose();
+  });
+
+  it("a trusting horse does not kick, even crowded from behind", () => {
+    const rig = createHorseRig();
+    const animator = new WildHorseAnimator(0.45, 0.62);
+    animator.reset(0);
+    keepCompany(animator, rig, 8, 12);
+    expect(animator.currentMood).toBe("trusting");
+
+    const struck = hold(animator, rig, 2.0, Math.PI, 6);
+
+    expect(struck).toBe(false);
+    expect(animator.currentMood).toBe("trusting");
+    rig.dispose();
   });
 });
