@@ -26,7 +26,7 @@ export function createStageScene(stage: StageWorld): StageScene {
   const scene = new Scene();
   scene.fog = new Fog(PALETTE.fog, FOG_NEAR, FOG_FAR);
 
-  const sky = createSkyDome();
+  const sky = createSkyDome().mesh;
   scene.add(sky);
 
   // Two lights only. A warm low sun for shape and long readable shadows, and a

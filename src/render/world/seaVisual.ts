@@ -8,6 +8,7 @@ import {
   MeshBasicMaterial,
   ShaderMaterial,
   SphereGeometry,
+  Vector3,
 } from "three";
 import { STAGE_WATER_LEVEL, stageHeightAt } from "../../stage/horseLabStage";
 import { PALETTE } from "../palette";
@@ -34,12 +35,19 @@ const WATER_FRAGMENT = /* glsl */ `
   uniform float uHazeNear;
   uniform float uHazeFar;
   uniform float uTime;
+  uniform vec3 uSunDirection;
+  uniform vec3 uSunColor;
+  uniform float uNight;
+  uniform vec3 uCameraPosition;
   varying float vShore;
   varying float vViewDepth;
   varying vec3 vWorldPosition;
 
   void main() {
     vec3 color = mix(uDeep, uShallow, vShore);
+    // Night pulls the whole body of the water down before anything is added
+    // on top; moonlit sea is dark first and silvered second.
+    color *= 1.0 - uNight * 0.72;
 
     // How much surface detail this pixel can honestly carry.
     //
@@ -52,9 +60,27 @@ const WATER_FRAGMENT = /* glsl */ `
     // hilltop anyway.
     float detail = 1.0 - smoothstep(90.0, 400.0, vViewDepth);
 
+    // Two swell octaves travelling on different headings: one long slow set
+    // and a shorter chop across it. One octave reads as a repeating pattern;
+    // two beating against each other read as water.
     float swell = sin(vWorldPosition.x * 0.09 + uTime * 0.7)
                 * cos(vWorldPosition.z * 0.11 - uTime * 0.55);
-    color += swell * 0.02 * detail;
+    float chop = sin(vWorldPosition.x * 0.23 - vWorldPosition.z * 0.19 + uTime * 1.4)
+               * sin(vWorldPosition.x * 0.17 + vWorldPosition.z * 0.27 - uTime * 1.1);
+    color += (swell * 0.02 + chop * 0.011) * detail;
+
+    // Sun glitter: the path of broken light running from the horizon towards
+    // the viewer, the single strongest cue that a flat plane is water. The
+    // surface normal is tilted by the swell derivatives, the view ray is
+    // mirrored about it, and the sparkle is how nearly that mirror looks into
+    // the sun - modulated by the chop so the path glitters rather than glows.
+    vec3 toCamera = normalize(uCameraPosition - vWorldPosition);
+    vec3 waterNormal = normalize(vec3(swell * 0.14 + chop * 0.08, 1.0, swell * 0.1 - chop * 0.07));
+    vec3 mirrored = reflect(-toCamera, waterNormal);
+    float glitterAlignment = max(dot(mirrored, normalize(uSunDirection)), 0.0);
+    float sparkle = 0.55 + 0.45 * chop;
+    float glitter = pow(glitterAlignment, 90.0) * sparkle * (1.0 - uNight * 0.55);
+    color += uSunColor * glitter * 0.85;
 
     // A slow surf band where the sea meets the beach. The band itself survives
     // to distance because it marks the shoreline; only its modulation fades.
@@ -63,7 +89,7 @@ const WATER_FRAGMENT = /* glsl */ `
     float surf = smoothstep(0.5, 1.0, vShore)
                * (0.55 + 0.45 * detail
                        * sin(uTime * 1.3 + vWorldPosition.x * 0.16 + vWorldPosition.z * 0.13));
-    color = mix(color, uFoam, clamp(surf, 0.0, 1.0) * 0.5);
+    color = mix(color, uFoam * (1.0 - uNight * 0.6), clamp(surf, 0.0, 1.0) * 0.5);
 
     // The water carries its own haze instead of scene fog, which it opts out of
     // so the surf band stays readable up close. Without this the open sea keeps
@@ -88,6 +114,13 @@ const WATER_FRAGMENT = /* glsl */ `
 export interface SeaVisual {
   readonly group: Group;
   update(elapsedSeconds: number): void;
+  /** Driven by the day/night cycle: sun for the glitter path, night to darken. */
+  setLight(
+    sunDirection: Vector3,
+    sunColor: Color,
+    night: number,
+    cameraPosition: Vector3,
+  ): void;
   /**
    * Releases the water surface and every distant-land hill.
    *
@@ -200,6 +233,10 @@ export function createSeaVisual(options: SeaVisualOptions = {}): SeaVisual {
       uHazeNear: { value: options.hazeNear ?? 320 },
       uHazeFar: { value: options.hazeFar ?? 1250 },
       uTime: { value: 0 },
+      uSunDirection: { value: new Vector3(0.35, 0.66, 0.35) },
+      uSunColor: { value: PALETTE.sunLight.clone() },
+      uNight: { value: 0 },
+      uCameraPosition: { value: new Vector3() },
     },
     vertexShader: WATER_VERTEX,
     fragmentShader: WATER_FRAGMENT,
@@ -215,6 +252,17 @@ export function createSeaVisual(options: SeaVisualOptions = {}): SeaVisual {
   group.add(water);
   const distantLand = createDistantLand(options.distantLandScale ?? 1, waterLevel);
   group.add(distantLand);
+  // The horizon hills are unlit, so the cycle has to dim them by hand or they
+  // stand at the bottom of the night sky as a band of full daylight.
+  const distantLandDay = new Color();
+  let distantLandMaterial: MeshBasicMaterial | null = null;
+  for (const hill of distantLand.children) {
+    if (hill instanceof Mesh && hill.material instanceof MeshBasicMaterial) {
+      distantLandMaterial = hill.material;
+      distantLandDay.copy(hill.material.color);
+      break;
+    }
+  }
 
   let disposed = false;
 
@@ -222,6 +270,17 @@ export function createSeaVisual(options: SeaVisualOptions = {}): SeaVisual {
     group,
     update(elapsedSeconds: number) {
       material.uniforms.uTime!.value = elapsedSeconds;
+    },
+    setLight(sunDirection, sunColor, night, cameraPosition) {
+      (material.uniforms.uSunDirection!.value as Vector3).copy(sunDirection);
+      (material.uniforms.uSunColor!.value as Color).copy(sunColor);
+      material.uniforms.uNight!.value = night;
+      (material.uniforms.uCameraPosition!.value as Vector3).copy(cameraPosition);
+      if (distantLandMaterial) {
+        distantLandMaterial.color
+          .copy(distantLandDay)
+          .multiplyScalar(1 - night * 0.82);
+      }
     },
     dispose() {
       if (disposed) return;

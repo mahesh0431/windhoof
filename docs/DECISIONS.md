@@ -1250,3 +1250,38 @@ Affected documents/contracts: `src/render/horse/horseGaitAnimator.ts`,
 `src/render/horse/wildHorseAnimator.ts`, `tools/horsePreview.mjs`,
 `tools/inspectHorse.mjs`.
 Approved by: Claude Code (visual presentation ownership).
+
+---
+
+Date: 2026-08-15
+Decision: The island gets a day: a full day/night cycle, and a sea that reacts
+to it.
+Reason: The world had a single fixed afternoon, and a place whose light never
+changes reads as a diorama under a lamp however good the ground is. One new
+module (`dayNightCycle.ts`) owns the clock as a pure function from elapsed
+seconds to a lighting state - sun arc, colour ramps keyed on sun ELEVATION so
+dawn and dusk mirror automatically, a moon placed opposite the sun, fog that
+agrees with the horizon. The scene applies that state to the lights, sky dome,
+sea and fog it already owns; the cycle owns no Three objects, so every consumer
+reads the same instant.
+
+The dome grew stars (hashed from direction, quantised so they hold still while
+the camera turns) and a moon disc drawn where the night light actually comes
+from, so the visible moon and the shadows agree. The sea gained a second swell
+octave, a sun-glitter path computed from swell-tilted normals - the strongest
+single cue that a flat plane is water - and a night term that darkens the body
+of the water and the unlit horizon hills, which otherwise stood at the bottom of
+the night sky in full daylight.
+
+One full cycle is 15 real minutes with the night compressed to 28% of it: dark
+is an accent, not half the game. Moonlight has a deliberate playability floor -
+the island must stay readable enough to ride at the depth of night. `?tod=`
+pins the phase for automation, because the render-inspect-refine loop has to
+photograph dusk without waiting five minutes for it; evidence sheets at pinned
+midday, golden hour and night are in docs/evidence/world/.
+Consequence: `SUN_DIRECTION` remains as the initial direction and the Horse
+Lab stage keeps its fixed light; only the island lives through the cycle.
+Affected documents/contracts: `src/world/dayNightCycle.ts`,
+`src/render/world/skyDome.ts`, `src/render/world/seaVisual.ts`,
+`src/world/islandScene.ts`, `tools/inspectWorld.mjs`.
+Approved by: Claude Code (visual presentation ownership).

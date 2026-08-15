@@ -44,6 +44,10 @@ const MODES = {
   wide: { distance: 90, eye: 26, aim: 4, bearing: 0.7, label: "from above" },
 };
 
+/** `--tod=0.5` pins the time of day, so dusk and night can be photographed. */
+const todArgument = process.argv.find((argument) => argument.startsWith("--tod="));
+const timeOfDay = todArgument ? Number(todArgument.slice(6)) : null;
+
 const mode = process.argv.includes("--close")
   ? "close"
   : process.argv.includes("--wide")
@@ -76,7 +80,11 @@ try {
 
   console.log("booting the island...");
   const started = Date.now();
-  await page.goto(automationUrl(baseUrl), { waitUntil: "domcontentloaded" });
+  const pageUrl =
+    timeOfDay === null
+      ? automationUrl(baseUrl)
+      : `${automationUrl(baseUrl)}&tod=${timeOfDay}`;
+  await page.goto(pageUrl, { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() => window.__longrideLab?.ready === true, null, {
     timeout: BOOT_BUDGET_MS,
   });
@@ -99,7 +107,8 @@ try {
     console.log(`  ${region.id}`);
   }
 
-  const file = path.join(OUTPUT_DIR, `regions-${mode}.png`);
+  const suffix = timeOfDay === null ? "" : `-tod${timeOfDay}`;
+  const file = path.join(OUTPUT_DIR, `regions-${mode}${suffix}.png`);
   await writeSheet(page, panels, file);
   console.log(`\n${path.relative(process.cwd(), file)}`);
 

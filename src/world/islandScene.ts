@@ -7,12 +7,14 @@ import {
   Mesh,
   MeshStandardMaterial,
   Scene,
+  Vector3,
 } from "three";
 import type { WorldManifest } from "../game/world/compiler/worldTypes";
 import type { TerrainChunkTopology } from "../game/world/runtime/terrainChunkTopology";
 import { PALETTE, SUN_DIRECTION } from "../render/palette";
 import { createSeaVisual, type SeaVisual } from "../render/world/seaVisual";
 import { createSkyDome } from "../render/world/skyDome";
+import { DayNightCycle } from "./dayNightCycle";
 import {
   assembleIslandField,
   beginRouteDistanceField,
@@ -161,7 +163,26 @@ export async function createIslandScene(
   scene.fog = new Fog(atmosphere.haze, ranges.fogNear, ranges.fogFar);
 
   const sky = await resources.job("sky-dome", () => createSkyDome());
-  scene.add(sky);
+  scene.add(sky.mesh);
+
+  // One clock for every colour in the world. The scene owns the lights, dome,
+  // sea and fog; the cycle owns what they should look like right now.
+  //
+  // `?tod=0.5` pins the phase for automation: the render-inspect-refine loop
+  // has to be able to photograph dusk without waiting five real minutes for
+  // it. An automation switch rather than a player setting, like the rest of
+  // the query flags, and absent means the day simply runs.
+  const pinnedTimeOfDay = (() => {
+    if (typeof location === "undefined") return null;
+    const raw = new URLSearchParams(location.search).get("tod");
+    if (raw === null) return null;
+    const value = Number(raw);
+    return Number.isFinite(value) ? ((value % 1) + 1) % 1 : null;
+  })();
+  const dayNight =
+    pinnedTimeOfDay === null
+      ? new DayNightCycle()
+      : new DayNightCycle(Number.MAX_SAFE_INTEGER, pinnedTimeOfDay);
 
   const sun = new DirectionalLight(PALETTE.sunLight, 2.05);
   sun.position.set(SUN_DIRECTION.x * 60, SUN_DIRECTION.y * 60, SUN_DIRECTION.z * 60);
@@ -193,6 +214,9 @@ export async function createIslandScene(
   // stays legible ground.
   const fill = new HemisphereLight(PALETTE.skyLight, PALETTE.bounceLight, 2.6);
   scene.add(fill);
+
+  /** Reused each frame for the sea's glitter path; the eye rides near the focus. */
+  const cameraProxy = new Vector3();
 
   // The global field, in two halves. Reassembling the compiled samples and
   // sweeping every sample against the safe routes are independent, and together
@@ -372,7 +396,31 @@ export async function createIslandScene(
       // not walk them towards the edge of the sky. The sea deliberately does
       // not: its surf band is baked per-vertex against the real sea bed, so
       // moving it would slide the foam off the actual shoreline.
-      sky.position.set(focusX, 0, focusZ);
+      sky.mesh.position.set(focusX, 0, focusZ);
+
+      // --- the time of day ------------------------------------------------
+      const light = dayNight.at(elapsedSeconds);
+      sun.color.copy(light.lightColor);
+      sun.intensity = light.lightIntensity;
+      fill.color.copy(light.skyFill);
+      fill.groundColor.copy(light.groundFill);
+      fill.intensity = light.fillIntensity;
+      (scene.fog as Fog).color.copy(light.fogColor);
+      sky.uniforms.uZenith.value.copy(light.zenith);
+      sky.uniforms.uHorizon.value.copy(light.horizon);
+      sky.uniforms.uHaze.value.copy(light.horizon).lerp(light.sunGlow, 0.5);
+      sky.uniforms.uSunColor.value.copy(light.sunGlow);
+      sky.uniforms.uSunDirection.value.copy(light.sunDirection);
+      sky.uniforms.uNight.value = light.night;
+      // The moon is the night's working light; the dome draws its disc where
+      // the light actually comes from, so shadows and the visible moon agree.
+      sky.uniforms.uMoonDirection.value.copy(light.lightDirection);
+      sea.setLight(
+        light.sunDirection,
+        light.sunGlow,
+        light.night,
+        cameraProxy.set(focusX, focusY + 2, focusZ),
+      );
       groundCover.setFocus(focusX, focusZ);
       groundCover.setTime(elapsedSeconds);
       clouds.time.value = elapsedSeconds;
@@ -397,9 +445,9 @@ export async function createIslandScene(
       const snappedX = Math.round(focusX / texelSize) * texelSize;
       const snappedZ = Math.round(focusZ / texelSize) * texelSize;
       sun.position.set(
-        snappedX + SUN_DIRECTION.x * 90,
-        focusY + SUN_DIRECTION.y * 90,
-        snappedZ + SUN_DIRECTION.z * 90,
+        snappedX + light.lightDirection.x * 90,
+        focusY + light.lightDirection.y * 90,
+        snappedZ + light.lightDirection.z * 90,
       );
       sun.target.position.set(snappedX, focusY, snappedZ);
       sun.target.updateMatrixWorld();
@@ -424,9 +472,9 @@ export async function createIslandScene(
       // The sky dome owns a SphereGeometry and a ShaderMaterial that nothing
       // else references; `createSkyDome` hands back a bare Mesh, so releasing
       // them is the caller's job and was previously not being done at all.
-      sky.geometry.dispose();
-      if (Array.isArray(sky.material)) for (const item of sky.material) item.dispose();
-      else sky.material.dispose();
+      sky.mesh.geometry.dispose();
+      if (Array.isArray(sky.mesh.material)) for (const item of sky.mesh.material) item.dispose();
+      else sky.mesh.material.dispose();
       scene.clear();
       for (const release of releaseRenderRetains) release();
       releaseRenderRetains.length = 0;
