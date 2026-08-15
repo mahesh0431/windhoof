@@ -167,7 +167,23 @@ export const GAIT_PROFILES: Record<HorseGait, GaitProfile> = {
   },
 };
 
-const REST_HOCK = -0.34;
+/**
+ * How far the gaskin is carried behind the vertical when the horse is standing.
+ *
+ * A standing horse does not hang its hind legs straight down off the hip: the
+ * point of hock sits back under the point of buttock and the cannon comes
+ * forward again to the fetlock, which is the zig-zag that reads as a hind leg
+ * from any angle. With the gaskin plumb, as it was, the whole hind limb is one
+ * straight post and the hock - the most recognisable joint on the animal -
+ * never appears in the outline at all.
+ *
+ * It blends out with speed, because a moving horse's neutral is not a standing
+ * one's, and biasing the swing backwards at a gallop would stop the hinds ever
+ * reaching under the body.
+ */
+const HIND_STANCE = 0.3;
+/** Chosen so the cannon keeps its own angle once the gaskin is leant back. */
+const REST_HOCK = -0.535;
 const REST_KNEE = 0.06;
 const TAU = Math.PI * 2;
 
@@ -414,11 +430,12 @@ export class HorseGaitAnimator {
         this.stumbleBlend * 0.7,
       );
 
-      leg.upper.rotation.x = damp(leg.upper.rotation.x, finalSwing, 26, dt);
+      const stance = leg.isFront ? 0 : HIND_STANCE * (1 - speedRatio);
+      leg.upper.rotation.x = damp(leg.upper.rotation.x, finalSwing + stance, 26, dt);
 
       // Knees bend backwards, hocks bend forwards. Mixing these up is what
       // makes a quadruped read as a stretched dog.
-      const jointRest = leg.isFront ? REST_KNEE : REST_HOCK;
+      const jointRest = leg.isFront ? REST_KNEE : REST_HOCK + HIND_STANCE - stance;
       const jointTarget = leg.isFront
         ? jointRest - finalFlex
         : jointRest + finalFlex * 0.85;
@@ -450,19 +467,26 @@ export class HorseGaitAnimator {
     const drive = MathUtils.clamp(this.compress / 0.12, 0, 1);
     const cycleWave = Math.cos(cycleAngle);
 
+    // The bob swings about the horse's STANDING height, which means half of it
+    // is the body sinking below the height its own legs hold it at - and with
+    // no inverse kinematics under the stance leg, a body that sinks takes the
+    // planted hoof down through the terrain with it. Measured across a full
+    // stride that was the largest single term: 4.5 cm at a trot before the
+    // tilt was even counted.
+    //
+    // Offsetting by one amplitude puts the trough at standing height instead of
+    // below it. The rise and fall the player sees is unchanged - peak to trough
+    // is still twice `bob` - the whole waveform simply sits on the ground the
+    // horse is standing on rather than through it. A moving horse carrying
+    // itself a little higher than a stationary one is also true.
     const gaitRise =
-      (this.profile.lift * suspension + this.profile.bob * cycleWave) * moving;
-    const breathBob = Math.sin(this.breath * 1.3) * 0.012 * (1 - moving);
+      (this.profile.lift * suspension + this.profile.bob * (cycleWave + 1)) * moving;
+    // Offset for the same reason as the gait bob: a standing horse breathing
+    // should rise off its own height, not sink through it.
+    const breathBob = (Math.sin(this.breath * 1.3) + 1) * 0.012 * (1 - moving);
     // The legs absorb most of a landing; only part of it drops the body, and
     // that part is floored so the hooves never sink through the terrain.
     const impulseRise = Math.max(IMPULSE_BODY_FLOOR, this.compress * IMPULSE_BODY_SHARE);
-
-    // Assigned rather than damped. Every term feeding it is already smooth and
-    // continuous, and a first-order lag here does nothing but flatten the
-    // suspension pulse it exists to deliver: at gallop the pulse lasts about
-    // 80 ms, which a 26-per-second damp would cut by nearly a third.
-    rig.body.position.y =
-      (gaitRise + breathBob) * motionScale + impulseRise - this.airborneBlend * 0.04;
 
     // Banking into a turn. A horse leans in; without this, fast turns look like
     // the model is sliding sideways on rails.
@@ -489,15 +513,23 @@ export class HorseGaitAnimator {
     );
     const stumblePitch = this.stumbleBlend * 0.3;
 
+    // Split deliberately: `ride` is the horse tilting itself, `ground` is the
+    // horse being tilted by the hill it is standing on. They add up to the same
+    // rotation, but only the first needs its feet putting back.
+    const ridePitch =
+      (gaitPitch + this.lean) * motionScale + airPitch + stumblePitch;
+    const rideRoll =
+      this.bank * motionScale + this.stumbleBlend * Math.sin(this.breath * 6) * 0.12;
+
     rig.body.rotation.x = damp(
       rig.body.rotation.x,
-      (gaitPitch + this.lean) * motionScale + airPitch + stumblePitch + this.groundPitch,
+      ridePitch + this.groundPitch,
       30,
       dt,
     );
     rig.body.rotation.z = damp(
       rig.body.rotation.z,
-      this.bank * motionScale + this.groundRoll + this.stumbleBlend * Math.sin(this.breath * 6) * 0.12,
+      rideRoll + this.groundRoll,
       12,
       dt,
     );
@@ -507,6 +539,27 @@ export class HorseGaitAnimator {
       10,
       dt,
     );
+
+    // Assigned rather than damped. Every term feeding it is already smooth and
+    // continuous, and a first-order lag here does nothing but flatten the
+    // suspension pulse it exists to deliver: at gallop the pulse lasts about
+    // 80 ms, which a 26-per-second damp would cut by nearly a third.
+    //
+    // The tilt term is what stops the hooves going through the terrain. Body
+    // rotation turns about the rig's origin, and the origin sits at hoof level,
+    // so pitching or banking swings whichever end is going down BELOW the
+    // ground instead of rocking the horse over its own feet. Measured across a
+    // full stride the worst point reached 7.5 cm under at a trot - on grass
+    // that reads as hooves in the sward, on rock and sand it reads as a bug.
+    //
+    // Read from the rotation the horse applies to ITSELF only; the ground
+    // conform is excluded on purpose, because matching the slope you are
+    // standing on is exactly the case where the feet should follow.
+    rig.body.position.y =
+      (gaitRise + breathBob) * motionScale +
+      impulseRise -
+      this.airborneBlend * 0.04 +
+      tiltLift(ridePitch, rideRoll) * (1 - this.airborneBlend);
 
     // --- Torso articulation ------------------------------------------------
     // Positive spine rounds the back and brings the hocks under; negative
@@ -585,12 +638,18 @@ export class HorseGaitAnimator {
     );
     rig.neck.rotation.x = this.neckAngle;
 
-    // The head stays roughly level with the horizon regardless of neck angle
-    // or how far the forehand has rotated, and turns a little into the
-    // direction of travel.
+    // How far the face is carried below the horizon, independent of neck angle
+    // or how far the forehand has rotated.
+    //
+    // A standing horse holds its face near the vertical with the poll highest -
+    // nose down by roughly a third of a right angle - and only reaches its head
+    // out flat when it is going somewhere. Holding it level at every speed,
+    // which is what this did, made the profile read as a camel: a long
+    // horizontal head stuck on the end of a raised neck.
+    const headCarry = 0.62 - speedRatio * 0.5;
     rig.head.rotation.x = damp(
       rig.head.rotation.x,
-      -this.neckAngle - this.forehandAngle * 0.6 + 0.1 - this.stumbleBlend * 0.5,
+      -this.neckAngle - this.forehandAngle * 0.6 + headCarry - this.stumbleBlend * 0.5,
       10,
       dt,
     );
@@ -627,37 +686,71 @@ export class HorseGaitAnimator {
     // Tail lifts and streams behind as speed builds, swishes when standing.
     this.tailSwing = damp(
       this.tailSwing,
-      Math.sin(this.breath * (0.9 + speedRatio * 2)) * (0.16 - speedRatio * 0.1),
+      Math.sin(this.breath * (0.9 + speedRatio * 2)) * (0.07 - speedRatio * 0.03),
       5,
       dt,
     );
 
     // Larger pitch trails the tail further behind the horse, so speed streams
-    // it out instead of tucking it under.
-    const liftBase = 0.82 + speedRatio * 0.5;
+    // it out instead of tucking it under. At rest it hangs: a standing horse
+    // carrying its tail out behind it reads as alarmed, permanently.
+    // A relaxed horse's tail hangs close to plumb off the point of the croup;
+    // it only leaves the quarters when the animal is moving or worried. Carried
+    // out at rest, which is what this did, the tail reads as a stick nailed on
+    // behind rather than as hair.
+    const liftBase = 0.2 + speedRatio * 0.8;
     rig.tail.forEach((segment, index) => {
       const target =
         index === 0
           ? liftBase + this.airborneBlend * 0.12
           : 0.16 + speedRatio * 0.24 + this.airborneBlend * 0.1;
       segment.rotation.x = damp(segment.rotation.x, target, 7, dt);
+      // Sideways sway compounds down the chain, so the growth per segment has
+      // to stay small: at 0.6 the three joints summed to better than forty
+      // degrees and a standing horse held its tail permanently out sideways,
+      // clear of its own quarters.
       segment.rotation.z = damp(
         segment.rotation.z,
-        this.tailSwing * (1 + index * 0.6) * motionScale,
+        this.tailSwing * (1 + index * 0.25) * motionScale,
         6,
         dt,
       );
     });
 
+    // The mane swings about the middle of the crest, so the angle here is what
+    // the hair trails by rather than what the whole sheet is dragged by. Kept
+    // modest for that reason: past about a quarter radian the roots leave the
+    // neck they are supposed to be growing out of.
     this.maneLag = damp(this.maneLag, speedRatio, 4, dt);
     rig.mane.rotation.x = damp(
       rig.mane.rotation.x,
-      -this.maneLag * 0.42 * motionScale +
+      -this.maneLag * 0.26 * motionScale +
         Math.sin(this.breath * 2.4) * 0.03 * motionScale,
       8,
       dt,
     );
   }
+}
+
+/**
+ * How far to raise a body tilted about an origin at hoof level, in metres.
+ *
+ * The lever arms are the rig's own: the shoulder sits 1.02 up and 0.45 forward
+ * of the origin, the hip 0.99 up and 0.56 back, and the feet stand about 0.21
+ * either side of the centre line. Which end goes down depends on the sign of
+ * the pitch, so the forward arm is chosen accordingly.
+ *
+ * Exact for a single-axis tilt and close enough for the small combined angles a
+ * gait produces; it is undoing a few centimetres, not solving a pose.
+ */
+function tiltLift(pitch: number, roll: number): number {
+  const arm = pitch > 0 ? 0.45 : 0.56;
+  return (
+    1.02 * (1 - Math.cos(pitch)) +
+    Math.abs(Math.sin(pitch)) * arm +
+    1.0 * (1 - Math.cos(roll)) +
+    Math.abs(Math.sin(roll)) * 0.21
+  );
 }
 
 function legOffsetIndex(id: HorseLegRig["id"]): number {

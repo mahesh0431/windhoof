@@ -1,5 +1,5 @@
 /*
- * Windhoof interface styling.
+ * Longride interface styling.
  *
  * Direction: the interface is weather, not a dashboard. Surfaces are warm,
  * translucent, and soft-edged so they read as part of a late-afternoon
@@ -13,23 +13,23 @@
  */
 
 :root {
-  --wh-text-scale: 1;
+  --lr-text-scale: 1;
 
-  --wh-ink: #f4ece0;
-  --wh-ink-soft: rgba(244, 236, 224, 0.78);
+  --lr-ink: #f4ece0;
+  --lr-ink-soft: rgba(244, 236, 224, 0.78);
   /* Raised from 0.46: at that alpha the settings hint text and the resting gait
      strip were below a comfortable contrast ratio on their own backgrounds. */
-  --wh-ink-faint: rgba(244, 236, 224, 0.62);
-  --wh-dusk: rgba(26, 30, 32, 0.72);
-  --wh-dusk-deep: rgba(18, 22, 24, 0.9);
-  --wh-warm: #e4b876;
-  --wh-warm-soft: rgba(228, 184, 118, 0.28);
-  --wh-grass: #9dbb6e;
+  --lr-ink-faint: rgba(244, 236, 224, 0.62);
+  --lr-dusk: rgba(26, 30, 32, 0.72);
+  --lr-dusk-deep: rgba(18, 22, 24, 0.9);
+  --lr-warm: #e4b876;
+  --lr-warm-soft: rgba(228, 184, 118, 0.28);
+  --lr-grass: #9dbb6e;
 
-  --wh-display: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", serif;
-  --wh-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --lr-display: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --lr-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  --wh-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --lr-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 * {
@@ -43,12 +43,12 @@ body {
   height: 100%;
   overflow: hidden;
   background: #10161a;
-  color: var(--wh-ink);
-  font-family: var(--wh-body);
+  color: var(--lr-ink);
+  font-family: var(--lr-body);
   -webkit-font-smoothing: antialiased;
 }
 
-#windhoof-canvas {
+#longride-canvas {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -57,31 +57,31 @@ body {
   touch-action: none;
 }
 
-.wh-ui {
+.lr-ui {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  font-size: calc(16px * var(--wh-text-scale));
+  font-size: calc(16px * var(--lr-text-scale));
   z-index: 10;
   user-select: none;
 }
 
-.wh-ui button,
-.wh-ui input,
-.wh-ui select {
+.lr-ui button,
+.lr-ui input,
+.lr-ui select {
   font: inherit;
   color: inherit;
 }
 
 /* One visible focus ring for every interactive control. Without this a keyboard
    player could move through the settings panel with no idea where they were. */
-.wh-ui :focus-visible {
-  outline: 2px solid var(--wh-warm);
+.lr-ui :focus-visible {
+  outline: 2px solid var(--lr-warm);
   outline-offset: 3px;
   border-radius: 0.35rem;
 }
 
-.wh-visually-hidden {
+.lr-visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -95,62 +95,62 @@ body {
 
 /* ---------------------------------------------------------------- hints -- */
 
-.wh-hint {
+.lr-hint {
   position: absolute;
   top: 4.2vh;
   left: 50%;
   transform: translate(-50%, -0.5rem);
   padding: 0.5rem 1.15rem;
   border-radius: 999px;
-  background: var(--wh-dusk);
+  background: var(--lr-dusk);
   backdrop-filter: blur(9px);
   -webkit-backdrop-filter: blur(9px);
   border: 1px solid rgba(244, 236, 224, 0.12);
   font-size: 0.9em;
   letter-spacing: 0.045em;
-  color: var(--wh-ink-soft);
+  color: var(--lr-ink-soft);
   opacity: 0;
   transition:
-    opacity 620ms var(--wh-ease),
-    transform 620ms var(--wh-ease);
+    opacity 620ms var(--lr-ease),
+    transform 620ms var(--lr-ease);
   white-space: nowrap;
 }
 
-.wh-hint[data-visible="true"] {
+.lr-hint[data-visible="true"] {
   opacity: 1;
   transform: translate(-50%, 0);
 }
 
 /* Transient acknowledgements: a state change the player must not miss, said
    once and then gone. Distinct from hints so the two never stack. */
-.wh-notice {
+.lr-notice {
   position: absolute;
   top: 11vh;
   left: 50%;
   transform: translate(-50%, -0.4rem);
-  font-family: var(--wh-display);
+  font-family: var(--lr-display);
   font-size: 1.05em;
   letter-spacing: 0.06em;
-  color: var(--wh-ink);
+  color: var(--lr-ink);
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.65);
   opacity: 0;
   transition:
-    opacity 420ms var(--wh-ease),
-    transform 420ms var(--wh-ease);
+    opacity 420ms var(--lr-ease),
+    transform 420ms var(--lr-ease);
 }
 
-.wh-notice[data-visible="true"] {
+.lr-notice[data-visible="true"] {
   opacity: 1;
   transform: translate(-50%, 0);
 }
 
 /* --------------------------------------------------------------- vignette -- */
 
-.wh-vignette {
+.lr-vignette {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 260ms var(--wh-ease);
+  transition: opacity 260ms var(--lr-ease);
   background: radial-gradient(
     ellipse at center,
     rgba(0, 0, 0, 0) 42%,
@@ -158,11 +158,11 @@ body {
   );
 }
 
-.wh-vignette[data-state="stumble"] {
+.lr-vignette[data-state="stumble"] {
   opacity: 1;
 }
 
-.wh-vignette[data-state="reset"] {
+.lr-vignette[data-state="reset"] {
   opacity: 1;
   background: radial-gradient(
     ellipse at center,
@@ -173,7 +173,7 @@ body {
 
 /* ------------------------------------------------------------ gait strip -- */
 
-.wh-gait {
+.lr-gait {
   position: absolute;
   left: 2.4vw;
   bottom: 3.4vh;
@@ -181,61 +181,61 @@ body {
   flex-direction: column;
   gap: 0.4rem;
   opacity: 0.26;
-  transition: opacity 900ms var(--wh-ease);
+  transition: opacity 900ms var(--lr-ease);
 }
 
-.wh-gait[data-emphasis="true"] {
+.lr-gait[data-emphasis="true"] {
   opacity: 1;
 }
 
-.wh-gait[data-persistent="true"] {
+.lr-gait[data-persistent="true"] {
   opacity: 0.72;
 }
 
-.wh-gait[hidden] {
+.lr-gait[hidden] {
   display: none;
 }
 
-.wh-gait-ticks {
+.lr-gait-ticks {
   display: flex;
   align-items: flex-end;
   gap: 0.28rem;
   height: 1.5rem;
 }
 
-.wh-gait-tick {
+.lr-gait-tick {
   width: 0.3rem;
   border-radius: 999px;
   background: rgba(244, 236, 224, 0.3);
   transition:
-    background-color 220ms var(--wh-ease),
-    height 320ms var(--wh-ease);
+    background-color 220ms var(--lr-ease),
+    height 320ms var(--lr-ease);
 }
 
-.wh-gait-tick[data-active="true"] {
-  background: var(--wh-warm);
+.lr-gait-tick[data-active="true"] {
+  background: var(--lr-warm);
   box-shadow: 0 0 12px rgba(228, 184, 118, 0.55);
 }
 
-.wh-gait-tick[data-reached="true"] {
+.lr-gait-tick[data-reached="true"] {
   background: rgba(228, 184, 118, 0.55);
 }
 
-.wh-gait-label {
+.lr-gait-label {
   display: flex;
   align-items: baseline;
   gap: 0.55rem;
   font-size: 0.72em;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--wh-ink-soft);
+  color: var(--lr-ink-soft);
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
 }
 
-.wh-gait-speed {
+.lr-gait-speed {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.08em;
-  color: var(--wh-ink-faint);
+  color: var(--lr-ink-faint);
   /* The label row is uppercased; a unit symbol is not. "M/S" is not a unit. */
   text-transform: none;
 }
@@ -251,7 +251,7 @@ body {
  * ever taking pointer lock, and dimming their view forever because they never
  * clicked would be a bug, not a nudge.
  */
-.wh-focus {
+.lr-focus {
   position: absolute;
   inset: 0;
   display: grid;
@@ -267,8 +267,8 @@ body {
      hiding. Animating it instead leaves the element computed as hidden for the
      first frames after it is shown, which silently rejects `focus()`. */
   transition:
-    opacity 300ms var(--wh-ease),
-    background-color 400ms var(--wh-ease),
+    opacity 300ms var(--lr-ease),
+    background-color 400ms var(--lr-ease),
     visibility 0s linear 300ms;
   pointer-events: auto;
   cursor: pointer;
@@ -276,22 +276,22 @@ body {
   text-align: center;
 }
 
-.wh-focus[data-visible="true"] {
+.lr-focus[data-visible="true"] {
   opacity: 1;
   visibility: visible;
   transition:
-    opacity 300ms var(--wh-ease),
-    background-color 400ms var(--wh-ease),
+    opacity 300ms var(--lr-ease),
+    background-color 400ms var(--lr-ease),
     visibility 0s linear 0s;
 }
 
-.wh-focus[data-compact="true"] {
+.lr-focus[data-compact="true"] {
   /* Top left. The diagnostics overlay owns the top right, and these two can be
      on screen at the same time during a playtest. */
   inset: 1.6vh auto auto 1.4vw;
   display: block;
   width: max-content;
-  background: var(--wh-dusk);
+  background: var(--lr-dusk);
   backdrop-filter: blur(9px);
   -webkit-backdrop-filter: blur(9px);
   border: 1px solid rgba(244, 236, 224, 0.12);
@@ -299,40 +299,40 @@ body {
   padding: 0.45rem 1rem;
 }
 
-.wh-focus-inner {
-  font-family: var(--wh-display);
+.lr-focus-inner {
+  font-family: var(--lr-display);
   letter-spacing: 0.08em;
 }
 
-.wh-focus-inner strong {
+.lr-focus-inner strong {
   display: block;
   font-size: 1.5em;
   font-weight: 500;
   margin-bottom: 0.35rem;
 }
 
-.wh-focus-inner span {
-  font-family: var(--wh-body);
+.lr-focus-inner span {
+  font-family: var(--lr-body);
   font-size: 0.85em;
-  color: var(--wh-ink-soft);
+  color: var(--lr-ink-soft);
   letter-spacing: 0.05em;
 }
 
-.wh-focus[data-compact="true"] .wh-focus-inner strong {
-  font-family: var(--wh-body);
+.lr-focus[data-compact="true"] .lr-focus-inner strong {
+  font-family: var(--lr-body);
   font-size: 0.85em;
   letter-spacing: 0.045em;
   margin-bottom: 0;
-  color: var(--wh-ink-soft);
+  color: var(--lr-ink-soft);
 }
 
-.wh-focus[data-compact="true"] .wh-focus-inner span {
+.lr-focus[data-compact="true"] .lr-focus-inner span {
   display: none;
 }
 
 /* ----------------------------------------------------------------- pause -- */
 
-.wh-pause {
+.lr-pause {
   position: absolute;
   inset: 0;
   display: grid;
@@ -351,20 +351,20 @@ body {
   -webkit-backdrop-filter: blur(14px) saturate(0.7);
   opacity: 0;
   visibility: hidden;
-  /* See the note on .wh-focus: showing must make the dialog focusable in the
+  /* See the note on .lr-focus: showing must make the dialog focusable in the
      same style recalculation, or moving focus to Resume is rejected. */
   transition:
-    opacity 320ms var(--wh-ease),
+    opacity 320ms var(--lr-ease),
     visibility 0s linear 320ms;
   pointer-events: auto;
   overflow: hidden;
 }
 
-.wh-pause[data-visible="true"] {
+.lr-pause[data-visible="true"] {
   opacity: 1;
   visibility: visible;
   transition:
-    opacity 320ms var(--wh-ease),
+    opacity 320ms var(--lr-ease),
     visibility 0s linear 0s;
 }
 
@@ -373,7 +373,7 @@ body {
  * the title and Resume stay put on a short window. Letting a centred overlay
  * overflow instead pushes the primary action off the top of the screen.
  */
-.wh-panel {
+.lr-panel {
   display: flex;
   flex-direction: column;
   width: min(46rem, 100%);
@@ -385,7 +385,7 @@ body {
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
 }
 
-.wh-panel-scroll {
+.lr-panel-scroll {
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -397,69 +397,69 @@ body {
   padding-bottom: 1.5rem;
 }
 
-.wh-panel-title {
-  font-family: var(--wh-display);
+.lr-panel-title {
+  font-family: var(--lr-display);
   font-size: 1.9em;
   font-weight: 500;
   letter-spacing: 0.06em;
   margin: 0 0 0.25rem;
 }
 
-.wh-panel-subtitle {
+.lr-panel-subtitle {
   margin: 0 0 1.6rem;
   font-size: 0.88em;
-  color: var(--wh-ink-soft);
+  color: var(--lr-ink-soft);
   letter-spacing: 0.03em;
   line-height: 1.55;
 }
 
-.wh-actions {
+.lr-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
   margin-bottom: 1.4rem;
 }
 
-.wh-button {
+.lr-button {
   appearance: none;
   border: 1px solid rgba(244, 236, 224, 0.18);
   background: rgba(244, 236, 224, 0.07);
-  color: var(--wh-ink);
+  color: var(--lr-ink);
   padding: 0.62rem 1.25rem;
   border-radius: 0.7rem;
   font-size: 0.9em;
   letter-spacing: 0.05em;
   cursor: pointer;
   transition:
-    background-color 200ms var(--wh-ease),
-    border-color 200ms var(--wh-ease),
-    transform 200ms var(--wh-ease);
+    background-color 200ms var(--lr-ease),
+    border-color 200ms var(--lr-ease),
+    transform 200ms var(--lr-ease);
 }
 
-.wh-button:hover,
-.wh-button:focus-visible {
+.lr-button:hover,
+.lr-button:focus-visible {
   background: rgba(228, 184, 118, 0.18);
   border-color: rgba(228, 184, 118, 0.45);
   outline: none;
 }
 
-.wh-button:active {
+.lr-button:active {
   transform: translateY(1px);
 }
 
-.wh-button[data-variant="primary"] {
+.lr-button[data-variant="primary"] {
   background: rgba(228, 184, 118, 0.22);
   border-color: rgba(228, 184, 118, 0.5);
 }
 
-.wh-tabs {
+.lr-tabs {
   display: flex;
   gap: 1.4rem;
   border-bottom: 1px solid rgba(244, 236, 224, 0.12);
   margin-bottom: 1.3rem;
 }
 
-.wh-tab {
+.lr-tab {
   appearance: none;
   background: none;
   border: none;
@@ -468,23 +468,23 @@ body {
   font-size: 0.76em;
   letter-spacing: 0.19em;
   text-transform: uppercase;
-  color: var(--wh-ink-faint);
+  color: var(--lr-ink-faint);
   cursor: pointer;
-  transition: color 200ms var(--wh-ease), border-color 200ms var(--wh-ease);
+  transition: color 200ms var(--lr-ease), border-color 200ms var(--lr-ease);
 }
 
-.wh-tab[aria-selected="true"] {
-  color: var(--wh-ink);
-  border-bottom-color: var(--wh-warm);
+.lr-tab[aria-selected="true"] {
+  color: var(--lr-ink);
+  border-bottom-color: var(--lr-warm);
 }
 
-.wh-tabpanel[hidden] {
+.lr-tabpanel[hidden] {
   display: none;
 }
 
 /* --------------------------------------------------------------- fields -- */
 
-.wh-field {
+.lr-field {
   display: grid;
   grid-template-columns: 1fr minmax(0, 15rem) 3.4rem;
   align-items: center;
@@ -494,45 +494,45 @@ body {
   font-size: 0.87em;
 }
 
-.wh-field:last-child {
+.lr-field:last-child {
   border-bottom: none;
 }
 
-.wh-field-label {
-  color: var(--wh-ink-soft);
+.lr-field-label {
+  color: var(--lr-ink-soft);
   letter-spacing: 0.03em;
 }
 
-.wh-field-hint {
+.lr-field-hint {
   display: block;
   font-size: 0.8em;
-  color: var(--wh-ink-faint);
+  color: var(--lr-ink-faint);
   margin-top: 0.15rem;
   letter-spacing: 0.02em;
 }
 
-.wh-field-value {
+.lr-field-value {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--wh-ink-faint);
+  color: var(--lr-ink-faint);
   font-size: 0.9em;
 }
 
-.wh-ui input[type="range"] {
+.lr-ui input[type="range"] {
   width: 100%;
-  accent-color: var(--wh-warm);
+  accent-color: var(--lr-warm);
   cursor: pointer;
 }
 
-.wh-ui input[type="checkbox"] {
+.lr-ui input[type="checkbox"] {
   width: 1.05rem;
   height: 1.05rem;
-  accent-color: var(--wh-warm);
+  accent-color: var(--lr-warm);
   cursor: pointer;
   justify-self: start;
 }
 
-.wh-ui select {
+.lr-ui select {
   background: rgba(20, 22, 24, 0.8);
   border: 1px solid rgba(244, 236, 224, 0.18);
   border-radius: 0.45rem;
@@ -540,7 +540,7 @@ body {
   cursor: pointer;
 }
 
-.wh-keys {
+.lr-keys {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
   gap: 0.55rem 1.6rem;
@@ -548,7 +548,7 @@ body {
   margin: 0;
 }
 
-.wh-key-row {
+.lr-key-row {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -557,21 +557,21 @@ body {
   border-bottom: 1px solid rgba(244, 236, 224, 0.06);
 }
 
-.wh-key-row dt {
-  color: var(--wh-ink-soft);
+.lr-key-row dt {
+  color: var(--lr-ink-soft);
 }
 
-.wh-key-row dd {
+.lr-key-row dd {
   margin: 0;
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: 0.88em;
   letter-spacing: 0.06em;
-  color: var(--wh-warm);
+  color: var(--lr-warm);
 }
 
 /* ---------------------------------------------------------- diagnostics -- */
 
-.wh-diagnostics {
+.lr-diagnostics {
   position: absolute;
   top: 1.6vh;
   right: 1.4vw;
@@ -585,74 +585,74 @@ body {
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: 0.7em;
   line-height: 1.65;
-  color: var(--wh-ink-soft);
+  color: var(--lr-ink-soft);
 }
 
-.wh-diagnostics[hidden] {
+.lr-diagnostics[hidden] {
   display: none;
 }
 
-.wh-diagnostics-title {
+.lr-diagnostics-title {
   font-size: 0.85em;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--wh-ink-faint);
+  color: var(--lr-ink-faint);
   margin-bottom: 0.4rem;
 }
 
-.wh-diagnostics-row {
+.lr-diagnostics-row {
   display: flex;
   justify-content: space-between;
   gap: 1.2rem;
 }
 
-.wh-diagnostics-row span:last-child {
-  color: var(--wh-ink);
+.lr-diagnostics-row span:last-child {
+  color: var(--lr-ink);
   font-variant-numeric: tabular-nums;
 }
 
-.wh-diagnostics-row[data-warn="true"] span:last-child {
+.lr-diagnostics-row[data-warn="true"] span:last-child {
   color: #e8a25f;
 }
 
 /* -------------------------------------------------------------- loading -- */
 
-.wh-loading {
+.lr-loading {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
   background: linear-gradient(160deg, #1b2429, #2a2118);
-  transition: opacity 700ms var(--wh-ease);
+  transition: opacity 700ms var(--lr-ease);
   pointer-events: auto;
 }
 
-.wh-loading[data-done="true"] {
+.lr-loading[data-done="true"] {
   opacity: 0;
   pointer-events: none;
 }
 
-.wh-loading-inner {
+.lr-loading-inner {
   text-align: center;
 }
 
-.wh-loading-title {
-  font-family: var(--wh-display);
+.lr-loading-title {
+  font-family: var(--lr-display);
   font-size: 2.4em;
   font-weight: 400;
   letter-spacing: 0.28em;
   margin: 0 0 0.4rem;
-  color: var(--wh-ink);
+  color: var(--lr-ink);
 }
 
-.wh-loading-note {
+.lr-loading-note {
   font-size: 0.82em;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--wh-ink-faint);
+  color: var(--lr-ink-faint);
 }
 
-.wh-error {
+.lr-error {
   max-width: 34rem;
   max-height: 40vh;
   overflow: auto;
@@ -668,7 +668,7 @@ body {
  * agent hides `noscript` when scripting is enabled, and an author rule on the
  * element would override that and show the fallback to everyone.
  */
-.wh-noscript {
+.lr-noscript {
   position: fixed;
   inset: 0;
   z-index: 100;
@@ -677,21 +677,21 @@ body {
   padding: 2rem;
   text-align: center;
   background: #10161a;
-  color: var(--wh-ink);
-  font-family: var(--wh-body);
+  color: var(--lr-ink);
+  font-family: var(--lr-body);
   line-height: 1.6;
 }
 
 /* -------------------------------------------------------- reduced motion -- */
 
-.wh-ui[data-reduced-motion="true"] *,
-.wh-ui[data-reduced-motion="true"] {
+.lr-ui[data-reduced-motion="true"] *,
+.lr-ui[data-reduced-motion="true"] {
   transition-duration: 90ms !important;
   animation: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wh-ui * {
+  .lr-ui * {
     transition-duration: 90ms !important;
   }
 }
@@ -704,7 +704,7 @@ body {
  * ahead stay clear, and slow enough on both edges that it reads as the world
  * naming itself rather than as a notification.
  */
-.wh-place {
+.lr-place {
   position: absolute;
   right: 2.4vw;
   bottom: 3.4vh;
@@ -712,24 +712,24 @@ body {
   opacity: 0;
   transform: translateY(0.5rem);
   transition:
-    opacity 1200ms var(--wh-ease),
-    transform 1200ms var(--wh-ease);
+    opacity 1200ms var(--lr-ease),
+    transform 1200ms var(--lr-ease);
 }
-.wh-place[data-visible="true"] {
+.lr-place[data-visible="true"] {
   opacity: 1;
   transform: translateY(0);
 }
-.wh-place-name {
-  font-family: var(--wh-display);
+.lr-place-name {
+  font-family: var(--lr-display);
   font-size: 1.5em;
   letter-spacing: 0.09em;
-  color: var(--wh-ink);
+  color: var(--lr-ink);
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
   padding-bottom: 0.35rem;
-  border-bottom: 1px solid var(--wh-warm-soft);
+  border-bottom: 1px solid var(--lr-warm-soft);
 }
 
-.wh-ui[data-reduced-motion="true"] .wh-place {
+.lr-ui[data-reduced-motion="true"] .lr-place {
   transition-duration: 260ms;
   transform: none;
 }
@@ -745,7 +745,7 @@ body {
  * the gait strip where the player's eye already goes.
  */
 
-.wh-goal {
+.lr-goal {
   position: absolute;
   left: 2.4vw;
   /*
@@ -765,22 +765,22 @@ body {
   opacity: 0;
   transform: translateY(0.4rem);
   transition:
-    opacity 900ms var(--wh-ease),
-    transform 900ms var(--wh-ease);
+    opacity 900ms var(--lr-ease),
+    transform 900ms var(--lr-ease);
 }
-.wh-goal[data-visible="true"] {
+.lr-goal[data-visible="true"] {
   opacity: 1;
   transform: translateY(0);
 }
-.wh-goal-mark {
-  color: var(--wh-warm);
+.lr-goal-mark {
+  color: var(--lr-warm);
   font-size: 1.1em;
   line-height: 1;
 }
-.wh-goal-text {
-  font-family: var(--wh-display);
+.lr-goal-text {
+  font-family: var(--lr-display);
   font-size: 1.05em;
-  color: var(--wh-ink-soft);
+  color: var(--lr-ink-soft);
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
 }
 
@@ -792,7 +792,7 @@ body {
  * behind the player as readily as ahead - which is the case that matters, since
  * the herd answers from somewhere the player is not already looking.
  */
-.wh-bearing {
+.lr-bearing {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -801,13 +801,13 @@ body {
   margin-left: calc(min(52vh, 40vw) / -2);
   margin-top: calc(min(52vh, 40vw) / -2);
   opacity: 0;
-  transition: opacity 700ms var(--wh-ease);
+  transition: opacity 700ms var(--lr-ease);
   pointer-events: none;
 }
-.wh-bearing[data-visible="true"] {
+.lr-bearing[data-visible="true"] {
   opacity: 1;
 }
-.wh-bearing-arrow {
+.lr-bearing-arrow {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -816,37 +816,37 @@ body {
   margin: -0.8em 0 0 -0.8em;
   /* Rotate about the centre, then push out to the ring: one transform does
      both the direction and the placement. */
-  transform: rotate(var(--wh-bearing, 0deg)) translateY(calc(min(52vh, 40vw) / -2 + 1.4em));
-  transition: transform 420ms var(--wh-ease);
+  transform: rotate(var(--lr-bearing, 0deg)) translateY(calc(min(52vh, 40vw) / -2 + 1.4em));
+  transition: transform 420ms var(--lr-ease);
 }
-.wh-bearing-glyph {
+.lr-bearing-glyph {
   display: grid;
   place-items: center;
   width: 100%;
   height: 100%;
-  color: var(--wh-warm);
+  color: var(--lr-warm);
   font-size: 0.9em;
   text-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
-  animation: wh-bearing-pulse 2.4s var(--wh-ease) infinite;
+  animation: lr-bearing-pulse 2.4s var(--lr-ease) infinite;
 }
-.wh-bearing-distance {
+.lr-bearing-distance {
   position: absolute;
   left: 50%;
   top: 105%;
   /* Counter-rotated by exactly the bearing, so the caption stays level while
      the mark it belongs to swings around the ring. */
-  transform: translateX(-50%) rotate(calc(-1 * var(--wh-bearing, 0deg)));
+  transform: translateX(-50%) rotate(calc(-1 * var(--lr-bearing, 0deg)));
   font-size: 0.72em;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: var(--wh-ink-faint);
+  color: var(--lr-ink-faint);
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
 }
-.wh-bearing[data-behind="true"] .wh-bearing-distance::after {
+.lr-bearing[data-behind="true"] .lr-bearing-distance::after {
   content: " · turn around";
 }
-@keyframes wh-bearing-pulse {
+@keyframes lr-bearing-pulse {
   0%,
   100% {
     opacity: 0.55;
@@ -856,7 +856,7 @@ body {
   }
 }
 
-.wh-discovery {
+.lr-discovery {
   position: absolute;
   left: 50%;
   /* Sits across the lower middle, which is where the eye already is. Lifting it
@@ -869,11 +869,11 @@ body {
   text-align: center;
   opacity: 0;
   transition:
-    opacity 1100ms var(--wh-ease),
-    transform 1100ms var(--wh-ease);
+    opacity 1100ms var(--lr-ease),
+    transform 1100ms var(--lr-ease);
   pointer-events: none;
 }
-.wh-discovery[data-visible="true"] {
+.lr-discovery[data-visible="true"] {
   opacity: 1;
   transform: translate(-50%, 0);
 }
@@ -885,7 +885,7 @@ body {
  * wash rather than a panel: it has no edge to notice, so the moment still reads
  * as something the island said rather than as a box the interface opened.
  */
-.wh-discovery::before {
+.lr-discovery::before {
   content: "";
   position: absolute;
   inset: -2.4rem -4rem;
@@ -898,22 +898,22 @@ body {
   );
   pointer-events: none;
 }
-.wh-discovery-name {
-  font-family: var(--wh-display);
+.lr-discovery-name {
+  font-family: var(--lr-display);
   font-size: 1.75em;
   letter-spacing: 0.05em;
-  color: var(--wh-ink);
+  color: var(--lr-ink);
   text-shadow: 0 2px 22px rgba(0, 0, 0, 0.85);
 }
-.wh-discovery-body {
+.lr-discovery-body {
   margin-top: 0.35rem;
   font-size: 0.98em;
   line-height: 1.45;
-  color: var(--wh-ink-soft);
+  color: var(--lr-ink-soft);
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.85);
 }
 
-.wh-prompt {
+.lr-prompt {
   position: absolute;
   left: 50%;
   bottom: 12vh;
@@ -923,20 +923,20 @@ body {
   gap: 0.6rem;
   padding: 0.4rem 0.9rem 0.4rem 0.5rem;
   border-radius: 999px;
-  background: var(--wh-dusk);
-  border: 1px solid var(--wh-warm-soft);
+  background: var(--lr-dusk);
+  border: 1px solid var(--lr-warm-soft);
   backdrop-filter: blur(6px);
   opacity: 0;
   transition:
-    opacity 320ms var(--wh-ease),
-    transform 320ms var(--wh-ease);
+    opacity 320ms var(--lr-ease),
+    transform 320ms var(--lr-ease);
   pointer-events: none;
 }
-.wh-prompt[data-visible="true"] {
+.lr-prompt[data-visible="true"] {
   opacity: 1;
   transform: translate(-50%, 0);
 }
-.wh-prompt-key {
+.lr-prompt-key {
   display: grid;
   place-items: center;
   min-width: 1.9em;
@@ -945,54 +945,54 @@ body {
   border-radius: 0.4em;
   background: rgba(244, 236, 224, 0.92);
   color: #1a1e20;
-  font-family: var(--wh-body);
+  font-family: var(--lr-body);
   font-size: 0.86em;
   font-weight: 700;
 }
-.wh-prompt-text {
+.lr-prompt-text {
   font-size: 0.98em;
-  color: var(--wh-ink);
+  color: var(--lr-ink);
 }
 
-.wh-save {
+.lr-save {
   position: absolute;
   right: 2.4vw;
   top: 2.6vh;
   font-size: 0.76em;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--wh-ink-faint);
+  color: var(--lr-ink-faint);
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
   opacity: 0;
-  transition: opacity 700ms var(--wh-ease);
+  transition: opacity 700ms var(--lr-ease);
 }
-.wh-save[data-visible="true"] {
+.lr-save[data-visible="true"] {
   opacity: 1;
 }
 
 /* The full picture, on demand, inside the pause surface. */
-.wh-journey {
+.lr-journey {
   margin-bottom: 1.4rem;
 }
-.wh-journey-title {
+.lr-journey-title {
   margin: 0 0 0.3rem;
-  font-family: var(--wh-display);
+  font-family: var(--lr-display);
   font-size: 1.15em;
-  color: var(--wh-ink);
+  color: var(--lr-ink);
 }
-.wh-journey-summary {
+.lr-journey-summary {
   margin: 0 0 0.7rem;
   font-size: 0.92em;
-  color: var(--wh-ink-faint);
+  color: var(--lr-ink-faint);
 }
-.wh-journey-list {
+.lr-journey-list {
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
   gap: 0.35rem;
 }
-.wh-journey-item {
+.lr-journey-item {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
@@ -1001,36 +1001,36 @@ body {
   background: rgba(244, 236, 224, 0.05);
   border-left: 2px solid transparent;
 }
-.wh-journey-item[data-state="completed"] {
-  border-left-color: var(--wh-warm);
+.lr-journey-item[data-state="completed"] {
+  border-left-color: var(--lr-warm);
 }
-.wh-journey-item[data-state="revealed"] {
+.lr-journey-item[data-state="revealed"] {
   opacity: 0.72;
 }
-.wh-journey-item-name {
-  color: var(--wh-ink);
+.lr-journey-item-name {
+  color: var(--lr-ink);
 }
-.wh-journey-item-state {
-  color: var(--wh-ink-faint);
+.lr-journey-item-state {
+  color: var(--lr-ink-faint);
   font-size: 0.86em;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-.wh-ui[data-reduced-motion="true"] .wh-goal,
-.wh-ui[data-reduced-motion="true"] .wh-discovery,
-.wh-ui[data-reduced-motion="true"] .wh-prompt {
+.lr-ui[data-reduced-motion="true"] .lr-goal,
+.lr-ui[data-reduced-motion="true"] .lr-discovery,
+.lr-ui[data-reduced-motion="true"] .lr-prompt {
   transition-duration: 240ms;
   transform: none;
 }
-.wh-ui[data-reduced-motion="true"] .wh-discovery,
-.wh-ui[data-reduced-motion="true"] .wh-prompt {
+.lr-ui[data-reduced-motion="true"] .lr-discovery,
+.lr-ui[data-reduced-motion="true"] .lr-prompt {
   /* These are centred by transform, so reduced motion must keep the centring
      while dropping only the travel. */
   transform: translate(-50%, 0);
 }
-.wh-ui[data-reduced-motion="true"] .wh-bearing-glyph {
+.lr-ui[data-reduced-motion="true"] .lr-bearing-glyph {
   animation: none;
   opacity: 1;
 }
@@ -1043,7 +1043,7 @@ body {
  * being written down. It sits low and narrow rather than filling the screen -
  * the island is still there behind it and still worth looking at.
  */
-.wh-storage {
+.lr-storage {
   position: absolute;
   /* Above the focus scrim: this is a question, and the scrim is an invitation. */
   z-index: 5;
@@ -1054,46 +1054,46 @@ body {
   opacity: 0;
   pointer-events: none;
   transition:
-    opacity 420ms var(--wh-ease),
-    transform 420ms var(--wh-ease);
+    opacity 420ms var(--lr-ease),
+    transform 420ms var(--lr-ease);
 }
-.wh-storage[data-visible="true"] {
+.lr-storage[data-visible="true"] {
   opacity: 1;
   transform: translate(-50%, 0);
   pointer-events: auto;
 }
-.wh-storage-panel {
+.lr-storage-panel {
   padding: 1.1rem 1.3rem 1rem;
   border-radius: 0.9rem;
-  background: var(--wh-dusk-deep);
-  border: 1px solid var(--wh-warm-soft);
+  background: var(--lr-dusk-deep);
+  border: 1px solid var(--lr-warm-soft);
   backdrop-filter: blur(10px);
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
 }
-.wh-storage-title {
+.lr-storage-title {
   margin: 0 0 0.2rem;
-  font-family: var(--wh-display);
+  font-family: var(--lr-display);
   font-size: 1.2em;
-  color: var(--wh-ink);
+  color: var(--lr-ink);
 }
-.wh-storage-reason {
+.lr-storage-reason {
   margin: 0 0 0.4rem;
   font-size: 0.95em;
-  color: var(--wh-warm);
+  color: var(--lr-warm);
 }
-.wh-storage-body {
+.lr-storage-body {
   margin: 0 0 0.9rem;
   font-size: 0.94em;
   line-height: 1.5;
-  color: var(--wh-ink-soft);
+  color: var(--lr-ink-soft);
 }
-.wh-storage-actions {
+.lr-storage-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
 }
 
-.wh-ui[data-reduced-motion="true"] .wh-storage {
+.lr-ui[data-reduced-motion="true"] .lr-storage {
   transition-duration: 200ms;
   transform: translate(-50%, 0);
 }
@@ -1106,11 +1106,11 @@ body {
    Sits above the pause panel and the focus scrim: a lost context outranks
    anything else the interface could be saying, including an invitation to
    click into a canvas that cannot draw. */
-.wh-graphics {
+.lr-graphics {
   position: absolute;
   inset: 0;
   z-index: 20;
-  /* `.wh-ui` is transparent to the pointer and every interactive surface opts
+  /* `.lr-ui` is transparent to the pointer and every interactive surface opts
      back in. Without this the resume button is covered by the canvas and the
      only way out of a restored context cannot be clicked. */
   pointer-events: none;
@@ -1126,44 +1126,44 @@ body {
      the panel computed as hidden for the first frames, which silently rejects
      the `focus()` that puts the player on the resume button. */
   transition:
-    opacity 320ms var(--wh-ease),
+    opacity 320ms var(--lr-ease),
     visibility 0s linear 320ms;
 }
-.wh-graphics[data-visible="true"] {
+.lr-graphics[data-visible="true"] {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transition-delay: 0s;
 }
-.wh-graphics-panel {
+.lr-graphics-panel {
   width: min(46ch, 90vw);
   padding: 1.4rem 1.5rem 1.3rem;
   border-radius: 1rem;
   text-align: center;
-  background: var(--wh-dusk-deep);
-  border: 1px solid var(--wh-warm-soft);
+  background: var(--lr-dusk-deep);
+  border: 1px solid var(--lr-warm-soft);
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
 }
-.wh-graphics-title {
+.lr-graphics-title {
   margin: 0 0 0.5rem;
-  font-family: var(--wh-display);
+  font-family: var(--lr-display);
   font-size: 1.35em;
-  color: var(--wh-ink);
+  color: var(--lr-ink);
 }
-.wh-graphics-body {
+.lr-graphics-body {
   margin: 0 0 1.1rem;
   font-size: 0.96em;
   line-height: 1.55;
-  color: var(--wh-ink-soft);
+  color: var(--lr-ink-soft);
 }
 /* The two waiting states get a slow breath so the panel does not read as a
    still image of a hung game. It is the only motion on screen while the
    context is gone, and it stops the moment there is something to press. */
-.wh-graphics[data-status="context-lost"] .wh-graphics-title,
-.wh-graphics[data-status="restoring"] .wh-graphics-title {
-  animation: wh-graphics-breath 3.4s ease-in-out infinite;
+.lr-graphics[data-status="context-lost"] .lr-graphics-title,
+.lr-graphics[data-status="restoring"] .lr-graphics-title {
+  animation: lr-graphics-breath 3.4s ease-in-out infinite;
 }
-@keyframes wh-graphics-breath {
+@keyframes lr-graphics-breath {
   0%,
   100% {
     opacity: 0.72;
@@ -1172,14 +1172,63 @@ body {
     opacity: 1;
   }
 }
-.wh-ui[data-reduced-motion="true"] .wh-graphics {
+.lr-ui[data-reduced-motion="true"] .lr-graphics {
   transition-duration: 150ms;
 }
-.wh-ui[data-reduced-motion="true"] .wh-graphics-title {
+.lr-ui[data-reduced-motion="true"] .lr-graphics-title {
   animation: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .wh-graphics-title {
+  .lr-graphics-title {
     animation: none;
+  }
+}
+
+/*
+ * The always-on control reference.
+ *
+ * Low contrast on purpose. It has to be legible against both a sunlit dune and
+ * a shaded wood without ever competing with the horse, so it leans on a soft
+ * shadow rather than on a panel, and it sits in the one corner nothing else
+ * uses. It is inert: no transitions, no state, nothing to notice.
+ */
+.lr-controls {
+  position: absolute;
+  left: 1.6vw;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 0.18rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.5rem;
+  background: rgba(12, 16, 18, 0.28);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+  user-select: none;
+}
+.lr-controls-row {
+  display: grid;
+  grid-template-columns: 3.6rem auto;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+.lr-controls-key {
+  color: rgba(244, 238, 226, 0.82);
+  letter-spacing: 0.06em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+  white-space: nowrap;
+}
+.lr-controls-action {
+  color: rgba(226, 220, 206, 0.5);
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+}
+
+/* On a short window the legend would collide with the gait strip. */
+@media (max-height: 560px) {
+  .lr-controls {
+    display: none;
   }
 }

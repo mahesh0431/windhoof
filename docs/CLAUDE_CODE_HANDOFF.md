@@ -48,7 +48,7 @@ Copy this when the active milestone has a playable UI boundary:
 
 ```text
 You are taking ownership of all player-facing UI/UX and visual presentation
-for Windhoof.
+for Longride.
 
 Read CLAUDE.md and the canonical project documents it links before making
 decisions. The active milestone in docs/MILESTONES.md defines the current scope
@@ -74,7 +74,7 @@ Copy this when the active milestone needs real visual or audio assets:
 
 ```text
 Take ownership of the visual and audio assets and their integration for the
-current Windhoof milestone.
+current Longride milestone.
 
 Read CLAUDE.md, docs/ART_ASSET_BRIEF.md, docs/WORLD_BIBLE.md,
 docs/TECHNICAL_ARCHITECTURE.md, and the active milestone before proceeding.
@@ -99,7 +99,7 @@ gate.
 Copy this after a playtest or visual review:
 
 ```text
-Review the current playable Windhoof build against the canonical project
+Review the current playable Longride build against the canonical project
 documents and the active milestone exit gate.
 
 Review evidence:

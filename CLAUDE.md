@@ -1,6 +1,6 @@
-# Windhoof project context
+# Longride project context
 
-Windhoof is a third-person browser game in which the player embodies a young
+Longride is a third-person browser game in which the player embodies a young
 wild horse exploring an island after being separated from its herd.
 
 ## Read first

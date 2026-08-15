@@ -1,6 +1,7 @@
 import {
   Color,
   ConeGeometry,
+  DoubleSide,
   Group,
   InstancedMesh,
   Matrix4,
@@ -9,6 +10,12 @@ import {
   Vector3,
   type BufferGeometry,
 } from "three";
+import {
+  applyGrassWind,
+  createTuftGeometry,
+  createWindUniforms,
+  type WindUniforms,
+} from "./grassBlades";
 import type { WorldManifest } from "../game/world/compiler/worldTypes";
 import type { IslandField } from "./islandField";
 import { ROUTE_DISTANCE_CAP } from "./islandField";
@@ -55,6 +62,8 @@ export interface IslandGroundCover {
    * centre and half-diagonal.
    */
   setFocus(x: number, z: number): void;
+  /** Advances the wind. One uniform moves every tuft on the island. */
+  setTime(seconds: number): void;
   dispose(): void;
 }
 
@@ -73,7 +82,29 @@ export interface IslandGroundCover {
  * clock second. Whether the boundary reads in motion is still an open question,
  * and it is recorded as one rather than answered by an unmeasured constant.
  */
-const COVER_DRAW_RADIUS = 260;
+/*
+ * Trimmed from 260 when the near-grass window arrived: the far scatter no
+ * longer has to carry the foreground, and the triangles it gives up here are
+ * what pay for the carpet the player is standing in.
+ */
+const COVER_DRAW_RADIUS = 185;
+
+/**
+ * Terrain chunks per cover bucket.
+ *
+ * One bucket per chunk is the finest cull and, at two layers, also two draw
+ * calls per chunk: on the full island that was fifty calls of grass alone and
+ * it is what took the riding frame over its draw-call budget. Bucketing two
+ * chunks together quarters the calls and pays for it in triangles, which is the
+ * side of the budget that has room.
+ */
+const CHUNKS_PER_BUCKET = 2;
+
+/**
+ * Flower heads are a few centimetres across and gone from the frame well before
+ * the grass they sit in is, so they stop being drawn long before it does.
+ */
+const FLOWER_DRAW_RADIUS = 85;
 
 /** Metres between candidate tufts before jitter. */
 const CELL_METRES = 3;
@@ -88,7 +119,7 @@ const CELL_METRES = 3;
  * Tuft ceiling for the 512-metre slice. Scaled by area for larger islands, so
  * a bigger world is not thinner ground - see `tuftCeiling`.
  */
-const MAX_TUFTS_PER_SLICE = 140_000;
+const MAX_TUFTS_PER_SLICE = 320_000;
 
 /**
  * Ground cover is instanced, so cost is triangles and matrix writes rather than
@@ -116,9 +147,9 @@ interface CoverStyle {
 const STYLES: Record<TerrainFamily, CoverStyle> = {
   // Marram on the dunes: sparse, low, wind-flattened, greyed off by salt.
   coastal: {
-    perCell: 2,
-    minHeight: 0.2,
-    maxHeight: 0.4,
+    perCell: 3,
+    minHeight: 0.26,
+    maxHeight: 0.52,
     minRadius: 0.07,
     maxRadius: 0.13,
     tints: [new Color("#9aa471"), new Color("#aab27f"), new Color("#87956a")],
@@ -127,11 +158,11 @@ const STYLES: Record<TerrainFamily, CoverStyle> = {
   // The longgrass the region is named for: tall, gold-shot, and thick enough
   // that the gallop has something streaming past it.
   grassland: {
-    perCell: 4,
-    minHeight: 0.34,
-    maxHeight: 0.72,
-    minRadius: 0.09,
-    maxRadius: 0.18,
+    perCell: 5,
+    minHeight: 0.45,
+    maxHeight: 0.95,
+    minRadius: 0.1,
+    maxRadius: 0.2,
     tints: [
       new Color("#a8b163"),
       new Color("#8da55c"),
@@ -143,9 +174,9 @@ const STYLES: Record<TerrainFamily, CoverStyle> = {
   // Fern under the canopy: lower, much wider, and far darker than anything on
   // the plain, so the treeline is a change of country and not just of props.
   woodland: {
-    perCell: 4,
-    minHeight: 0.26,
-    maxHeight: 0.52,
+    perCell: 5,
+    minHeight: 0.34,
+    maxHeight: 0.68,
     minRadius: 0.14,
     maxRadius: 0.26,
     tints: [new Color("#33512e"), new Color("#3f6136"), new Color("#284526")],
@@ -168,6 +199,18 @@ function hash3(seed: number, x: number, z: number, salt: number): number {
   value = Math.imul(value, 0x846ca68b);
   value ^= value >>> 16;
   return value >>> 0;
+}
+
+/**
+ * What one instanced cover layer is made of.
+ *
+ * Blades and flower heads want opposite anchoring: a blade grows out of the
+ * ground it is placed on, and a bud sits centred on the point it was given.
+ */
+interface CoverLayer {
+  readonly name: string;
+  readonly triangles: number;
+  readonly flower: boolean;
 }
 
 interface Tuft {
@@ -265,7 +308,13 @@ export function beginIslandGroundCover(
 
   const tufts: Tuft[] = [];
   const flowers: Tuft[] = [];
-  const bucketMeshes: Array<{ mesh: InstancedMesh; centreX: number; centreZ: number }> = [];
+  const bucketMeshes: Array<{
+    mesh: InstancedMesh;
+    centreX: number;
+    centreZ: number;
+    /** Layers can reach different distances; a flower head is not a treeline. */
+    radius: number;
+  }> = [];
   const half = field.halfMeters;
   const chunksPerEdge = manifest.island.chunksPerEdge;
   const cells = Math.floor(field.sizeMeters / CELL_METRES);
@@ -316,9 +365,13 @@ export function beginIslandGroundCover(
         // fading rather than a line.
         const slopeFalloff = slope > 34 ? 0.45 : 1;
         const shoreFalloff = shore < 16 ? 0.35 + (shore - 5) / 16 : 1;
+        // Thinner than it was. This layer used to be the only cover there was
+        // and had to read as ground on its own; now it is the middle distance
+        // behind a carpet, and half of it is enough to keep the ground textured
+        // out to the horizon for half the triangles.
         const attempts = Math.max(
-          1,
-          Math.round(style.perCell * (0.55 + density) * slopeFalloff * shoreFalloff),
+          2,
+          Math.round(style.perCell * (0.8 + density) * slopeFalloff * shoreFalloff * 1.5),
         );
 
         for (let index = 0; index < attempts; index += 1) {
@@ -373,6 +426,9 @@ export function beginIslandGroundCover(
 
   const geometries: BufferGeometry[] = [];
   const materials: MeshStandardMaterial[] = [];
+  // Weaker than the near carpet: at this distance a large sway reads as the
+  // whole ground plane shearing rather than as grass moving.
+  const wind: WindUniforms = createWindUniforms(0.07, 0.045, 1, 2.4);
   let triangleCount = 0;
 
   /**
@@ -388,26 +444,42 @@ export function beginIslandGroundCover(
    * Measured on the vertical slice: 69,398 tufts, 212,836 triangles in total,
    * of which only the visible chunks are submitted.
    */
+  const bucketSpan = manifest.island.chunkSizeMeters * CHUNKS_PER_BUCKET;
+  const bucketsPerEdge = Math.max(1, Math.ceil(chunksPerEdge / CHUNKS_PER_BUCKET));
   const bucketOf = (tuft: Tuft): number => {
-    const chunkX = Math.min(
-      chunksPerEdge - 1,
-      Math.max(0, Math.floor((tuft.x + half) / manifest.island.chunkSizeMeters)),
+    const bucketX = Math.min(
+      bucketsPerEdge - 1,
+      Math.max(0, Math.floor((tuft.x + half) / bucketSpan)),
     );
-    const chunkZ = Math.min(
-      chunksPerEdge - 1,
-      Math.max(0, Math.floor((tuft.z + half) / manifest.island.chunkSizeMeters)),
+    const bucketZ = Math.min(
+      bucketsPerEdge - 1,
+      Math.max(0, Math.floor((tuft.z + half) / bucketSpan)),
     );
-    return chunkZ * chunksPerEdge + chunkX;
+    return bucketZ * bucketsPerEdge + bucketX;
   };
 
-  const addLayer = (name: string, members: readonly Tuft[], radialSegments: number): void => {
+  const addLayer = (name: string, members: readonly Tuft[], layer: CoverLayer): void => {
     if (members.length === 0) return;
-    // Open-ended cones: three or four triangles each, no base anyone can see,
-    // and no texture, so there is no asset provenance question to answer.
-    const geometry = new ConeGeometry(1, 1, radialSegments, 1, true);
+    // Three triangles either way. Spent on splayed blades rather than on a cone,
+    // because a cone is the one silhouette at this budget that cannot read as a
+    // plant. Flower heads keep the cone: a bud is a blob, and it is the one
+    // thing on the ground that should not be blade-shaped.
+    const geometry = layer.flower
+      ? new ConeGeometry(1, 1, 4, 1, true)
+      : createTuftGeometry({ blades: 3, width: 0.17, splay: 0.82, rootShade: 0.5 }, 1);
     geometries.push(geometry);
     // Instance colour multiplies the material colour, so the base stays white.
-    const material = new MeshStandardMaterial({ roughness: 0.94, metalness: 0 });
+    const material = new MeshStandardMaterial({
+      roughness: 0.94,
+      metalness: 0,
+      vertexColors: !layer.flower,
+    });
+    if (!layer.flower) {
+      // A blade has no back: single-sided, half of every tuft is unlit black
+      // whenever the sun is on the other side of it.
+      material.side = DoubleSide;
+      applyGrassWind(material, wind);
+    }
     materials.push(material);
 
     const buckets = new Map<number, Tuft[]>();
@@ -428,8 +500,9 @@ export function beginIslandGroundCover(
       const mesh = new InstancedMesh(geometry, material, bucket.length);
       bucketMeshes.push({
         mesh,
-        centreX: -half + ((key % chunksPerEdge) + 0.5) * manifest.island.chunkSizeMeters,
-        centreZ: -half + (Math.floor(key / chunksPerEdge) + 0.5) * manifest.island.chunkSizeMeters,
+        centreX: -half + ((key % bucketsPerEdge) + 0.5) * bucketSpan,
+        centreZ: -half + (Math.floor(key / bucketsPerEdge) + 0.5) * bucketSpan,
+        radius: layer.flower ? FLOWER_DRAW_RADIUS : COVER_DRAW_RADIUS,
       });
       mesh.name = `${name}-${key}`;
       // Ground cover receives shadow but does not cast: tens of thousands of
@@ -439,10 +512,18 @@ export function beginIslandGroundCover(
       mesh.receiveShadow = true;
 
       bucket.forEach((tuft, index) => {
-        position.set(tuft.x, tuft.y + tuft.height * 0.5, tuft.z);
+        position.set(
+          tuft.x,
+          layer.flower ? tuft.y + tuft.height * 0.5 : tuft.y,
+          tuft.z,
+        );
         axis.set(Math.cos(tuft.yaw), 0, Math.sin(tuft.yaw)).normalize();
         quaternion.setFromAxisAngle(axis, tuft.lean);
-        scale.set(tuft.radius, tuft.height * 0.5, tuft.radius);
+        scale.set(
+          tuft.radius,
+          layer.flower ? tuft.height * 0.5 : tuft.height,
+          tuft.radius,
+        );
         matrix.compose(position, quaternion, scale);
         mesh.setMatrixAt(index, matrix);
         mesh.setColorAt(index, tuft.tint);
@@ -452,18 +533,14 @@ export function beginIslandGroundCover(
       // Without this the mesh keeps the geometry's unit bounding sphere and the
       // culler makes the wrong call in both directions.
       mesh.computeBoundingSphere();
-      triangleCount += radialSegments * bucket.length;
+      triangleCount += layer.triangles * bucket.length;
       group.add(mesh);
     }
   };
 
-  const layers: ReadonlyArray<{
-    readonly name: string;
-    readonly members: readonly Tuft[];
-    readonly segments: number;
-  }> = [
-    { name: "island-tufts", members: tufts, segments: 3 },
-    { name: "island-flowers", members: flowers, segments: 4 },
+  const layers: ReadonlyArray<CoverLayer & { readonly members: readonly Tuft[] }> = [
+    { name: "island-tufts", members: tufts, triangles: 3, flower: false },
+    { name: "island-flowers", members: flowers, triangles: 4, flower: true },
   ];
 
   return {
@@ -473,19 +550,23 @@ export function beginIslandGroundCover(
     realizeLayer(layer) {
       const entry = layers[layer];
       if (!entry) throw new Error(`No ground-cover layer ${layer}`);
-      addLayer(entry.name, entry.members, entry.segments);
+      addLayer(entry.name, entry.members, entry);
     },
     finish() {
-      const chunkHalfDiagonal = manifest.island.chunkSizeMeters * Math.SQRT1_2;
+      const chunkHalfDiagonal = bucketSpan * Math.SQRT1_2;
       return {
         group,
         tuftCount: tufts.length + flowers.length,
         triangleCount,
         setFocus(x, z) {
+          wind.parter.value.set(x, 0, z);
           for (const bucket of bucketMeshes) {
             const distance = Math.hypot(bucket.centreX - x, bucket.centreZ - z);
-            bucket.mesh.visible = distance - chunkHalfDiagonal <= COVER_DRAW_RADIUS;
+            bucket.mesh.visible = distance - chunkHalfDiagonal <= bucket.radius;
           }
+        },
+        setTime(seconds) {
+          wind.time.value = seconds;
         },
         dispose() {
           for (const geometry of geometries) geometry.dispose();

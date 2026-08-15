@@ -428,9 +428,14 @@ export function buildIslandChunkMesh(
       const aboveSea = height - field.seaLevel;
       const shore = field.shoreDistance[global] ?? 100;
       const coastalWeight = familyWeights[global * 3] ?? 0;
+      // How far the strand reaches inland is a fraction of the island, not a
+      // fixed number of metres. Sixty-six metres of sand was a beach on a
+      // 1,024-metre island and was most of the arrival region on a 512-metre
+      // one, which is why the spawn read as bleached rather than as grass.
+      const strandReach = (field.sizeMeters / 1024) * (18 + 48 * coastalWeight);
       const beach = Math.max(
-        1 - smoothstep(0.4, 4.5, aboveSea),
-        (1 - smoothstep(4, 18 + 48 * coastalWeight, shore)) * (0.3 + 0.7 * coastalWeight),
+        1 - smoothstep(0.4, 3, aboveSea),
+        (1 - smoothstep(3, Math.max(8, strandReach), shore)) * (0.3 + 0.7 * coastalWeight),
       );
       if (beach > 0) {
         scratch

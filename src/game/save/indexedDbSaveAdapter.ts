@@ -1,7 +1,7 @@
 import type { SaveAdapter } from "./saveAdapter";
 import type { GameSaveV1 } from "./saveSchema";
 
-const DATABASE_NAME = "windhoof";
+const DATABASE_NAME = "longride";
 const DATABASE_VERSION = 1;
 const STORE_NAME = "game-saves";
 const SAVE_KEY = "primary-v1";

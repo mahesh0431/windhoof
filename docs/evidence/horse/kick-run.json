@@ -1,0 +1,26 @@
+{
+  "target": {
+    "x": 33.282394739245696,
+    "z": -80.08341077652128,
+    "grazing": true,
+    "live": false,
+    "mood": null,
+    "distance": 95.8786378042172
+  },
+  "moods": [
+    "watching",
+    "warning",
+    "kicking"
+  ],
+  "byHorse": {
+    "33.3,-80.1": [
+      "watching",
+      "warning",
+      "kicking"
+    ]
+  },
+  "shoved": true,
+  "liveSeen": true,
+  "maxDraws": 242,
+  "consoleErrors": []
+}

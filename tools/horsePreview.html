@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Longride · horse preview</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #7d8f72;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      Dev-only inspection surface for the horse model. It is not an application
+      entry: only index.html is built, so this page exists purely so
+      tools/inspectHorse.mjs can photograph the rig on its own, away from the
+      terrain, the interface, and the chase camera.
+    -->
+    <canvas id="preview"></canvas>
+    <script type="module" src="/tools/horsePreview.mjs"></script>
+  </body>
+</html>

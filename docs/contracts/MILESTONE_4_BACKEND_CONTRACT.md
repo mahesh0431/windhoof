@@ -17,7 +17,7 @@ may never collapse the trace, spring, and overlook into one completion area.
 
 This contract is the authoritative simulation/save seam for the exploration
 vertical slice. It follows the WorldClaw-inspired workflow already adopted by
-Windhoof:
+Longride:
 
 ```text
 authored WorldSpec

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { WindhoofAudio } from "../../src/audio/windhoofAudio";
-import type { AudioFrame } from "../../src/audio/windhoofAudio";
+import { LongrideAudio } from "../../src/audio/longrideAudio";
+import type { AudioFrame } from "../../src/audio/longrideAudio";
 
 /**
  * Mute is enforced at one point - the context is never constructed - so what
@@ -48,7 +48,7 @@ const frame: AudioFrame = {
 describe("muted audio", () => {
   it("never constructs an audio context, however often it is resumed", async () => {
     withStubbedAudioContext();
-    const audio = new WindhoofAudio({ muted: true });
+    const audio = new LongrideAudio({ muted: true });
 
     // Every path that reaches audio: startup, the first gesture, pointer lock,
     // resuming from pause, and the settings the pause panel writes.
@@ -65,7 +65,7 @@ describe("muted audio", () => {
 
   it("stays silent through the sounds a ride actually triggers", async () => {
     withStubbedAudioContext();
-    const audio = new WindhoofAudio({ muted: true });
+    const audio = new LongrideAudio({ muted: true });
     await audio.resume();
 
     // None of these may reach for a context, and none may throw for not having
@@ -84,7 +84,7 @@ describe("muted audio", () => {
 
   it("is off by default, so ordinary play still builds its context", async () => {
     withStubbedAudioContext();
-    const audio = new WindhoofAudio();
+    const audio = new LongrideAudio();
 
     expect(audio.isMuted).toBe(false);
     await audio.resume();

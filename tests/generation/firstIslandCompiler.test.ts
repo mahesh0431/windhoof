@@ -24,13 +24,28 @@ describe("first-island compiler contract", () => {
   it("keeps the frozen schema-v3 manifest while compiling the authored v4 plan", () => {
     const second = compileWorld(firstIsland);
 
-    expect(slice.manifestHash).toBe("fnv1a64-75ef4f476903558d");
+    // Re-frozen on 2026-08-14. The old value described the world before the
+    // island was halved: that change moved the terrain noise lattice from 18 to
+    // 34 metres, dropped its amplitude, and derived summit relief from the
+    // island's own size instead of a hard-coded 20, so every compiled height
+    // moved and the hash with it.
+    //
+    // The guard did its job - it is meant to catch exactly this and make
+    // somebody say out loud that the world changed. The consequence is that
+    // saved rides from before the halving no longer match this island and are
+    // refused with "manifest-mismatch", which the interface already explains.
+    expect(slice.manifestHash).toBe("fnv1a64-07b6248151245dd1");
     expect(manifest).toEqual(second);
     expect(manifest.schemaVersion).toBe(4);
     expect(manifest.generatorVersion).toBe("0.5.0");
     expect(manifest.topology).toEqual(firstIsland.topology);
     expect(manifest.regions).toHaveLength(5);
-    expect(manifest.chunks).toHaveLength(64);
+    // A square grid of chunks covering the island, derived rather than counted:
+    // halving the island took this from 64 to 16, and a literal here only ever
+    // recorded how big the island used to be.
+    const chunksPerEdge = manifest.island.sizeMeters / manifest.island.chunkSizeMeters;
+    expect(manifest.island.chunksPerEdge).toBe(chunksPerEdge);
+    expect(manifest.chunks).toHaveLength(chunksPerEdge * chunksPerEdge);
     expect(manifest.discoveries.filter((discovery) => discovery.mandatory)).toHaveLength(5);
   }, 30_000);
 
@@ -50,7 +65,16 @@ describe("first-island compiler contract", () => {
     expect(new Set(traces.map((trace) => trace.regionId)).size).toBe(5);
     const finalTrace = traces.find((trace) => trace.id === "blackstone-living-herd");
     expect(finalTrace?.progression.prerequisiteIds).toHaveLength(4);
-    expect(finalTrace?.position.y).toBeGreaterThanOrEqual(45);
+    // "High" relative to this island, not to a remembered metre count. The
+    // absolute 45 here silently became an assertion about an island twice the
+    // height of the one being compiled the moment the spec was halved, and a
+    // number that only ever passed because of the island's old size is not
+    // testing that the pasture is high - it is testing that nobody resized
+    // anything.
+    const traceHeights = traces.map((trace) => trace.position.y);
+    expect(finalTrace?.position.y).toBe(Math.max(...traceHeights));
+    const relief = Math.max(...traceHeights) - manifest.island.seaLevelMeters;
+    expect(relief).toBeGreaterThan(manifest.island.sizeMeters * 0.04);
     for (let leftIndex = 0; leftIndex < traces.length; leftIndex += 1) {
       for (let rightIndex = leftIndex + 1; rightIndex < traces.length; rightIndex += 1) {
         const left = traces[leftIndex];

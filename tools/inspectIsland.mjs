@@ -45,7 +45,7 @@ const ONLY = (process.argv.find((argument) => argument.startsWith("--only=")) ??
  * one cannot: when the budget is gone it writes whatever it has, says what it
  * did not reach, and exits non-zero.
  */
-const RUN_BUDGET_MS = Number(process.env.WINDHOOF_RUN_BUDGET_MS ?? 300_000);
+const RUN_BUDGET_MS = Number(process.env.LONGRIDE_RUN_BUDGET_MS ?? 300_000);
 const runDeadline = Date.now() + RUN_BUDGET_MS;
 const outOfTime = () => Date.now() > runDeadline;
 const OUTPUT_DIR = path.resolve(SPOTS_ONLY ? "docs/evidence/island/spots" : "docs/evidence/island");
@@ -138,20 +138,20 @@ async function runTour(baseUrl) {
   page.on("pageerror", (error) => consoleErrors.push(`pageerror: ${error.message}`));
 
   await page.goto(automationUrl(baseUrl), { waitUntil: "domcontentloaded" });
-  await page.waitForFunction(() => window.__windhoofLab?.ready === true, null, {
+  await page.waitForFunction(() => window.__longrideLab?.ready === true, null, {
     timeout: 90_000,
   });
-  await page.waitForSelector("html[data-windhoof='running']");
+  await page.waitForSelector("html[data-longride='running']");
 
   const lab = {
-    state: () => page.evaluate(() => window.__windhoofLab.state()),
+    state: () => page.evaluate(() => window.__longrideLab.state()),
     move: (x, y) =>
-      page.evaluate(([mx, my]) => window.__windhoofLab.setMove(mx, my), [x, y]),
-    gallop: (on) => page.evaluate((v) => window.__windhoofLab.setGallop(v), on),
-    press: (action) => page.evaluate((a) => window.__windhoofLab.press(a), action),
-    yaw: (value) => page.evaluate((v) => window.__windhoofLab.setCameraYaw(v), value),
-    command: (command) => page.evaluate((c) => window.__windhoofLab.command(c), command),
-    settings: (patch) => page.evaluate((p) => window.__windhoofLab.setSettings(p), patch),
+      page.evaluate(([mx, my]) => window.__longrideLab.setMove(mx, my), [x, y]),
+    gallop: (on) => page.evaluate((v) => window.__longrideLab.setGallop(v), on),
+    press: (action) => page.evaluate((a) => window.__longrideLab.press(a), action),
+    yaw: (value) => page.evaluate((v) => window.__longrideLab.setCameraYaw(v), value),
+    command: (command) => page.evaluate((c) => window.__longrideLab.command(c), command),
+    settings: (patch) => page.evaluate((p) => window.__longrideLab.setSettings(p), patch),
   };
 
   const wait = (seconds) => page.waitForTimeout(seconds * 1000);
@@ -363,7 +363,7 @@ async function runTour(baseUrl) {
 
   // Headless Chromium refuses pointer lock, so the focus prompt would otherwise
   // dim every remaining capture. It is covered by the Playwright suite.
-  await page.addStyleTag({ content: ".wh-focus { display: none !important; }" });
+  await page.addStyleTag({ content: ".lr-focus { display: none !important; }" });
 
   const spawnState = await lab.state();
 

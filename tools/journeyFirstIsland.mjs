@@ -30,7 +30,7 @@ const OUTPUT_DIR = path.resolve("docs/evidence/milestone-5");
 const VIEWPORT = { width: 1600, height: 900 };
 
 /** Hard wall clock for the whole ride, browser launch included. */
-const RUN_BUDGET_MS = Number(process.env.WINDHOOF_JOURNEY_BUDGET_MS ?? 420_000);
+const RUN_BUDGET_MS = Number(process.env.LONGRIDE_JOURNEY_BUDGET_MS ?? 420_000);
 /**
  * How much budget a leg must have left before it is worth starting.
  *
@@ -42,7 +42,7 @@ const LEG_FLOOR_MS = 70_000;
  * How long to stand on a trace before deciding the world is not going to
  * resolve it. Comfortably over the longest authored linger.
  */
-const SETTLE_MS = Number(process.env.WINDHOOF_JOURNEY_SETTLE_MS ?? 12_000);
+const SETTLE_MS = Number(process.env.LONGRIDE_JOURNEY_SETTLE_MS ?? 12_000);
 
 const runDeadline = Date.now() + RUN_BUDGET_MS;
 const outOfTime = () => Date.now() > runDeadline;
@@ -126,12 +126,12 @@ async function ride(baseUrl) {
   });
 
   const lab = {
-    state: () => page.evaluate(() => window.__windhoofLab.state()),
-    scenes: () => page.evaluate(() => window.__windhoofLab.scenes?.() ?? []),
-    move: (x, y) => page.evaluate(([a, b]) => window.__windhoofLab.setMove(a, b), [x, y]),
-    gallop: (on) => page.evaluate((v) => window.__windhoofLab.setGallop(v), on),
-    press: (action) => page.evaluate((a) => window.__windhoofLab.press(a), action),
-    yaw: (value) => page.evaluate((v) => window.__windhoofLab.setCameraYaw(v), value),
+    state: () => page.evaluate(() => window.__longrideLab.state()),
+    scenes: () => page.evaluate(() => window.__longrideLab.scenes?.() ?? []),
+    move: (x, y) => page.evaluate(([a, b]) => window.__longrideLab.setMove(a, b), [x, y]),
+    gallop: (on) => page.evaluate((v) => window.__longrideLab.setGallop(v), on),
+    press: (action) => page.evaluate((a) => window.__longrideLab.press(a), action),
+    yaw: (value) => page.evaluate((v) => window.__longrideLab.setCameraYaw(v), value),
   };
   const wait = (seconds) => page.waitForTimeout(seconds * 1000);
   const shoot = async (label) => {
@@ -140,11 +140,11 @@ async function ride(baseUrl) {
   };
 
   await page.goto(automationUrl(baseUrl), { waitUntil: "domcontentloaded" });
-  await page.waitForFunction(() => window.__windhoofLab?.ready === true, null, {
+  await page.waitForFunction(() => window.__longrideLab?.ready === true, null, {
     timeout: 240_000,
   });
-  await page.waitForSelector("html[data-windhoof='running']");
-  await page.addStyleTag({ content: ".wh-focus { display: none !important; }" });
+  await page.waitForSelector("html[data-longride='running']");
+  await page.addStyleTag({ content: ".lr-focus { display: none !important; }" });
   await wait(1.5);
 
   const spawn = await lab.state();

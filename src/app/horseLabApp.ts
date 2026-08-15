@@ -19,13 +19,13 @@ import {
   stageNormalAt,
 } from "../stage/horseLabStage";
 import { StageWorld } from "../stage/stageWorld";
-import { WindhoofAudio } from "../audio/windhoofAudio";
+import { LongrideAudio } from "../audio/longrideAudio";
 import { PresentationSettingsStore } from "../ui/presentationSettings";
-import { createWindhoofUi } from "../ui/windhoofUi";
+import { createLongrideUi } from "../ui/longrideUi";
 import { createInputBindings } from "./inputBindings";
 import { installLabHarness } from "./labHarness";
 import { resolveRuntimeFlags } from "./runtimeFlags";
-import type { WindhoofApp } from "./windhoofApp";
+import type { LongrideApp } from "./longrideApp";
 
 /** Metres above the water line that still count as wet ground underfoot. */
 const WET_GROUND_BAND = 0.35;
@@ -33,12 +33,12 @@ const WET_GROUND_BAND = 0.35;
 export async function startHorseLab(
   canvas: HTMLCanvasElement,
   uiHost: HTMLElement,
-): Promise<WindhoofApp> {
+): Promise<LongrideApp> {
   const settings = new PresentationSettingsStore();
 
   const { renderer, camera, resize, dispose: disposeRenderer } = createRenderer(canvas);
 
-  const ui = createWindhoofUi(uiHost, settings, {
+  const ui = createLongrideUi(uiHost, settings, {
     onCommand: (command) => applyCommand(command),
     onRequestFocus: () => requestFocus(),
   });
@@ -75,7 +75,7 @@ export async function startHorseLab(
   chaseCamera.setYaw(STAGE_SPAWN_YAW);
 
   const flags = resolveRuntimeFlags();
-  const audio = new WindhoofAudio({ muted: flags.muted });
+  const audio = new LongrideAudio({ muted: flags.muted });
   const bindings = createInputBindings(canvas, chaseCamera, {
     isRiding: () => currentMode === "playing" || currentMode === "recovering",
     isPointerLocked: () => document.pointerLockElement === canvas,
@@ -395,7 +395,7 @@ export async function startHorseLab(
   }
 
   window.requestAnimationFrame(frame);
-  document.documentElement.dataset.windhoof = "running";
+  document.documentElement.dataset.longride = "running";
 
   return {
     dispose() {

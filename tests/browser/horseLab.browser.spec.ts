@@ -10,8 +10,8 @@ test("fixed-step horse and Rapier WASM run in the browser", async ({ page }) => 
   await page.goto("/tests/browser/harness.html?mute=1");
   await expect(page.locator("html")).toHaveAttribute("data-harness-status", "passed");
 
-  const result = await page.evaluate(() => window.__windhoofHorseLabHarness);
-  const harnessError = await page.evaluate(() => window.__windhoofHorseLabHarnessError);
+  const result = await page.evaluate(() => window.__longrideHorseLabHarness);
+  const harnessError = await page.evaluate(() => window.__longrideHorseLabHarnessError);
 
   expect(harnessError).toBeUndefined();
   expect(result).toBeDefined();

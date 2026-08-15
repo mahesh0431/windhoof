@@ -18,7 +18,7 @@
  * so a leg is minutes even when it is going well, and there is no way to tell
  * a slow leg from a stuck one without being told. Now there is: every leg
  * prints when it starts and what it cost, the whole run dies at
- * WINDHOOF_INSPECT_BUDGET_MS, and whatever was captured is written out with the
+ * LONGRIDE_INSPECT_BUDGET_MS, and whatever was captured is written out with the
  * regions that were never reached named explicitly.
  *
  * Usage:
@@ -45,7 +45,7 @@ const REGION_FILTER = (process.argv.find((a) => a.startsWith("--regions=")) ?? "
  * half-hour. Anything still unfinished when this expires is reported as
  * unfinished.
  */
-const RUN_BUDGET_MS = Number(process.env.WINDHOOF_INSPECT_BUDGET_MS ?? 480_000);
+const RUN_BUDGET_MS = Number(process.env.LONGRIDE_INSPECT_BUDGET_MS ?? 480_000);
 const runDeadline = Date.now() + RUN_BUDGET_MS;
 const outOfTime = () => Date.now() > runDeadline;
 const remainingSeconds = () => Math.max(0, Math.round((runDeadline - Date.now()) / 1000));
@@ -126,21 +126,21 @@ async function inspect(baseUrl) {
   });
 
   const lab = {
-    state: () => page.evaluate(() => window.__windhoofLab.state()),
-    regions: () => page.evaluate(() => window.__windhoofLab.regions?.() ?? []),
-    jobs: () => page.evaluate(() => window.__windhoofLab.preparationJobs()),
-    move: (x, y) => page.evaluate(([a, b]) => window.__windhoofLab.setMove(a, b), [x, y]),
-    gallop: (on) => page.evaluate((v) => window.__windhoofLab.setGallop(v), on),
-    yaw: (value) => page.evaluate((v) => window.__windhoofLab.setCameraYaw(v), value),
+    state: () => page.evaluate(() => window.__longrideLab.state()),
+    regions: () => page.evaluate(() => window.__longrideLab.regions?.() ?? []),
+    jobs: () => page.evaluate(() => window.__longrideLab.preparationJobs()),
+    move: (x, y) => page.evaluate(([a, b]) => window.__longrideLab.setMove(a, b), [x, y]),
+    gallop: (on) => page.evaluate((v) => window.__longrideLab.setGallop(v), on),
+    yaw: (value) => page.evaluate((v) => window.__longrideLab.setCameraYaw(v), value),
   };
   const wait = (seconds) => page.waitForTimeout(seconds * 1000);
 
   const bootStarted = Date.now();
   await page.goto(automationUrl(baseUrl), { waitUntil: "domcontentloaded" });
-  await page.waitForFunction(() => window.__windhoofLab?.ready === true, null, { timeout: 240_000 });
-  await page.waitForSelector("html[data-windhoof='running']");
+  await page.waitForFunction(() => window.__longrideLab?.ready === true, null, { timeout: 240_000 });
+  await page.waitForSelector("html[data-longride='running']");
   const bootMilliseconds = Date.now() - bootStarted;
-  await page.addStyleTag({ content: ".wh-focus { display: none !important; }" });
+  await page.addStyleTag({ content: ".lr-focus { display: none !important; }" });
   await wait(1);
 
   const boot = await lab.state();

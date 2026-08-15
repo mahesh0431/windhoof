@@ -115,8 +115,14 @@ export class ChaseCamera {
     // camera. Fast enough to help, slow enough that it never fights the mouse.
     this.idleLookSeconds += dt;
     const restingPitch = MathUtils.lerp(RESTING_PITCH, GALLOP_PITCH, speedRatio);
-    if (this.idleLookSeconds > AUTO_ALIGN_DELAY && target.speed > 2.5) {
-      const align = (0.5 + speedRatio * 1.3) * dt;
+    // Follows from a walk, not from a canter.
+    //
+    // The old gate was 2.5 m/s, which is faster than a horse walks, so turning
+    // at low speed left the camera pointing wherever it had been and the player
+    // steering a horse they were watching side-on. Now that the reins turn the
+    // animal rather than aiming it at the camera, the camera has to keep up.
+    if (this.idleLookSeconds > AUTO_ALIGN_DELAY && target.speed > 0.4) {
+      const align = (1.1 + speedRatio * 1.6) * dt;
       this.yawAngle = approachAngle(this.yawAngle, target.yaw, align);
       this.pitchAngle = MathUtils.damp(this.pitchAngle, restingPitch, 0.9, dt);
     }

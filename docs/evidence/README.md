@@ -55,6 +55,56 @@ steering so the horse holds its line and keeps galloping. Its shutter also waits
 on the rig's own body height, so the frame lands on the suspension phase rather
 than on a random point in a 0.43-second stride.
 
+## Horse model sheets
+
+`horse/` holds the model itself, photographed away from the world by
+`tools/inspectHorse.mjs`:
+
+```text
+pnpm inspect:horse
+```
+
+| File | Contents |
+|---|---|
+| `horse/turnaround.png` | Profile, three-quarter, front, rear, head, and overhead, standing |
+| `horse/gaits.png` | Walk, trot, gallop, and gallop three-quarter |
+
+Both are single frames divided into viewports, so one screenshot covers the
+whole subject. The tour above proves how the horse looks while being ridden;
+these prove what it looks like, which the chase camera can never show because it
+only ever sits behind the horse at one distance. Pass a view name
+(`pnpm inspect:horse profile`) for that view alone at full frame, or `--views`
+to list them. The run reports the model's own triangle and draw-call cost.
+
+## Island vegetation sheets
+
+`world/` holds the island's ground and vegetation, photographed by holding the
+camera at each region's own anchor:
+
+```text
+pnpm inspect:world            eye level
+pnpm inspect:world --close    knee height, for ground cover
+pnpm inspect:world --wide     from above, for region shape and treeline
+```
+
+| File | Contents |
+|---|---|
+| `world/regions-eye.png` | All five regions from a rider's height |
+| `world/regions-close.png` | All five from knee height, where cover is judged |
+| `world/regions-wide.png` | All five from above, where a treeline is judged |
+
+Same seam and the same limit as the region captures in `milestone-5`: this is
+evidence that a place exists and looks the way it is claimed to, and never
+evidence that a player can reach it. Each capture also reports its own draw
+calls, drawn triangles and live near-grass blades, so a vegetation change can be
+read against the budget it spends.
+
+One honest caveat about `regions-eye.png`: the Fernwood camera stands inside a
+closed canopy and its frame is nearly black. That is one unlucky bearing in a
+dense wood rather than a rendering fault - `regions-wide.png` shows the same
+wood lit - and it is left in rather than moved, because a wood a rider can be
+blinded inside is worth knowing about.
+
 ## Rendering note
 
 Captures are produced in headless Chromium with SwiftShader, so the frame rate

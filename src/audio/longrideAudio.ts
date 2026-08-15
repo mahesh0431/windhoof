@@ -26,7 +26,7 @@ export interface AudioFrame {
  * it delivers what the milestone actually needs, which is rhythmic feedback
  * that confirms speed, gait, surface, and contact with the ground.
  */
-export interface WindhoofAudioOptions {
+export interface LongrideAudioOptions {
   /**
    * Silences this instance for its whole lifetime.
    *
@@ -39,7 +39,7 @@ export interface WindhoofAudioOptions {
   readonly muted?: boolean;
 }
 
-export class WindhoofAudio {
+export class LongrideAudio {
   private readonly mutedByFlag: boolean;
   private context: AudioContext | null = null;
   private master: GainNode | null = null;
@@ -53,7 +53,7 @@ export class WindhoofAudio {
   private volumes: AudioVolumes = { master: 0.7, ambience: 0.8, horse: 0.9 };
   private failed = false;
 
-  public constructor(options: WindhoofAudioOptions = {}) {
+  public constructor(options: LongrideAudioOptions = {}) {
     this.mutedByFlag = options.muted === true;
   }
 

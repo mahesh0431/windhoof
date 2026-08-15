@@ -1,0 +1,60 @@
+{
+  "mode": "eye",
+  "view": {
+    "distance": 15,
+    "eye": 2.4,
+    "aim": 1.2,
+    "bearing": 0.7,
+    "label": "eye level"
+  },
+  "regions": [
+    {
+      "id": "saltwind-coast",
+      "displayName": "Saltwind Coast",
+      "terrainFamily": "coastal",
+      "anchor": {
+        "x": 0,
+        "z": -170
+      }
+    },
+    {
+      "id": "longgrass-plain",
+      "displayName": "Longgrass Plain",
+      "terrainFamily": "grassland",
+      "anchor": {
+        "x": 155,
+        "z": -60
+      }
+    },
+    {
+      "id": "fernwood",
+      "displayName": "Fernwood",
+      "terrainFamily": "woodland",
+      "anchor": {
+        "x": 137.5,
+        "z": 110
+      }
+    },
+    {
+      "id": "river-hollow",
+      "displayName": "River Hollow",
+      "terrainFamily": "woodland",
+      "anchor": {
+        "x": -130,
+        "z": 110
+      }
+    },
+    {
+      "id": "blackstone-crown",
+      "displayName": "Blackstone Crown",
+      "terrainFamily": "grassland",
+      "anchor": {
+        "x": 0,
+        "z": 40
+      }
+    }
+  ],
+  "drawCalls": 125,
+  "triangles": 741263,
+  "consoleErrors": []
+}

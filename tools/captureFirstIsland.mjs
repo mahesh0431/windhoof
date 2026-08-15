@@ -36,7 +36,7 @@ const OUTPUT_DIR = path.resolve("docs/evidence/milestone-5");
 const VIEWPORT = { width: 1600, height: 900 };
 
 /** Hard wall clock for everything, browser launch included. */
-const RUN_BUDGET_MS = Number(process.env.WINDHOOF_CAPTURE_BUDGET_MS ?? 420_000);
+const RUN_BUDGET_MS = Number(process.env.LONGRIDE_CAPTURE_BUDGET_MS ?? 420_000);
 /**
  * Hard ceiling for one capture.
  *
@@ -44,7 +44,7 @@ const RUN_BUDGET_MS = Number(process.env.WINDHOOF_CAPTURE_BUDGET_MS ?? 420_000);
  * renderer that has stopped answering, so that is the unit that gets a timeout.
  * A run-wide budget alone cannot tell a slow island from a dead one.
  */
-const CAPTURE_BUDGET_MS = Number(process.env.WINDHOOF_CAPTURE_STEP_MS ?? 25_000);
+const CAPTURE_BUDGET_MS = Number(process.env.LONGRIDE_CAPTURE_STEP_MS ?? 25_000);
 
 /** Ground above this is land the horse could stand on rather than sea bed. */
 const SHORE_METRES = 4;
@@ -150,33 +150,33 @@ async function capture(baseUrl) {
   });
 
   const lab = {
-    state: () => page.evaluate(() => window.__windhoofLab.state()),
-    regions: () => page.evaluate(() => window.__windhoofLab.regions?.() ?? []),
-    scenes: () => page.evaluate(() => window.__windhoofLab.scenes?.() ?? []),
-    jobs: () => page.evaluate(() => window.__windhoofLab.preparationJobs()),
+    state: () => page.evaluate(() => window.__longrideLab.state()),
+    regions: () => page.evaluate(() => window.__longrideLab.regions?.() ?? []),
+    scenes: () => page.evaluate(() => window.__longrideLab.scenes?.() ?? []),
+    jobs: () => page.evaluate(() => window.__longrideLab.preparationJobs()),
     heightAt: (x, z) =>
-      page.evaluate(([a, b]) => window.__windhoofLab.heightAt?.(a, b) ?? 0, [x, z]),
+      page.evaluate(([a, b]) => window.__longrideLab.heightAt?.(a, b) ?? 0, [x, z]),
     observe: (from, lookAt) =>
-      page.evaluate(([a, b]) => window.__windhoofLab.observe?.(a, b), [from, lookAt]),
-    release: () => page.evaluate(() => window.__windhoofLab.release?.()),
+      page.evaluate(([a, b]) => window.__longrideLab.observe?.(a, b), [from, lookAt]),
+    release: () => page.evaluate(() => window.__longrideLab.release?.()),
     graphics: () =>
-      page.evaluate(() => window.__windhoofLab.graphics?.() ?? { status: "unknown" }),
-    loseContext: () => page.evaluate(() => window.__windhoofLab.loseGraphicsContext?.() ?? false),
+      page.evaluate(() => window.__longrideLab.graphics?.() ?? { status: "unknown" }),
+    loseContext: () => page.evaluate(() => window.__longrideLab.loseGraphicsContext?.() ?? false),
     restoreContext: () =>
-      page.evaluate(() => window.__windhoofLab.restoreGraphicsContext?.() ?? false),
-    resumeGraphics: () => page.evaluate(() => window.__windhoofLab.resumeGraphics?.() ?? false),
+      page.evaluate(() => window.__longrideLab.restoreGraphicsContext?.() ?? false),
+    resumeGraphics: () => page.evaluate(() => window.__longrideLab.resumeGraphics?.() ?? false),
   };
   const wait = (seconds) => page.waitForTimeout(seconds * 1000);
 
   stage("boot");
   const bootStarted = Date.now();
   await page.goto(automationUrl(baseUrl), { waitUntil: "domcontentloaded" });
-  await page.waitForFunction(() => window.__windhoofLab?.ready === true, null, {
+  await page.waitForFunction(() => window.__longrideLab?.ready === true, null, {
     timeout: 240_000,
   });
-  await page.waitForSelector("html[data-windhoof='running']");
+  await page.waitForSelector("html[data-longride='running']");
   const bootMilliseconds = Date.now() - bootStarted;
-  await page.addStyleTag({ content: ".wh-focus { display: none !important; }" });
+  await page.addStyleTag({ content: ".lr-focus { display: none !important; }" });
   await wait(1);
 
   const boot = await lab.state();
@@ -198,7 +198,7 @@ async function capture(baseUrl) {
 
   // Asked inside the page. A function cannot cross the `evaluate` boundary, so
   // returning it and testing the result out here always says "missing".
-  if (!(await page.evaluate(() => typeof window.__windhoofLab.observe === "function"))) {
+  if (!(await page.evaluate(() => typeof window.__longrideLab.observe === "function"))) {
     findings.push("the harness has no observe seam; nothing can be captured directly");
   }
 
@@ -447,7 +447,7 @@ async function capture(baseUrl) {
     async function reachStatus(want) {
       try {
         await page.waitForFunction(
-          (target) => window.__windhoofLab.graphics().status === target,
+          (target) => window.__longrideLab.graphics().status === target,
           want,
           { timeout: CAPTURE_BUDGET_MS, polling: 250 },
         );
@@ -493,7 +493,7 @@ async function capture(baseUrl) {
 
       // And it has to end when the player says so, through the button they see
       // rather than through the harness back door.
-      await page.click(".wh-graphics .wh-button");
+      await page.click(".lr-graphics .lr-button");
       await reachStatus("ready");
       seen.push("ready");
       await wait(1.2);

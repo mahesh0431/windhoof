@@ -3,7 +3,7 @@
  *
  * Opens the real build in a real browser, drives the horse into representative
  * gameplay states through the lab harness, and writes canonical views to
- * docs/evidence. This is the Windhoof equivalent of the WorldClaw method's
+ * docs/evidence. This is the Longride equivalent of the WorldClaw method's
  * render-and-inspect step: screenshots of a game that never moved prove nothing.
  *
  * It starts and stops its own Vite server, so it runs from a clean checkout
@@ -93,14 +93,14 @@ async function runTour(baseUrl) {
   const hiddenFocusPrompt = await boot(page, baseUrl);
 
   const lab = {
-    state: () => page.evaluate(() => window.__windhoofLab.state()),
+    state: () => page.evaluate(() => window.__longrideLab.state()),
     move: (x, y) =>
-      page.evaluate(([mx, my]) => window.__windhoofLab.setMove(mx, my), [x, y]),
-    gallop: (on) => page.evaluate((v) => window.__windhoofLab.setGallop(v), on),
-    press: (action) => page.evaluate((a) => window.__windhoofLab.press(a), action),
-    yaw: (value) => page.evaluate((v) => window.__windhoofLab.setCameraYaw(v), value),
-    command: (command) => page.evaluate((c) => window.__windhoofLab.command(c), command),
-    settings: (patch) => page.evaluate((p) => window.__windhoofLab.setSettings(p), patch),
+      page.evaluate(([mx, my]) => window.__longrideLab.setMove(mx, my), [x, y]),
+    gallop: (on) => page.evaluate((v) => window.__longrideLab.setGallop(v), on),
+    press: (action) => page.evaluate((a) => window.__longrideLab.press(a), action),
+    yaw: (value) => page.evaluate((v) => window.__longrideLab.setCameraYaw(v), value),
+    command: (command) => page.evaluate((c) => window.__longrideLab.command(c), command),
+    settings: (patch) => page.evaluate((p) => window.__longrideLab.setSettings(p), patch),
   };
 
   const wait = (seconds) => page.waitForTimeout(seconds * 1000);
@@ -173,7 +173,7 @@ async function runTour(baseUrl) {
   await hiddenFocusPrompt.evaluate((node) => node.remove());
   await wait(0.5);
   await capture("20-focus-pill", "Riding without pointer lock; prompt recedes to a pill");
-  await page.addStyleTag({ content: ".wh-focus { display: none !important; }" });
+  await page.addStyleTag({ content: ".lr-focus { display: none !important; }" });
 
   await lab.move(0, 0.6);
   await wait(2.2);
@@ -189,18 +189,18 @@ async function runTour(baseUrl) {
   // than a fixed delay is what lands this on a genuinely airborne frame.
   await lab.press("jumpPressed");
   await page.waitForFunction(
-    () => window.__windhoofLab.state().verticalVelocity > 3,
+    () => window.__longrideLab.state().verticalVelocity > 3,
     null,
     { timeout: 4000 },
   );
   await capture("06-airborne", "Rising after a jump at gallop");
-  await page.waitForFunction(() => window.__windhoofLab.state().grounded === true, null, {
+  await page.waitForFunction(() => window.__longrideLab.state().grounded === true, null, {
     timeout: 6000,
   });
   await capture("07-landed", "Back on the ground");
 
   // 6. The stream crossing.
-  await page.waitForFunction(() => window.__windhoofLab.state().position.z > -14, null, {
+  await page.waitForFunction(() => window.__longrideLab.state().position.z > -14, null, {
     timeout: 12_000,
   });
   await capture("08-stream-approach", "Approaching the stream at gallop");
@@ -315,7 +315,7 @@ async function runTour(baseUrl) {
   await wait(0.9);
   await capture("17-pause", "Pause and settings surface");
   await page.evaluate(() => {
-    document.querySelectorAll(".wh-tab")[1]?.click();
+    document.querySelectorAll(".lr-tab")[1]?.click();
   });
   await wait(0.5);
   await capture("18-controls", "Controls list");
@@ -324,7 +324,7 @@ async function runTour(baseUrl) {
   // most likely to overflow or collapse badly.
   await page.setViewportSize(NARROW_VIEWPORT);
   await page.evaluate(() => {
-    document.querySelectorAll(".wh-tab")[0]?.click();
+    document.querySelectorAll(".lr-tab")[0]?.click();
   });
   await wait(0.8);
   await capture("19-pause-narrow", `Pause surface at ${NARROW_VIEWPORT.width}px`);
@@ -336,17 +336,17 @@ async function runTour(baseUrl) {
 
 async function boot(page, baseUrl) {
   await page.goto(automationUrl(baseUrl, { stage: "lab" }), { waitUntil: "domcontentloaded" });
-  await page.waitForFunction(() => window.__windhoofLab?.ready === true, null, {
+  await page.waitForFunction(() => window.__longrideLab?.ready === true, null, {
     timeout: 45_000,
   });
-  await page.waitForSelector("html[data-windhoof='running']");
+  await page.waitForSelector("html[data-longride='running']");
 
   // Headless Chromium refuses pointer lock, so the "click to look around"
   // prompt would sit dimmed over every capture. Hiding it is a capture-only
   // concern; the prompt itself is covered by the Playwright suite and shown
   // deliberately in one capture below.
   const style = await page.addStyleTag({
-    content: ".wh-focus { display: none !important; }",
+    content: ".lr-focus { display: none !important; }",
   });
   await page.waitForTimeout(200);
   return style;

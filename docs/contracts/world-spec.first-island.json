@@ -1,7 +1,7 @@
 {
   "schemaVersion": 4,
   "generatorVersion": "0.5.0",
-  "worldId": "windhoof-first-island",
+  "worldId": "longride-first-island",
   "seed": 483921,
   "presentation": {
     "mood": "a naturalistic island journey from storm isolation to herd belonging",
@@ -17,7 +17,7 @@
     ]
   },
   "island": {
-    "sizeMeters": 1024,
+    "sizeMeters": 512,
     "seaLevelMeters": 0,
     "chunkSizeMeters": 128,
     "terrainSamplesPerEdge": 65
@@ -40,106 +40,220 @@
     {
       "id": "saltwind-coast",
       "role": "storm-beach opening, first tracks, and a forgiving route choice",
-      "anchorMeters": { "x": 0, "z": -340 },
+      "anchorMeters": {
+        "x": 0,
+        "z": -170
+      },
       "coverage": 0.18,
-      "elevationMeters": [1, 14],
-      "moisture": [0.15, 0.65],
+      "elevationMeters": [
+        0.5,
+        7
+      ],
+      "moisture": [
+        0.15,
+        0.65
+      ],
       "maxSlopeDegrees": 18,
-      "adjacentTo": ["longgrass-plain", "river-hollow"],
-      "tags": ["beach", "dunes", "storm", "tracks", "opening"],
+      "adjacentTo": [
+        "longgrass-plain",
+        "river-hollow"
+      ],
+      "tags": [
+        "beach",
+        "dunes",
+        "storm",
+        "tracks",
+        "opening"
+      ],
       "visualIntent": {
         "terrainFamily": "coastal",
         "silhouette": "split sea stack, wind-bent trees, and a broken beacon",
-        "scatterFamilies": ["weathered-rock", "marram", "drift-debris"],
+        "scatterFamilies": [
+          "weathered-rock",
+          "marram",
+          "drift-debris"
+        ],
         "scatterDensity": 0.35
       },
       "terrainIntent": {
-        "anchorElevationMeters": 6,
-        "influenceRadiusMeters": 180
+        "anchorElevationMeters": 3,
+        "influenceRadiusMeters": 90
       }
     },
     {
       "id": "longgrass-plain",
       "role": "open gallop country with long-distance choice and returning sightlines",
-      "anchorMeters": { "x": 310, "z": -120 },
+      "anchorMeters": {
+        "x": 155,
+        "z": -60
+      },
       "coverage": 0.22,
-      "elevationMeters": [10, 32],
-      "moisture": [0.2, 0.6],
+      "elevationMeters": [
+        5,
+        16
+      ],
+      "moisture": [
+        0.2,
+        0.6
+      ],
       "maxSlopeDegrees": 22,
-      "adjacentTo": ["saltwind-coast", "fernwood", "blackstone-crown"],
-      "tags": ["grassland", "gallop", "sightlines", "resting-circle"],
+      "adjacentTo": [
+        "saltwind-coast",
+        "fernwood",
+        "blackstone-crown"
+      ],
+      "tags": [
+        "grassland",
+        "gallop",
+        "sightlines",
+        "resting-circle"
+      ],
       "visualIntent": {
         "terrainFamily": "grassland",
         "silhouette": "lone tree and stone ridge below the central crown",
-        "scatterFamilies": ["longgrass", "gorse", "field-boulder"],
+        "scatterFamilies": [
+          "longgrass",
+          "gorse",
+          "field-boulder"
+        ],
         "scatterDensity": 0.5
       },
       "terrainIntent": {
-        "anchorElevationMeters": 22,
-        "influenceRadiusMeters": 230
+        "anchorElevationMeters": 11,
+        "influenceRadiusMeters": 115
       }
     },
     {
       "id": "fernwood",
       "role": "close woodland control, bark traces, and hidden reconnection routes",
-      "anchorMeters": { "x": 275, "z": 220 },
+      "anchorMeters": {
+        "x": 137.5,
+        "z": 110
+      },
       "coverage": 0.2,
-      "elevationMeters": [16, 42],
-      "moisture": [0.55, 1],
+      "elevationMeters": [
+        8,
+        21
+      ],
+      "moisture": [
+        0.55,
+        1
+      ],
       "maxSlopeDegrees": 28,
-      "adjacentTo": ["longgrass-plain", "river-hollow", "blackstone-crown"],
-      "tags": ["forest", "ferns", "fallen-logs", "boundary-stones"],
+      "adjacentTo": [
+        "longgrass-plain",
+        "river-hollow",
+        "blackstone-crown"
+      ],
+      "tags": [
+        "forest",
+        "ferns",
+        "fallen-logs",
+        "boundary-stones"
+      ],
       "visualIntent": {
         "terrainFamily": "woodland",
         "silhouette": "split cedar and ruined arch above a giant fern grove",
-        "scatterFamilies": ["fern", "sapling", "moss-rock", "old-trunk"],
+        "scatterFamilies": [
+          "fern",
+          "sapling",
+          "moss-rock",
+          "old-trunk"
+        ],
         "scatterDensity": 0.68
       },
       "terrainIntent": {
-        "anchorElevationMeters": 32,
-        "influenceRadiusMeters": 200
+        "anchorElevationMeters": 16,
+        "influenceRadiusMeters": 100
       }
     },
     {
       "id": "river-hollow",
       "role": "tranquil midpoint of fords, fresh tracks, springs, and safe rest",
-      "anchorMeters": { "x": -260, "z": 220 },
+      "anchorMeters": {
+        "x": -130,
+        "z": 110
+      },
       "coverage": 0.2,
-      "elevationMeters": [5, 24],
-      "moisture": [0.65, 1],
+      "elevationMeters": [
+        2.5,
+        12
+      ],
+      "moisture": [
+        0.65,
+        1
+      ],
       "maxSlopeDegrees": 22,
-      "adjacentTo": ["saltwind-coast", "fernwood", "blackstone-crown"],
-      "tags": ["river", "ford", "waterfall", "spring", "mud"],
+      "adjacentTo": [
+        "saltwind-coast",
+        "fernwood",
+        "blackstone-crown"
+      ],
+      "tags": [
+        "river",
+        "ford",
+        "waterfall",
+        "spring",
+        "mud"
+      ],
       "visualIntent": {
         "terrainFamily": "woodland",
         "silhouette": "waterfall notch, leaning stone bridge, and a bright spring",
-        "scatterFamilies": ["river-stone", "reed", "willow", "moss-bank"],
+        "scatterFamilies": [
+          "river-stone",
+          "reed",
+          "willow",
+          "moss-bank"
+        ],
         "scatterDensity": 0.58
       },
       "terrainIntent": {
-        "anchorElevationMeters": 14,
-        "influenceRadiusMeters": 210
+        "anchorElevationMeters": 7,
+        "influenceRadiusMeters": 105
       }
     },
     {
       "id": "blackstone-crown",
       "role": "broad central highland, two mastery approaches, and the living herd",
-      "anchorMeters": { "x": 0, "z": 80 },
+      "anchorMeters": {
+        "x": 0,
+        "z": 40
+      },
       "coverage": 0.2,
-      "elevationMeters": [45, 80],
-      "moisture": [0.15, 0.55],
+      "elevationMeters": [
+        22.5,
+        40
+      ],
+      "moisture": [
+        0.15,
+        0.55
+      ],
       "maxSlopeDegrees": 28,
-      "adjacentTo": ["longgrass-plain", "fernwood", "river-hollow"],
-      "tags": ["basalt", "ridge", "saddle", "high-pasture", "herd"],
+      "adjacentTo": [
+        "longgrass-plain",
+        "fernwood",
+        "river-hollow"
+      ],
+      "tags": [
+        "basalt",
+        "ridge",
+        "saddle",
+        "high-pasture",
+        "herd"
+      ],
       "visualIntent": {
         "terrainFamily": "grassland",
         "silhouette": "broken black ridge framing a windswept summit saddle",
-        "scatterFamilies": ["blackstone", "high-grass", "ridge-heather"],
+        "scatterFamilies": [
+          "blackstone",
+          "high-grass",
+          "ridge-heather"
+        ],
         "scatterDensity": 0.4
       },
       "terrainIntent": {
-        "anchorElevationMeters": 68,
-        "influenceRadiusMeters": 230
+        "anchorElevationMeters": 34,
+        "influenceRadiusMeters": 115
       }
     }
   ],
@@ -153,7 +267,16 @@
       "mandatory": true,
       "kind": "safe",
       "role": "coastal-loop",
-      "viaMeters": [{ "x": 160, "z": -340 }, { "x": 285, "z": -250 }]
+      "viaMeters": [
+        {
+          "x": 80,
+          "z": -170
+        },
+        {
+          "x": 142.5,
+          "z": -125
+        }
+      ]
     },
     {
       "id": "longgrass-fernwood-coastal",
@@ -164,7 +287,20 @@
       "mandatory": true,
       "kind": "safe",
       "role": "coastal-loop",
-      "viaMeters": [{ "x": 385, "z": -60 }, { "x": 380, "z": 120 }, { "x": 335, "z": 195 }]
+      "viaMeters": [
+        {
+          "x": 192.5,
+          "z": -30
+        },
+        {
+          "x": 190,
+          "z": 60
+        },
+        {
+          "x": 167.5,
+          "z": 97.5
+        }
+      ]
     },
     {
       "id": "fernwood-river-coastal",
@@ -175,7 +311,20 @@
       "mandatory": true,
       "kind": "safe",
       "role": "coastal-loop",
-      "viaMeters": [{ "x": 180, "z": 350 }, { "x": 0, "z": 390 }, { "x": -180, "z": 350 }]
+      "viaMeters": [
+        {
+          "x": 90,
+          "z": 175
+        },
+        {
+          "x": 0,
+          "z": 195
+        },
+        {
+          "x": -90,
+          "z": 175
+        }
+      ]
     },
     {
       "id": "river-saltwind-coastal",
@@ -186,7 +335,20 @@
       "mandatory": true,
       "kind": "safe",
       "role": "coastal-loop",
-      "viaMeters": [{ "x": -350, "z": 120 }, { "x": -375, "z": -100 }, { "x": -250, "z": -290 }]
+      "viaMeters": [
+        {
+          "x": -175,
+          "z": 60
+        },
+        {
+          "x": -187.5,
+          "z": -50
+        },
+        {
+          "x": -125,
+          "z": -145
+        }
+      ]
     },
     {
       "id": "river-blackstone-saddle",
@@ -197,7 +359,16 @@
       "mandatory": true,
       "kind": "safe",
       "role": "regional-link",
-      "viaMeters": [{ "x": -180, "z": 180 }, { "x": -90, "z": 130 }]
+      "viaMeters": [
+        {
+          "x": -90,
+          "z": 90
+        },
+        {
+          "x": -45,
+          "z": 65
+        }
+      ]
     },
     {
       "id": "longgrass-blackstone-ascent",
@@ -208,7 +379,16 @@
       "mandatory": true,
       "kind": "safe",
       "role": "regional-link",
-      "viaMeters": [{ "x": 220, "z": -30 }, { "x": 120, "z": 30 }]
+      "viaMeters": [
+        {
+          "x": 110,
+          "z": -15
+        },
+        {
+          "x": 60,
+          "z": 15
+        }
+      ]
     },
     {
       "id": "saltwind-longgrass-dune-cut",
@@ -219,7 +399,16 @@
       "mandatory": false,
       "kind": "expressive",
       "role": "interior-shortcut",
-      "viaMeters": [{ "x": 120, "z": -235 }, { "x": 230, "z": -170 }]
+      "viaMeters": [
+        {
+          "x": 60,
+          "z": -117.5
+        },
+        {
+          "x": 115,
+          "z": -85
+        }
+      ]
     },
     {
       "id": "longgrass-fernwood-ford-cut",
@@ -230,7 +419,16 @@
       "mandatory": false,
       "kind": "expressive",
       "role": "interior-shortcut",
-      "viaMeters": [{ "x": 260, "z": 20 }, { "x": 235, "z": 125 }]
+      "viaMeters": [
+        {
+          "x": 130,
+          "z": 10
+        },
+        {
+          "x": 117.5,
+          "z": 62.5
+        }
+      ]
     },
     {
       "id": "fernwood-river-inner-trail",
@@ -241,7 +439,16 @@
       "mandatory": false,
       "kind": "expressive",
       "role": "interior-shortcut",
-      "viaMeters": [{ "x": 130, "z": 230 }, { "x": -80, "z": 245 }]
+      "viaMeters": [
+        {
+          "x": 65,
+          "z": 115
+        },
+        {
+          "x": -40,
+          "z": 122.5
+        }
+      ]
     },
     {
       "id": "fernwood-blackstone-ridge",
@@ -252,7 +459,16 @@
       "mandatory": false,
       "kind": "expressive",
       "role": "interior-shortcut",
-      "viaMeters": [{ "x": 180, "z": 180 }, { "x": 85, "z": 125 }]
+      "viaMeters": [
+        {
+          "x": 90,
+          "z": 90
+        },
+        {
+          "x": 42.5,
+          "z": 62.5
+        }
+      ]
     }
   ],
   "discoveries": [
@@ -260,83 +476,145 @@
       "id": "storm-beach-hoofprints",
       "type": "herd-trace",
       "regionId": "saltwind-coast",
-      "offsetFromRegionAnchorMeters": { "x": -70, "z": 20 },
+      "offsetFromRegionAnchorMeters": {
+        "x": -35,
+        "z": 10
+      },
       "mandatory": true,
       "journeyOrder": 10,
       "progression": {
         "prerequisiteIds": [],
-        "reveal": { "kind": "proximity", "radiusMeters": 70 },
+        "reveal": {
+          "kind": "proximity",
+          "radiusMeters": 35
+        },
         "visitRadiusMeters": 12,
-        "completion": { "kind": "interact", "interaction": "inspect" },
+        "completion": {
+          "kind": "interact",
+          "interaction": "inspect"
+        },
         "autosave": true
       },
       "signals": [
-        { "kind": "tracks", "description": "deep hoofprints survive beside the storm tide line" },
-        { "kind": "light", "description": "wet impressions catch the low sun" }
+        {
+          "kind": "tracks",
+          "description": "deep hoofprints survive beside the storm tide line"
+        },
+        {
+          "kind": "light",
+          "description": "wet impressions catch the low sun"
+        }
       ]
     },
     {
       "id": "longgrass-resting-circle-trace",
       "type": "herd-trace",
       "regionId": "longgrass-plain",
-      "offsetFromRegionAnchorMeters": { "x": -80, "z": 50 },
+      "offsetFromRegionAnchorMeters": {
+        "x": -20,
+        "z": 13
+      },
       "mandatory": true,
       "journeyOrder": 20,
       "progression": {
         "prerequisiteIds": [],
-        "reveal": { "kind": "proximity", "radiusMeters": 80 },
+        "reveal": {
+          "kind": "proximity",
+          "radiusMeters": 40
+        },
         "visitRadiusMeters": 15,
-        "completion": { "kind": "linger", "ticks": 120 },
+        "completion": {
+          "kind": "linger",
+          "ticks": 120
+        },
         "autosave": true
       },
       "signals": [
-        { "kind": "tracks", "description": "a wide circle of flattened long grass" },
-        { "kind": "motion", "description": "surrounding seed heads lean toward the old herd path" }
+        {
+          "kind": "tracks",
+          "description": "a wide circle of flattened long grass"
+        },
+        {
+          "kind": "motion",
+          "description": "surrounding seed heads lean toward the old herd path"
+        }
       ]
     },
     {
       "id": "fernwood-caught-hair",
       "type": "herd-trace",
       "regionId": "fernwood",
-      "offsetFromRegionAnchorMeters": { "x": -60, "z": -50 },
+      "offsetFromRegionAnchorMeters": {
+        "x": -30,
+        "z": -25
+      },
       "mandatory": true,
       "journeyOrder": 30,
       "progression": {
         "prerequisiteIds": [],
-        "reveal": { "kind": "proximity", "radiusMeters": 65 },
+        "reveal": {
+          "kind": "proximity",
+          "radiusMeters": 32.5
+        },
         "visitRadiusMeters": 11,
-        "completion": { "kind": "interact", "interaction": "inspect" },
+        "completion": {
+          "kind": "interact",
+          "interaction": "inspect"
+        },
         "autosave": true
       },
       "signals": [
-        { "kind": "tracks", "description": "dark hair is caught on bark at horse height" },
-        { "kind": "sound", "description": "branches echo a distant herd movement" }
+        {
+          "kind": "tracks",
+          "description": "dark hair is caught on bark at horse height"
+        },
+        {
+          "kind": "sound",
+          "description": "branches echo a distant herd movement"
+        }
       ]
     },
     {
       "id": "river-spring-tracks",
       "type": "herd-trace",
       "regionId": "river-hollow",
-      "offsetFromRegionAnchorMeters": { "x": 65, "z": -60 },
+      "offsetFromRegionAnchorMeters": {
+        "x": 32.5,
+        "z": -30
+      },
       "mandatory": true,
       "journeyOrder": 40,
       "progression": {
         "prerequisiteIds": [],
-        "reveal": { "kind": "proximity", "radiusMeters": 75 },
+        "reveal": {
+          "kind": "proximity",
+          "radiusMeters": 37.5
+        },
         "visitRadiusMeters": 14,
-        "completion": { "kind": "call" },
+        "completion": {
+          "kind": "call"
+        },
         "autosave": true
       },
       "signals": [
-        { "kind": "tracks", "description": "fresh prints cross wet mud beside the spring" },
-        { "kind": "sound", "description": "the hollow carries the player's call toward the crown" }
+        {
+          "kind": "tracks",
+          "description": "fresh prints cross wet mud beside the spring"
+        },
+        {
+          "kind": "sound",
+          "description": "the hollow carries the player's call toward the crown"
+        }
       ]
     },
     {
       "id": "blackstone-living-herd",
       "type": "herd-trace",
       "regionId": "blackstone-crown",
-      "offsetFromRegionAnchorMeters": { "x": 0, "z": 35 },
+      "offsetFromRegionAnchorMeters": {
+        "x": 0,
+        "z": 17.5
+      },
       "mandatory": true,
       "journeyOrder": 50,
       "progression": {
@@ -346,90 +624,159 @@
           "fernwood-caught-hair",
           "river-spring-tracks"
         ],
-        "reveal": { "kind": "event" },
+        "reveal": {
+          "kind": "event"
+        },
         "visitRadiusMeters": 20,
-        "completion": { "kind": "linger", "ticks": 180 },
+        "completion": {
+          "kind": "linger",
+          "ticks": 180
+        },
         "autosave": true
       },
       "signals": [
-        { "kind": "sound", "description": "many horses answer from beyond the summit saddle" },
-        { "kind": "motion", "description": "living silhouettes rise through the high pasture grass" }
+        {
+          "kind": "sound",
+          "description": "many horses answer from beyond the summit saddle"
+        },
+        {
+          "kind": "motion",
+          "description": "living silhouettes rise through the high pasture grass"
+        }
       ]
     },
     {
       "id": "longgrass-resting-hollow",
       "type": "resting-hollow",
       "regionId": "longgrass-plain",
-      "offsetFromRegionAnchorMeters": { "x": 30, "z": -70 },
+      "offsetFromRegionAnchorMeters": {
+        "x": 15,
+        "z": -35
+      },
       "mandatory": false,
       "journeyOrder": 15,
       "progression": {
         "prerequisiteIds": [],
-        "reveal": { "kind": "proximity", "radiusMeters": 55 },
+        "reveal": {
+          "kind": "proximity",
+          "radiusMeters": 27.5
+        },
         "visitRadiusMeters": 12,
-        "completion": { "kind": "interact", "interaction": "rest" },
+        "completion": {
+          "kind": "interact",
+          "interaction": "rest"
+        },
         "autosave": true
       },
       "signals": [
-        { "kind": "silhouette", "description": "a lone tree shelters a shallow grass bowl" },
-        { "kind": "motion", "description": "the hollow grass moves more slowly than the open plain" }
+        {
+          "kind": "silhouette",
+          "description": "a lone tree shelters a shallow grass bowl"
+        },
+        {
+          "kind": "motion",
+          "description": "the hollow grass moves more slowly than the open plain"
+        }
       ]
     },
     {
       "id": "river-spring-hollow",
       "type": "resting-hollow",
       "regionId": "river-hollow",
-      "offsetFromRegionAnchorMeters": { "x": -40, "z": 0 },
+      "offsetFromRegionAnchorMeters": {
+        "x": -20,
+        "z": 0
+      },
       "mandatory": false,
       "journeyOrder": 35,
       "progression": {
         "prerequisiteIds": [],
-        "reveal": { "kind": "proximity", "radiusMeters": 60 },
+        "reveal": {
+          "kind": "proximity",
+          "radiusMeters": 30
+        },
         "visitRadiusMeters": 12,
-        "completion": { "kind": "interact", "interaction": "rest" },
+        "completion": {
+          "kind": "interact",
+          "interaction": "rest"
+        },
         "autosave": true
       },
       "signals": [
-        { "kind": "sound", "description": "clear water runs below the waterfall notch" },
-        { "kind": "light", "description": "the spring brightens the sheltered bank" }
+        {
+          "kind": "sound",
+          "description": "clear water runs below the waterfall notch"
+        },
+        {
+          "kind": "light",
+          "description": "the spring brightens the sheltered bank"
+        }
       ]
     },
     {
       "id": "fernwood-river-shortcut",
       "type": "shortcut",
       "regionId": "fernwood",
-      "offsetFromRegionAnchorMeters": { "x": -120, "z": 20 },
+      "offsetFromRegionAnchorMeters": {
+        "x": -60,
+        "z": 10
+      },
       "mandatory": false,
       "journeyOrder": 25,
       "progression": {
         "prerequisiteIds": [],
-        "reveal": { "kind": "proximity", "radiusMeters": 45 },
+        "reveal": {
+          "kind": "proximity",
+          "radiusMeters": 22.5
+        },
         "visitRadiusMeters": 14,
-        "completion": { "kind": "proximity" },
+        "completion": {
+          "kind": "proximity"
+        },
         "autosave": false
       },
       "signals": [
-        { "kind": "tracks", "description": "a narrow herd line leaves the fern corridor" },
-        { "kind": "silhouette", "description": "the waterfall notch appears between trunks" }
+        {
+          "kind": "tracks",
+          "description": "a narrow herd line leaves the fern corridor"
+        },
+        {
+          "kind": "silhouette",
+          "description": "the waterfall notch appears between trunks"
+        }
       ]
     },
     {
       "id": "longgrass-blackstone-shortcut",
       "type": "shortcut",
       "regionId": "longgrass-plain",
-      "offsetFromRegionAnchorMeters": { "x": -120, "z": 100 },
+      "offsetFromRegionAnchorMeters": {
+        "x": -60,
+        "z": 50
+      },
       "mandatory": false,
       "journeyOrder": 45,
       "progression": {
         "prerequisiteIds": [],
-        "reveal": { "kind": "proximity", "radiusMeters": 50 },
+        "reveal": {
+          "kind": "proximity",
+          "radiusMeters": 25
+        },
         "visitRadiusMeters": 14,
-        "completion": { "kind": "proximity" },
+        "completion": {
+          "kind": "proximity"
+        },
         "autosave": false
       },
       "signals": [
-        { "kind": "tracks", "description": "hoof wear marks the inner ascent" },
-        { "kind": "silhouette", "description": "the summit saddle aligns with the grass cut" }
+        {
+          "kind": "tracks",
+          "description": "hoof wear marks the inner ascent"
+        },
+        {
+          "kind": "silhouette",
+          "description": "the summit saddle aligns with the grass cut"
+        }
       ]
     }
   ],
@@ -444,9 +791,11 @@
         "fernwood-caught-hair",
         "river-spring-tracks"
       ],
-      "triggerRadiusMeters": 180,
+      "triggerRadiusMeters": 90,
       "responseDelayTicks": 120,
-      "revealDiscoveryIds": ["blackstone-living-herd"]
+      "revealDiscoveryIds": [
+        "blackstone-living-herd"
+      ]
     }
   ]
 }

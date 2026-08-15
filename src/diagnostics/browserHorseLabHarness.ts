@@ -16,8 +16,8 @@ export interface BrowserHorseLabHarnessResult {
 
 declare global {
   interface Window {
-    __windhoofHorseLabHarness?: BrowserHorseLabHarnessResult;
-    __windhoofHorseLabHarnessError?: string;
+    __longrideHorseLabHarness?: BrowserHorseLabHarnessResult;
+    __longrideHorseLabHarnessError?: string;
   }
 }
 
@@ -59,7 +59,7 @@ async function runBrowserHarness(): Promise<void> {
   }
 
   const state = simulation.authoritativeStateForDiagnostics();
-  window.__windhoofHorseLabHarness = {
+  window.__longrideHorseLabHarness = {
     tick: state.tick,
     finalZ: state.position.z,
     finalY: state.position.y,
@@ -77,7 +77,7 @@ async function runBrowserHarness(): Promise<void> {
 
 runBrowserHarness().catch((error: unknown) => {
   const message = error instanceof Error ? error.stack ?? error.message : String(error);
-  window.__windhoofHorseLabHarnessError = message;
+  window.__longrideHorseLabHarnessError = message;
   document.documentElement.dataset.harnessStatus = "failed";
 });
 

@@ -31,6 +31,8 @@ function horseAt(discovery: CompiledDiscovery, tick: number): HorseState {
     lastSafePose: { position: { ...discovery.position }, yaw: 0 },
     condition: "normal",
     recoveryTicksRemaining: 0,
+    shoveX: 0,
+    shoveZ: 0,
   };
 }
 

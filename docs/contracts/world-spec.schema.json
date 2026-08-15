@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://windhoof.local/schemas/world-spec-v3.json",
-  "title": "Windhoof WorldSpec v3",
+  "$id": "https://longride.local/schemas/world-spec-v3.json",
+  "title": "Longride WorldSpec v3",
   "type": "object",
   "additionalProperties": false,
   "required": [

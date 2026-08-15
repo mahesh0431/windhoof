@@ -45,7 +45,7 @@ export interface DiagnosticsReadout {
   readonly geometries: number;
 }
 
-export interface WindhoofUiFrame {
+export interface LongrideUiFrame {
   readonly snapshot: UiSnapshot;
   readonly events: readonly GameEvent[];
   readonly elapsedSeconds: number;
@@ -70,7 +70,7 @@ export interface WindhoofUiFrame {
   readonly viewer?: { readonly x: number; readonly z: number; readonly yaw: number };
 }
 
-export interface WindhoofUiCallbacks {
+export interface LongrideUiCallbacks {
   onCommand(command: GameCommand): void;
   onRequestFocus(): void;
   /**
@@ -109,9 +109,9 @@ export interface JourneyStart {
   readonly totalDiscoveries: number;
 }
 
-export interface WindhoofUi {
+export interface LongrideUi {
   readonly root: HTMLElement;
-  update(frame: WindhoofUiFrame): void;
+  update(frame: LongrideUiFrame): void;
   /** Shows where graphics recovery has got to. Safe to call every frame. */
   setGraphicsStatus(snapshot: GraphicsLifecycleSnapshot): void;
   setJourneyStart(start: JourneyStart): void;
@@ -161,34 +161,35 @@ const CONTROLS: ReadonlyArray<readonly [string, string]> = [
  * must not allocate or re-render during a gallop, and a zero-dependency layer
  * keeps the initial download well inside the 20 MB budget.
  */
-export function createWindhoofUi(
+export function createLongrideUi(
   host: HTMLElement,
   settings: PresentationSettingsStore,
-  callbacks: WindhoofUiCallbacks,
-): WindhoofUi {
-  const root = el("div", "wh-ui");
+  callbacks: LongrideUiCallbacks,
+): LongrideUi {
+  const root = el("div", "lr-ui");
   root.dataset.mode = "loading";
 
-  const vignette = el("div", "wh-vignette");
+  const vignette = el("div", "lr-vignette");
   vignette.setAttribute("aria-hidden", "true");
 
   // Hints are advisory; acknowledgements are state changes the player must not
   // miss. Both are announced politely so they are not sound-or-nothing.
-  const hint = el("div", "wh-hint");
+  const hint = el("div", "lr-hint");
   hint.setAttribute("aria-live", "polite");
-  const notice = el("div", "wh-notice");
+  const notice = el("div", "lr-notice");
   notice.setAttribute("role", "status");
   notice.setAttribute("aria-live", "polite");
 
   // Arriving somewhere is worth naming once. It sits bottom-right with the
   // other resting-state chrome, out of the centre and lower-middle where the
   // horse and the ground ahead live.
-  const place = el("div", "wh-place");
+  const place = el("div", "lr-place");
   place.setAttribute("role", "status");
   place.setAttribute("aria-live", "polite");
-  const placeName = el("div", "wh-place-name");
+  const placeName = el("div", "lr-place-name");
   place.append(placeName);
 
+  const controls = buildControlLegend();
   const gait = buildGaitStrip();
   const focus = buildFocusPrompt(callbacks);
   const diagnostics = buildDiagnostics();
@@ -215,6 +216,7 @@ export function createWindhoofUi(
     journey.save,
     storage.element,
     gait.element,
+    controls,
     diagnostics.element,
     focus.element,
     pause.element,
@@ -265,7 +267,7 @@ export function createWindhoofUi(
   const discoveryKinds = new Map<string, DiscoveryKind>();
 
   const applySettings = (value: PresentationSettings) => {
-    root.style.setProperty("--wh-text-scale", String(value.textScale));
+    root.style.setProperty("--lr-text-scale", String(value.textScale));
     attr(root, "data-reduced-motion", value.reducedMotion);
     pause.sync(value);
   };
@@ -572,22 +574,22 @@ export function createWindhoofUi(
  * surface appears without an action and is dismissible. Offering "begin a new
  * ride" there would promise something that cannot happen.
  */
-function buildStorageNotice(callbacks: WindhoofUiCallbacks, onAccept: () => void) {
-  const element = el("div", "wh-storage");
+function buildStorageNotice(callbacks: LongrideUiCallbacks, onAccept: () => void) {
+  const element = el("div", "lr-storage");
   element.setAttribute("role", "dialog");
   element.setAttribute("aria-live", "polite");
-  element.setAttribute("aria-labelledby", "wh-storage-title");
+  element.setAttribute("aria-labelledby", "lr-storage-title");
 
-  const panel = el("div", "wh-storage-panel");
-  const title = el("h2", "wh-storage-title");
-  title.id = "wh-storage-title";
-  const body = el("p", "wh-storage-body");
-  const reason = el("p", "wh-storage-reason");
-  const actions = el("div", "wh-storage-actions");
+  const panel = el("div", "lr-storage-panel");
+  const title = el("h2", "lr-storage-title");
+  title.id = "lr-storage-title";
+  const body = el("p", "lr-storage-body");
+  const reason = el("p", "lr-storage-reason");
+  const actions = el("div", "lr-storage-actions");
 
-  const accept = el("button", "wh-button", { type: "button" });
+  const accept = el("button", "lr-button", { type: "button" });
   accept.dataset.variant = "primary";
-  const dismiss = el("button", "wh-button", { text: "Ride on", type: "button" });
+  const dismiss = el("button", "lr-button", { text: "Ride on", type: "button" });
 
   actions.append(accept, dismiss);
   panel.append(title, reason, body, actions);
@@ -683,16 +685,16 @@ function objectiveLine(snapshot: UiSnapshot): string | null {
  * player on a keyboard must be able to reach it without a pointer.
  */
 function buildGraphicsNotice(onResume: () => void, onReload: () => void) {
-  const element = el("div", "wh-graphics");
+  const element = el("div", "lr-graphics");
   element.setAttribute("role", "alertdialog");
   element.setAttribute("aria-live", "assertive");
-  element.setAttribute("aria-labelledby", "wh-graphics-title");
+  element.setAttribute("aria-labelledby", "lr-graphics-title");
 
-  const panel = el("div", "wh-graphics-panel");
-  const title = el("h2", "wh-graphics-title");
-  title.id = "wh-graphics-title";
-  const body = el("p", "wh-graphics-body");
-  const action = el("button", "wh-button", { type: "button" });
+  const panel = el("div", "lr-graphics-panel");
+  const title = el("h2", "lr-graphics-title");
+  title.id = "lr-graphics-title";
+  const body = el("p", "lr-graphics-body");
+  const action = el("button", "lr-button", { type: "button" });
   action.dataset.variant = "primary";
 
   panel.append(title, body, action);
@@ -771,46 +773,46 @@ function relativeBearing(
  * while the player is riding.
  */
 function buildJourney() {
-  const goal = el("div", "wh-goal");
+  const goal = el("div", "lr-goal");
   goal.setAttribute("aria-live", "polite");
-  const goalText = el("span", "wh-goal-text");
-  goal.append(el("span", "wh-goal-mark", { text: "›" }), goalText);
+  const goalText = el("span", "lr-goal-text");
+  goal.append(el("span", "lr-goal-mark", { text: "›" }), goalText);
 
-  const bearing = el("div", "wh-bearing");
+  const bearing = el("div", "lr-bearing");
   bearing.setAttribute("aria-hidden", "true");
   // The caption rides with the mark rather than sitting at a fixed point on the
   // ring, so it can never drift over the horse - and it is counter-rotated in
   // CSS so it stays upright whichever way the mark is pointing.
-  const bearingArrow = el("div", "wh-bearing-arrow");
-  const bearingGlyph = el("div", "wh-bearing-glyph", { text: "▲" });
-  const bearingDistance = el("div", "wh-bearing-distance");
+  const bearingArrow = el("div", "lr-bearing-arrow");
+  const bearingGlyph = el("div", "lr-bearing-glyph", { text: "▲" });
+  const bearingDistance = el("div", "lr-bearing-distance");
   bearingArrow.append(bearingGlyph, bearingDistance);
   bearing.append(bearingArrow);
 
-  const discovery = el("div", "wh-discovery");
+  const discovery = el("div", "lr-discovery");
   discovery.setAttribute("role", "status");
   discovery.setAttribute("aria-live", "polite");
-  const discoveryName = el("div", "wh-discovery-name");
-  const discoveryBody = el("div", "wh-discovery-body");
+  const discoveryName = el("div", "lr-discovery-name");
+  const discoveryBody = el("div", "lr-discovery-body");
   discovery.append(discoveryName, discoveryBody);
 
-  const prompt = el("div", "wh-prompt");
+  const prompt = el("div", "lr-prompt");
   prompt.setAttribute("role", "status");
   prompt.setAttribute("aria-live", "polite");
-  const promptKey = el("kbd", "wh-prompt-key", { text: "E" });
-  const promptText = el("span", "wh-prompt-text");
+  const promptKey = el("kbd", "lr-prompt-key", { text: "E" });
+  const promptText = el("span", "lr-prompt-text");
   prompt.append(promptKey, promptText);
 
-  const save = el("div", "wh-save", { text: "Remembered" });
+  const save = el("div", "lr-save", { text: "Remembered" });
   save.setAttribute("role", "status");
   save.setAttribute("aria-live", "polite");
 
   // Lives inside the pause panel, so the full picture is available on demand
   // without ever being on screen while riding.
-  const list = el("div", "wh-journey");
-  const listSummary = el("p", "wh-journey-summary");
-  const listItems = el("ul", "wh-journey-list");
-  list.append(el("h3", "wh-journey-title", { text: "Your journey" }), listSummary, listItems);
+  const list = el("div", "lr-journey");
+  const listSummary = el("p", "lr-journey-summary");
+  const listItems = el("ul", "lr-journey-list");
+  list.append(el("h3", "lr-journey-title", { text: "Your journey" }), listSummary, listItems);
 
   let listSignature = "";
 
@@ -827,7 +829,7 @@ function buildJourney() {
     },
 
     setBearing(degrees: number, distanceMeters: number) {
-      bearingArrow.style.setProperty("--wh-bearing", `${degrees.toFixed(1)}deg`);
+      bearingArrow.style.setProperty("--lr-bearing", `${degrees.toFixed(1)}deg`);
       // Rounded hard: a precise distance would read as instrumentation, and a
       // horse does not know it is sixty-three metres away from anything.
       setText(
@@ -865,11 +867,11 @@ function buildJourney() {
       listItems.replaceChildren();
       for (const entry of snapshot.knownDiscoveries) {
         const text = discoveryText(entry.id, entry.kind);
-        const item = el("li", "wh-journey-item");
+        const item = el("li", "lr-journey-item");
         item.dataset.state = entry.state;
         item.append(
-          el("span", "wh-journey-item-name", { text: text.name }),
-          el("span", "wh-journey-item-state", { text: stateVerb(entry.state) ?? "" }),
+          el("span", "lr-journey-item-name", { text: text.name }),
+          el("span", "lr-journey-item-state", { text: stateVerb(entry.state) ?? "" }),
         );
         listItems.append(item);
       }
@@ -877,24 +879,61 @@ function buildJourney() {
   };
 }
 
+/**
+ * The controls, always on screen.
+ *
+ * The onboarding hints teach one thing at a time and then get out of the way,
+ * which is right for a first ride and useless afterwards: a player who comes
+ * back tomorrow has no way to find out that Space jumps or that C calls, short
+ * of opening the pause menu. This is the reference card - low contrast, small,
+ * out at the edge, and never animated, so it can be read when it is wanted and
+ * ignored when it is not.
+ *
+ * It is deliberately not a HUD element: nothing here changes at runtime, so it
+ * costs one build and no per-frame work.
+ */
+function buildControlLegend(): HTMLElement {
+  const element = el("aside", "lr-controls");
+  element.setAttribute("aria-label", "Controls");
+  const rows: ReadonlyArray<readonly [string, string]> = [
+    ["W A S D", "ride"],
+    ["\u2190 \u2192", "turn"],
+    ["Shift", "gallop"],
+    ["Space", "jump"],
+    ["C", "call"],
+    ["E", "interact"],
+    ["R", "reset"],
+    ["Esc", "pause"],
+  ];
+  for (const [keys, action] of rows) {
+    const row = el("div", "lr-controls-row");
+    row.append(
+      el("span", "lr-controls-key", { text: keys }),
+      el("span", "lr-controls-action", { text: action }),
+    );
+    element.append(row);
+  }
+  return element;
+}
+
 function buildGaitStrip() {
-  const element = el("div", "wh-gait");
+  const element = el("div", "lr-gait");
   // Decorative reinforcement of something the player already feels. Announcing
   // every gait and speed change would drown out the acknowledgements that
   // actually matter.
   element.setAttribute("aria-hidden", "true");
-  const ticks = el("div", "wh-gait-ticks");
+  const ticks = el("div", "lr-gait-ticks");
   const nodes = GAITS.map((name, index) => {
-    const tick = el("div", "wh-gait-tick");
+    const tick = el("div", "lr-gait-tick");
     tick.style.height = `${0.45 + index * 0.26}rem`;
     tick.title = name;
     ticks.append(tick);
     return tick;
   });
 
-  const label = el("div", "wh-gait-label");
-  const gaitName = el("span", "wh-gait-name", { text: "idle" });
-  const speed = el("span", "wh-gait-speed", { text: "0.0 m/s" });
+  const label = el("div", "lr-gait-label");
+  const gaitName = el("span", "lr-gait-name", { text: "idle" });
+  const speed = el("span", "lr-gait-speed", { text: "0.0 m/s" });
   label.append(gaitName, speed);
   element.append(ticks, label);
 
@@ -912,11 +951,11 @@ function buildGaitStrip() {
   };
 }
 
-function buildFocusPrompt(callbacks: WindhoofUiCallbacks) {
+function buildFocusPrompt(callbacks: LongrideUiCallbacks) {
   // A real button, so it is reachable and activatable from the keyboard rather
   // than being a click-only surface.
-  const element = el("button", "wh-focus", { type: "button" });
-  const inner = el("div", "wh-focus-inner");
+  const element = el("button", "lr-focus", { type: "button" });
+  const inner = el("div", "lr-focus-inner");
   inner.append(
     el("strong", undefined, { text: "Click to look around" }),
     el("span", undefined, { text: "W A S D to move  ·  Esc to pause" }),
@@ -937,13 +976,13 @@ function buildFocusPrompt(callbacks: WindhoofUiCallbacks) {
 }
 
 function buildLoading() {
-  const element = el("div", "wh-loading");
+  const element = el("div", "lr-loading");
   element.setAttribute("role", "status");
   element.setAttribute("aria-live", "polite");
-  const inner = el("div", "wh-loading-inner");
-  const note = el("div", "wh-loading-note", { text: "Preparing the Horse Lab" });
+  const inner = el("div", "lr-loading-inner");
+  const note = el("div", "lr-loading-note", { text: "Preparing the island" });
   inner.append(
-    el("h1", "wh-loading-title", { text: "WINDHOOF" }),
+    el("h1", "lr-loading-title", { text: "LONGRIDE" }),
     note,
   );
   element.append(inner);
@@ -966,20 +1005,20 @@ function buildLoading() {
     showError(message: string) {
       element.dataset.done = "false";
       setText(note, "Could not start");
-      const detail = el("pre", "wh-error", { text: message });
+      const detail = el("pre", "lr-error", { text: message });
       inner.append(detail);
     },
   };
 }
 
 function buildDiagnostics() {
-  const element = el("aside", "wh-diagnostics");
+  const element = el("aside", "lr-diagnostics");
   element.hidden = true;
-  element.append(el("div", "wh-diagnostics-title", { text: "Horse Lab diagnostics" }));
+  element.append(el("div", "lr-diagnostics-title", { text: "Diagnostics" }));
 
   const rows = new Map<string, { row: HTMLElement; value: HTMLElement }>();
   const addRow = (key: string, label: string) => {
-    const row = el("div", "wh-diagnostics-row");
+    const row = el("div", "lr-diagnostics-row");
     const value = el("span", undefined, { text: "-" });
     row.append(el("span", undefined, { text: label }), value);
     element.append(row);
@@ -1047,30 +1086,30 @@ function buildDiagnostics() {
 
 function buildPausePanel(
   settings: PresentationSettingsStore,
-  callbacks: WindhoofUiCallbacks,
+  callbacks: LongrideUiCallbacks,
   journeyList: HTMLElement,
 ) {
-  const element = el("div", "wh-pause");
+  const element = el("div", "lr-pause");
   element.setAttribute("role", "dialog");
   element.setAttribute("aria-modal", "true");
-  element.setAttribute("aria-labelledby", "wh-pause-title");
+  element.setAttribute("aria-labelledby", "lr-pause-title");
 
-  const panel = el("div", "wh-panel");
-  const title = el("h2", "wh-panel-title", { text: "Paused" });
-  title.id = "wh-pause-title";
+  const panel = el("div", "lr-panel");
+  const title = el("h2", "lr-panel-title", { text: "Paused" });
+  title.id = "lr-pause-title";
   panel.append(
     title,
-    el("p", "wh-panel-subtitle", {
+    el("p", "lr-panel-subtitle", {
       text: "The field is still there. Take a moment.",
     }),
   );
 
-  const actions = el("div", "wh-actions");
-  const resume = el("button", "wh-button", { text: "Resume", type: "button" });
+  const actions = el("div", "lr-actions");
+  const resume = el("button", "lr-button", { text: "Resume", type: "button" });
   resume.dataset.variant = "primary";
   resume.addEventListener("click", () => callbacks.onCommand({ type: "Resume" }));
 
-  const recover = el("button", "wh-button", {
+  const recover = el("button", "lr-button", {
     text: "Return to safe ground",
     type: "button",
   });
@@ -1088,13 +1127,13 @@ function buildPausePanel(
   // an answer at the moment it is wanted.
   panel.append(journeyList);
 
-  const tabs = el("div", "wh-tabs");
+  const tabs = el("div", "lr-tabs");
   tabs.setAttribute("role", "tablist");
-  const settingsPanel = el("div", "wh-tabpanel");
-  settingsPanel.id = "wh-tabpanel-settings";
+  const settingsPanel = el("div", "lr-tabpanel");
+  settingsPanel.id = "lr-tabpanel-settings";
   settingsPanel.setAttribute("role", "tabpanel");
-  const controlsPanel = el("div", "wh-tabpanel");
-  controlsPanel.id = "wh-tabpanel-controls";
+  const controlsPanel = el("div", "lr-tabpanel");
+  controlsPanel.id = "lr-tabpanel-controls";
   controlsPanel.setAttribute("role", "tabpanel");
   controlsPanel.hidden = true;
 
@@ -1112,7 +1151,7 @@ function buildPausePanel(
   };
 
   const makeTab = (label: string, target: HTMLElement, selected: boolean) => {
-    const tab = el("button", "wh-tab", { text: label, type: "button" });
+    const tab = el("button", "lr-tab", { text: label, type: "button" });
     tab.setAttribute("role", "tab");
     tab.setAttribute("aria-selected", String(selected));
     tab.setAttribute("aria-controls", target.id);
@@ -1140,13 +1179,13 @@ function buildPausePanel(
 
   // Everything below the pinned header scrolls together, so a short window
   // never puts Resume out of reach.
-  const scroll = el("div", "wh-panel-scroll");
+  const scroll = el("div", "lr-panel-scroll");
   scroll.append(settingsPanel, controlsPanel);
   panel.append(tabs, scroll);
 
-  const controlsList = el("dl", "wh-keys");
+  const controlsList = el("dl", "lr-keys");
   for (const [action, key] of CONTROLS) {
-    const row = el("div", "wh-key-row");
+    const row = el("div", "lr-key-row");
     row.append(el("dt", undefined, { text: action }), el("dd", undefined, { text: key }));
     controlsList.append(row);
   }
@@ -1214,7 +1253,7 @@ const FOCUSABLE =
 function buildSettingsFields(
   container: HTMLElement,
   settings: PresentationSettingsStore,
-  callbacks: WindhoofUiCallbacks,
+  callbacks: LongrideUiCallbacks,
 ): (value: PresentationSettings) => void {
   const syncers: Array<(value: PresentationSettings) => void> = [];
 
@@ -1227,19 +1266,19 @@ function buildSettingsFields(
     step: number,
     format: (value: number) => string,
   ) => {
-    const field = el("div", "wh-field");
-    const labelNode = el("label", "wh-field-label");
+    const field = el("div", "lr-field");
+    const labelNode = el("label", "lr-field-label");
     labelNode.append(
       document.createTextNode(label),
-      el("span", "wh-field-hint", { text: hintText }),
+      el("span", "lr-field-hint", { text: hintText }),
     );
     const input = el("input", undefined, { type: "range" });
     input.min = String(min);
     input.max = String(max);
     input.step = String(step);
-    const value = el("span", "wh-field-value");
-    labelNode.htmlFor = `wh-${key}`;
-    input.id = `wh-${key}`;
+    const value = el("span", "lr-field-value");
+    labelNode.htmlFor = `lr-${key}`;
+    input.id = `lr-${key}`;
 
     input.addEventListener("input", () => {
       const next = Number(input.value);
@@ -1263,22 +1302,22 @@ function buildSettingsFields(
     label: string,
     hintText: string,
   ) => {
-    const field = el("div", "wh-field");
-    const labelNode = el("label", "wh-field-label");
+    const field = el("div", "lr-field");
+    const labelNode = el("label", "lr-field-label");
     labelNode.append(
       document.createTextNode(label),
-      el("span", "wh-field-hint", { text: hintText }),
+      el("span", "lr-field-hint", { text: hintText }),
     );
     const input = el("input", undefined, { type: "checkbox" });
-    labelNode.htmlFor = `wh-${key}`;
-    input.id = `wh-${key}`;
+    labelNode.htmlFor = `lr-${key}`;
+    input.id = `lr-${key}`;
     input.addEventListener("change", () => {
       settings.update({ [key]: input.checked } as Partial<PresentationSettings>);
       if (key === "reducedMotion") {
         callbacks.onCommand({ type: "SetReducedMotion", enabled: input.checked });
       }
     });
-    field.append(labelNode, input, el("span", "wh-field-value"));
+    field.append(labelNode, input, el("span", "lr-field-value"));
     container.append(field);
     syncers.push((current) => {
       input.checked = current[key];
@@ -1319,15 +1358,15 @@ function buildSettingsFields(
     "Softens camera shake, lean, and field-of-view change",
   );
 
-  const gaitField = el("div", "wh-field");
-  const gaitLabel = el("label", "wh-field-label");
+  const gaitField = el("div", "lr-field");
+  const gaitLabel = el("label", "lr-field-label");
   gaitLabel.append(
     document.createTextNode("Gait indicator"),
-    el("span", "wh-field-hint", { text: "Fades out on its own by default" }),
+    el("span", "lr-field-hint", { text: "Fades out on its own by default" }),
   );
   const gaitSelect = el("select");
-  gaitLabel.htmlFor = "wh-gaitIndicator";
-  gaitSelect.id = "wh-gaitIndicator";
+  gaitLabel.htmlFor = "lr-gaitIndicator";
+  gaitSelect.id = "lr-gaitIndicator";
   for (const [value, label] of [
     ["auto", "Fade when settled"],
     ["always", "Always visible"],
@@ -1341,7 +1380,7 @@ function buildSettingsFields(
       gaitIndicator: gaitSelect.value as PresentationSettings["gaitIndicator"],
     });
   });
-  gaitField.append(gaitLabel, gaitSelect, el("span", "wh-field-value"));
+  gaitField.append(gaitLabel, gaitSelect, el("span", "lr-field-value"));
   container.append(gaitField);
   syncers.push((current) => {
     gaitSelect.value = current.gaitIndicator;

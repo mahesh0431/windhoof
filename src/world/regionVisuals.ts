@@ -137,6 +137,15 @@ export function regionDisplayName(regionId: string): string {
  * The numbers here are the concrete visual decisions the spec deliberately
  * leaves to the render layer; the spec states intent, in `presentation.palette`
  * and each region's `visualIntent`, and this is that intent as material.
+ *
+ * They were pulled a long way towards green in the vegetation pass. The first
+ * set was authored dry - bleached coast, gold plain - and read as pale and
+ * washed out once there was real grass standing on it, because a dry ground
+ * ramp under dry cover leaves nothing for either to contrast against. Every
+ * region keeps its own hue and its own value: the plain is still the brightest
+ * ground and the crown still the darkest, and the two woodlands are still told
+ * apart by warm against cool. They are simply all now the colour of somewhere
+ * things grow.
  */
 export interface RegionStyle {
   /** Dry and rich ends of the ground ramp, walked by authored moisture. */
@@ -161,73 +170,106 @@ const REGION_STYLES: Readonly<Record<string, RegionStyle>> = {
   // Salt-scoured and bleached. Pale, cool, and low-contrast, so the storm coast
   // reads as somewhere weather happens to rather than somewhere that grows.
   "saltwind-coast": {
-    dry: [0.66, 0.64, 0.53],
-    rich: [0.45, 0.52, 0.38],
+    dry: [0.55, 0.6, 0.42],
+    rich: [0.36, 0.52, 0.32],
     rockFromDegrees: 22,
-    coverDensity: 0.7,
-    coverScale: 0.85,
-    coverTints: [[0.58, 0.62, 0.44], [0.66, 0.68, 0.5], [0.5, 0.56, 0.4]],
+    coverDensity: 1.15,
+    coverScale: 1.15,
+    coverTints: [[0.5, 0.62, 0.38], [0.6, 0.68, 0.44], [0.42, 0.56, 0.34]],
   },
   // Dry gold, and the brightest ground on the island. This is the gallop
   // country, and it should be visible as such from the crown.
   "longgrass-plain": {
-    dry: [0.76, 0.68, 0.34],
-    rich: [0.53, 0.6, 0.24],
+    dry: [0.48, 0.58, 0.24],
+    rich: [0.3, 0.5, 0.19],
     rockFromDegrees: 26,
-    coverDensity: 1.25,
-    coverScale: 1.15,
-    coverTints: [[0.72, 0.68, 0.32], [0.62, 0.64, 0.28], [0.82, 0.74, 0.42], [0.48, 0.56, 0.2]],
+    coverDensity: 1.6,
+    coverScale: 1.6,
+    coverTints: [[0.55, 0.66, 0.26], [0.44, 0.6, 0.22], [0.66, 0.72, 0.34], [0.34, 0.52, 0.18]],
   },
   // Deep shade. The darkest living ground, and warm rather than blue, so it
   // separates from River Hollow at a distance.
   fernwood: {
-    dry: [0.2, 0.26, 0.14],
-    rich: [0.11, 0.2, 0.1],
+    dry: [0.24, 0.34, 0.16],
+    rich: [0.15, 0.28, 0.13],
     rockFromDegrees: 24,
     // The densest region on the island, and the one that broke the triangle
     // guide: a Fernwood view drew 799,860 against a 750k ceiling. Density comes
     // down and scale goes up, so the frame keeps the same closed, overgrown
     // reading from fewer, larger tufts rather than losing its floor.
-    coverDensity: 0.92,
-    coverScale: 1.3,
-    coverTints: [[0.14, 0.28, 0.13], [0.18, 0.34, 0.16], [0.1, 0.22, 0.11]],
+    coverDensity: 1.25,
+    coverScale: 1.5,
+    coverTints: [[0.16, 0.34, 0.15], [0.22, 0.42, 0.19], [0.12, 0.26, 0.13]],
   },
   // Wet, silver-green and cold. Bright where Fernwood is dark, blue where
   // Fernwood is warm - the two woodlands have to be told apart across a valley.
   "river-hollow": {
-    dry: [0.44, 0.55, 0.47],
-    rich: [0.3, 0.48, 0.42],
+    dry: [0.36, 0.55, 0.4],
+    rich: [0.24, 0.48, 0.35],
     rockFromDegrees: 20,
     // Trimmed with Fernwood's, for the same reason: a river-hollow frame drew
     // 780,050 against the 750k guide. Fewer, wider clumps keep the wet, shaggy
     // read without paying for every blade of it.
-    coverDensity: 0.92,
-    coverScale: 1.15,
-    coverTints: [[0.42, 0.6, 0.48], [0.52, 0.66, 0.54], [0.32, 0.5, 0.44]],
+    coverDensity: 1.25,
+    coverScale: 1.45,
+    coverTints: [[0.34, 0.62, 0.44], [0.44, 0.7, 0.5], [0.26, 0.52, 0.4]],
   },
   // Basalt, with high pasture caught in the folds. Rock breaks through early
   // and the ground itself is nearly black, so the crown is a dark mass on the
   // skyline from anywhere on the island.
   "blackstone-crown": {
-    dry: [0.12, 0.12, 0.13],
-    rich: [0.26, 0.34, 0.2],
+    dry: [0.13, 0.14, 0.13],
+    rich: [0.24, 0.38, 0.19],
     rockFromDegrees: 8,
-    coverDensity: 0.45,
-    coverScale: 0.8,
-    coverTints: [[0.24, 0.3, 0.18], [0.3, 0.26, 0.24], [0.18, 0.22, 0.16]],
+    coverDensity: 0.8,
+    coverScale: 1.05,
+    coverTints: [[0.26, 0.36, 0.18], [0.32, 0.3, 0.24], [0.2, 0.3, 0.16]],
   },
 };
 
 /** Neutral grassland, so an unrecognised region still renders as somewhere. */
 const FALLBACK_STYLE: RegionStyle = {
-  dry: [0.55, 0.58, 0.34],
-  rich: [0.34, 0.46, 0.24],
+  dry: [0.45, 0.56, 0.28],
+  rich: [0.3, 0.48, 0.22],
   rockFromDegrees: 22,
   coverDensity: 1,
   coverScale: 1,
   coverTints: [[0.6, 0.62, 0.36], [0.48, 0.56, 0.3]],
 };
 
+/**
+ * The authored tables above are written the way a person reads colour: as sRGB,
+ * the numbers a colour picker shows. Three's working space is linear, and
+ * `Color.setRGB` and instance colours both take linear values, so handing the
+ * authored numbers straight over renders every one of them far lighter and far
+ * less saturated than it was written - which is exactly how an island authored
+ * as gold and fern green ended up reading as pale mint.
+ *
+ * So the conversion happens once, here, at the boundary. The tables stay
+ * readable and the renderer gets what it actually expects.
+ */
+function toLinear(channel: number): number {
+  return channel <= 0.04045
+    ? channel / 12.92
+    : ((channel + 0.055) / 1.055) ** 2.4;
+}
+
+const LINEAR_STYLES: Readonly<Record<string, RegionStyle>> = Object.fromEntries(
+  Object.entries(REGION_STYLES).map(([id, style]) => [id, linearise(style)]),
+);
+const LINEAR_FALLBACK = linearise(FALLBACK_STYLE);
+
+function linearise(style: RegionStyle): RegionStyle {
+  const triple = (value: readonly [number, number, number]) =>
+    [toLinear(value[0]), toLinear(value[1]), toLinear(value[2])] as const;
+  return {
+    ...style,
+    dry: triple(style.dry),
+    rich: triple(style.rich),
+    coverTints: style.coverTints.map(triple),
+  };
+}
+
 export function regionStyleFor(regionId: string): RegionStyle {
-  return REGION_STYLES[regionId] ?? FALLBACK_STYLE;
+  return LINEAR_STYLES[regionId] ?? LINEAR_FALLBACK;
 }

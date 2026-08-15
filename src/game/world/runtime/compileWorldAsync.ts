@@ -5,7 +5,7 @@ type WorkerFactory = () => Worker;
 const defaultWorkerFactory: WorkerFactory = () =>
   new Worker(new URL("../../../workers/worldCompiler.worker.ts", import.meta.url), {
     type: "module",
-    name: "windhoof-world-compiler",
+    name: "longride-world-compiler",
   });
 
 /** Compiles off the main thread and disposes the one-shot worker afterward. */

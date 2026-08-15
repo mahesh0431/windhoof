@@ -91,19 +91,19 @@ async function inspect(baseUrl) {
   });
 
   const lab = {
-    state: () => page.evaluate(() => window.__windhoofLab.state()),
-    scenes: () => page.evaluate(() => window.__windhoofLab.scenes()),
-    move: (x, y) => page.evaluate(([a, b]) => window.__windhoofLab.setMove(a, b), [x, y]),
-    gallop: (on) => page.evaluate((v) => window.__windhoofLab.setGallop(v), on),
-    yaw: (value) => page.evaluate((v) => window.__windhoofLab.setCameraYaw(v), value),
-    look: (dx, dy) => page.evaluate(([a, b]) => window.__windhoofLab.look(a, b), [dx, dy]),
+    state: () => page.evaluate(() => window.__longrideLab.state()),
+    scenes: () => page.evaluate(() => window.__longrideLab.scenes()),
+    move: (x, y) => page.evaluate(([a, b]) => window.__longrideLab.setMove(a, b), [x, y]),
+    gallop: (on) => page.evaluate((v) => window.__longrideLab.setGallop(v), on),
+    yaw: (value) => page.evaluate((v) => window.__longrideLab.setCameraYaw(v), value),
+    look: (dx, dy) => page.evaluate(([a, b]) => window.__longrideLab.look(a, b), [dx, dy]),
   };
   const wait = (seconds) => page.waitForTimeout(seconds * 1000);
 
   await page.goto(automationUrl(baseUrl), { waitUntil: "domcontentloaded" });
-  await page.waitForFunction(() => window.__windhoofLab?.ready === true, null, { timeout: 120_000 });
-  await page.waitForSelector("html[data-windhoof='running']");
-  await page.addStyleTag({ content: ".wh-focus { display: none !important; }" });
+  await page.waitForFunction(() => window.__longrideLab?.ready === true, null, { timeout: 120_000 });
+  await page.waitForSelector("html[data-longride='running']");
+  await page.addStyleTag({ content: ".lr-focus { display: none !important; }" });
   await wait(0.8);
 
   const scenes = await lab.scenes();

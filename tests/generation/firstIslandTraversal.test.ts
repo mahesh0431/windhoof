@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import firstIslandJson from "../../docs/contracts/world-spec.first-island.json";
-import { NEUTRAL_HORSE_INPUT } from "../../src/game/contracts/input";
 import { stepHorse } from "../../src/game/simulation/horse/horseController";
+import { reinsTowards } from "../../src/game/simulation/horse/horseSteering";
 import {
   createInitialHorseState,
   type HorseState,
@@ -60,12 +60,14 @@ function rideRoute(
         y: 0,
         z: Math.cos(state.yaw) * state.speed,
       }).missingPhysicsChunkIds).toEqual([]);
-      state = stepHorse(state, {
-        ...NEUTRAL_HORSE_INPUT,
-        moveY: distance < 10 && state.speed > 7 ? -1 : 1,
-        cameraYaw: Math.atan2(dx, dz),
-        gallopHeld: distance > 22,
-      }, resolver).state;
+      state = stepHorse(
+        state,
+        reinsTowards(state, waypoint.x, waypoint.z, {
+          slowWithin: 10,
+          gallopBeyond: 22,
+        }),
+        resolver,
+      ).state;
       expect(Number.isFinite(state.position.y)).toBe(true);
     }
     expect(
@@ -87,21 +89,29 @@ describe("first-island physical traversal", () => {
     const repository = new IslandChunkRepository(manifest);
     repository.prepareAllSync();
 
+    // Fails at the placements stage, which runs after every terrain chunk has
+    // been built and retained, so this is the point with the most to release.
+    //
+    // It is named rather than numbered on purpose. This used to fail the build
+    // at `collision-terrain-03`, and when the island was halved there were only
+    // two terrain jobs left - so the injected failure never fired, nothing
+    // threw, and a test about the failure path stopped exercising one. Stage
+    // names are a contract; how many terrain chunks an island has is not.
     await expect(CompiledIslandWorld.createStaged(
       manifest,
       repository,
       async (name, work) => {
-        if (name === "collision-terrain-03") throw new Error("synthetic build failure");
+        if (name === "collision-placements") throw new Error("synthetic build failure");
         return work();
       },
     )).rejects.toThrow("synthetic build failure");
 
-    expect(repository.snapshot()).toMatchObject({
-      physicsRetains: 0,
-      renderRetains: 0,
-      cooldownChunks: 24,
-      preparedChunks: 40,
-    });
+    const snapshot = repository.snapshot();
+    // The invariant that matters: a failed build leaves nothing retained, so
+    // the repository can be torn down or rebuilt rather than leaking chunks.
+    expect(snapshot).toMatchObject({ physicsRetains: 0, renderRetains: 0 });
+    expect(snapshot.cooldownChunks).toBe(snapshot.totalChunks);
+    expect(snapshot.activeChunks).toBe(0);
     repository.dispose();
   });
 
@@ -121,28 +131,29 @@ describe("first-island physical traversal", () => {
         return work();
       },
     );
-    expect(jobNames).toEqual([
-      "collision-terrain-00",
-      "collision-terrain-01",
-      "collision-terrain-02",
-      "collision-terrain-03",
-      "collision-terrain-04",
-      "collision-terrain-05",
-      "collision-terrain-06",
-      "collision-terrain-07",
+    // The staging contract is the ORDER and the NAMES, not the count: terrain
+    // first, in numbered order from zero, then placements, then the boundary,
+    // then finalize. How many terrain batches that takes is a property of how
+    // big the island is, and pinning it here is what left this assertion
+    // describing an island twice the size of the one being compiled.
+    const terrainJobs = jobNames.filter((name) => name.startsWith("collision-terrain-"));
+    expect(terrainJobs.length).toBeGreaterThan(0);
+    expect(terrainJobs).toEqual(
+      terrainJobs.map((_, index) => `collision-terrain-${String(index).padStart(2, "0")}`),
+    );
+    expect(jobNames.slice(terrainJobs.length)).toEqual([
       "collision-placements",
       "collision-boundary",
       "collision-finalize",
     ]);
     repository.activateAll();
 
-    expect(repository.snapshot()).toMatchObject({
-      mode: "full-world",
-      totalChunks: 64,
-      activeChunks: 64,
-      physicsRetains: 64,
-      renderRetains: 64,
-    });
+    const built = repository.snapshot();
+    expect(built).toMatchObject({ mode: "full-world" });
+    // Every chunk active, and retained once by each side.
+    expect(built.activeChunks).toBe(built.totalChunks);
+    expect(built.physicsRetains).toBe(built.totalChunks);
+    expect(built.renderRetains).toBe(built.totalChunks);
     const baselineColliders = island.colliderCount();
     const coastalRoutes = manifest.routes
       .filter((route) => route.role === "coastal-loop")
@@ -197,11 +208,10 @@ describe("first-island physical traversal", () => {
     expect(island.colliderCount()).toBe(baselineColliders);
     island.dispose();
     releaseRender.forEach((release) => release());
-    expect(repository.snapshot()).toMatchObject({
-      physicsRetains: 0,
-      renderRetains: 0,
-      cooldownChunks: 64,
-    });
+    const tornDown = repository.snapshot();
+    expect(tornDown).toMatchObject({ physicsRetains: 0, renderRetains: 0 });
+    // Everything the ride retained has gone back, whatever the island's size.
+    expect(tornDown.cooldownChunks).toBe(tornDown.totalChunks);
     repository.dispose();
   });
 

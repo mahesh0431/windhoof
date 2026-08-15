@@ -23,32 +23,38 @@ is expected to be replaced before Milestone 5.
 
 | Asset ID | Purpose | Source/tool | Creator/provider | Acquired/generated | License/terms | Attribution | Modifications | Source/reference | Review status |
 |---|---|---|---|---|---|---|---|---|---|
-| `horse-rig-placeholder` | Player horse: articulated torso (forehand, rigid ribcage, spine), neck, head, ears, mane, tail, four three-segment legs | Procedural Three.js primitives assembled in code | Claude Code, for this project | 2026-08-12 | Project-owned; same terms as the repository | None required | n/a - authored here | `src/render/horse/horseVisual.ts` | `approved-placeholder` |
-| `horse-gait-animation` | Idle, walk, trot, canter, gallop, suspension, takeoff, landing, airborne, and stumble motion driven by controller state | Procedural animation; real quadruped footfall sequences, duty factors, spinal flexion, and an impulse spring | Claude Code, for this project | 2026-08-12, revised 2026-08-13 | Project-owned | None required | n/a - authored here | `src/render/horse/horseGaitAnimator.ts` | `approved-placeholder` |
+| `horse-rig-placeholder` | Player horse: articulated torso (forehand, rigid ribcage, spine), neck, head, ears, mane, tail, four three-segment legs | Flat-shaded lofts through authored cross-sections, plus hair sheets, built in code by the in-repo `horseGeometry` builders | Claude Code, for this project | 2026-08-12, remodelled 2026-08-13, remodelled against an anatomical reference 2026-08-14 | Project-owned; same terms as the repository | None required | n/a - authored here | `src/render/horse/horseVisual.ts`, `src/render/horse/horseGeometry.ts` | `approved-placeholder` |
+| `horse-gait-animation` | Idle, walk, trot, canter, gallop, suspension, takeoff, landing, airborne, and stumble motion driven by controller state | Procedural animation; real quadruped footfall sequences, duty factors, spinal flexion, and an impulse spring | Claude Code, for this project | 2026-08-12, revised 2026-08-13 and 2026-08-14 | Project-owned | None required | n/a - authored here | `src/render/horse/horseGaitAnimator.ts` | `approved-placeholder` |
+| `island-ground-cover` | Island-wide grass, fern and flower scatter, one instanced mesh per bucket per layer | Splayed blade tufts built in code, placed from the manifest's own fields, bent by a vertex-shader wind | Claude Code, for this project | 2026-08-13, remodelled 2026-08-13 | Project-owned | None required | n/a - authored here | `src/world/islandGroundCover.ts`, `src/world/grassBlades.ts` | `approved-placeholder` |
+| `island-near-grass` | The dense grass carpet within about thirty-five metres of the player, as a window of patches that follows them | Same blade tufts, regenerated per patch from a hash of its own cell | Claude Code, for this project | 2026-08-13 | Project-owned | None required | n/a - authored here | `src/world/islandNearGrass.ts` | `approved-placeholder` |
+| `island-woodland` | About 2,500 non-colliding trees: broadleaf, pine and scrub, in three storeys, per region | Flat-shaded merged trunk-and-canopy geometry with colours baked into vertices, instanced per species per bucket, bent by the same wind | Claude Code, for this project | 2026-08-13 | Project-owned | None required | n/a - authored here | `src/world/islandWoodland.ts`, `src/world/treeShapes.ts` | `approved-placeholder` |
 | `stage-terrain` | Horse Lab ground: corridor, stream, plateau, knoll, bank, beach, seabed | Analytic height field, sampled into one shared vertex buffer | Claude Code, for this project | 2026-08-12 | Project-owned | None required | n/a - authored here | `src/stage/horseLabStage.ts`, `src/stage/stageTerrainMesh.ts` | `approved-placeholder` |
 | `stage-props` | Rocks, boulders, logs, trees, and shrubs, instanced per family | Procedural Three.js primitives with deterministic vertex roughening | Claude Code, for this project | 2026-08-12 | Project-owned | None required | n/a - authored here | `src/render/world/propsVisual.ts` | `approved-placeholder` |
 | `sky-dome-shader` | Three-band gradient sky with a warm sun bloom | Hand-written GLSL | Claude Code, for this project | 2026-08-12 | Project-owned | None required | n/a - authored here | `src/render/world/skyDome.ts` | `approved-placeholder` |
 | `sea-and-distant-land` | Water surface with a shore-keyed surf band, plus hazed landforms on the horizon | Hand-written GLSL and procedural geometry | Claude Code, for this project | 2026-08-12 | Project-owned | None required | n/a - authored here | `src/render/world/seaVisual.ts` | `approved-placeholder` |
 | `hoof-contact-debris` | Turf, sand, grit, and water thrown up where the hooves strike | Pooled Three.js `Points` with hand-written GLSL; deterministic jitter, no `Math.random` | Claude Code, for this project | 2026-08-13 | Project-owned | None required | n/a - authored here | `src/render/horse/hoofContacts.ts` | `approved-placeholder` |
-| `windhoof-palette` | Shared colour system for terrain, vegetation, water, sky, and the horse | Authored colour values | Claude Code, for this project | 2026-08-12 | Project-owned | None required | n/a - authored here | `src/render/palette.ts` | `approved-placeholder` |
-| `audio-hooves` | Per-surface hoof impacts, triggered by animator footfalls | Web Audio synthesis: filtered noise burst plus a low sine thump | Claude Code, for this project | 2026-08-12 | Project-owned; no sample material used | None required | n/a - authored here | `src/audio/windhoofAudio.ts` | `approved-placeholder` |
-| `audio-ambience` | Wind bed that rises with speed, and a surf bed keyed to shore distance | Web Audio synthesis: looped generated noise through biquad filters | Claude Code, for this project | 2026-08-12 | Project-owned; no sample material used | None required | n/a - authored here | `src/audio/windhoofAudio.ts` | `approved-placeholder` |
-| `audio-horse-voice` | Whinny on call, breathing keyed to effort, landing impacts | Web Audio synthesis: detuned oscillator pair with a pitch contour and vibrato tail | Claude Code, for this project | 2026-08-12 | Project-owned; no sample material used | None required | n/a - authored here | `src/audio/windhoofAudio.ts` | `approved-placeholder` |
+| `longride-palette` | Shared colour system for terrain, vegetation, water, sky, and the horse | Authored colour values | Claude Code, for this project | 2026-08-12 | Project-owned | None required | n/a - authored here | `src/render/palette.ts` | `approved-placeholder` |
+| `audio-hooves` | Per-surface hoof impacts, triggered by animator footfalls | Web Audio synthesis: filtered noise burst plus a low sine thump | Claude Code, for this project | 2026-08-12 | Project-owned; no sample material used | None required | n/a - authored here | `src/audio/longrideAudio.ts` | `approved-placeholder` |
+| `audio-ambience` | Wind bed that rises with speed, and a surf bed keyed to shore distance | Web Audio synthesis: looped generated noise through biquad filters | Claude Code, for this project | 2026-08-12 | Project-owned; no sample material used | None required | n/a - authored here | `src/audio/longrideAudio.ts` | `approved-placeholder` |
+| `audio-horse-voice` | Whinny on call, breathing keyed to effort, landing impacts | Web Audio synthesis: detuned oscillator pair with a pitch contour and vibrato tail | Claude Code, for this project | 2026-08-12 | Project-owned; no sample material used | None required | n/a - authored here | `src/audio/longrideAudio.ts` | `approved-placeholder` |
 | `region-materials` | Per-region ground colour ramp, bare-rock slope threshold, and ground-cover density/scale/palette for the five first-island regions | Authored colour and threshold values, blurred across region borders | Claude Code, for this project | 2026-08-13 | Project-owned | None required | n/a - authored here | `src/world/regionVisuals.ts`, `src/world/islandTerrainMesh.ts`, `src/world/islandGroundCover.ts` | `approved-placeholder` |
 | `region-landmarks` | Authored silhouettes per region: split sea stack and broken beacon, lone tree and stone ridge, split cedar and ruined arch, waterfall notch and leaning bridge, broken black ridge | Procedural Three.js primitives merged per material family, seated per piece on sampled terrain | Claude Code, for this project | 2026-08-13 | Project-owned | None required | n/a - authored here | `src/world/regionLandmarks.ts` | `approved-placeholder` |
 | `journey-markers` | Generic wayfinding cues for any compiled world: hoofprint trail at a herd trace, rising mist over a hollow the spec gives a water sound, circling flocks over overlooks and answering ground. Stands off any discovery `trace-scenes` has claimed, so the first island's five traces keep their own scenes | Procedural Three.js primitives, instanced per cue | Claude Code, for this project | 2026-08-13 | Project-owned | None required | n/a - authored here | `src/world/journeyMarkers.ts` | `approved-placeholder` |
 | `crossing-wildlife` | Small four-legged animals for the optional plain crossing: barrel, haunch, chest, neck, head, ears, four tapered legs, raised tail, merged into one instanced geometry with per-instance coat colour | Procedural Three.js primitives merged via the in-repo `mergeGeometries` | Claude Code, for this project | 2026-08-13 | Project-owned | None required | n/a - authored here | `src/world/journeyMarkers.ts` | `approved-placeholder` |
 | `trace-scenes` | The five herd-trace scenes: storm-beach hoofprint trail and wrack, flattened resting circle with its inward-leaning stalk ring, Fernwood rubbing post inside a conifer stand, river-hollow mud patch with crossing prints and reeds, plus stone rings at the hollows and worn ground at the cuts | Procedural Three.js primitives, instanced per element, seated per piece on sampled terrain | Claude Code, for this project | 2026-08-13 | Project-owned | None required | n/a - authored here | `src/world/traceScenes.ts` | `approved-placeholder` |
 | `living-herd` | Nine grazing horses on the Blackstone summit saddle: barrel, haunch, chest, long low neck, head, four tapered legs and tail, merged into one instanced geometry with per-instance coat colour, and a grazing/notice motion | Procedural Three.js primitives merged via the in-repo `mergeGeometries` | Claude Code, for this project | 2026-08-13 | Project-owned | None required | n/a - authored here | `src/world/traceScenes.ts` | `approved-placeholder` |
+| `wild-horse-behaviour` | Wild horses that watch, warn and kick a rider who crowds them | Procedural state machine driving the same `HorseRig` the player uses; the two nearest horses are promoted from the instanced herd to live rigs | Claude Code, for this project | 2026-08-14 | Project-owned | None required | n/a - authored here | `src/render/horse/wildHorseAnimator.ts`, `src/world/islandWildlife.ts` | `approved-placeholder` |
 | `ui-typography` | Interface type | System font stacks (`ui-serif`/Georgia for display, `system-ui` for body) | Operating system | 2026-08-12 | No font is embedded or redistributed | None required | n/a | `src/ui/ui.css` | `approved-placeholder` |
 
 ## Honest assessment of placeholder quality
 
 Stated plainly, so nobody mistakes any of this for finished work:
 
-- The horse reads convincingly as a horse in silhouette and gait, but it is
-  assembled from primitives. Body seams are visible at close range and there is
-  no skinning, muscle deformation, or coat detail.
+- The horse reads convincingly as a horse in silhouette and gait, and its
+  faceted surfaces now belong to the same world as the terrain and the trees.
+  It is still an unskinned model: there is no muscle deformation and no coat
+  detail beyond countershading baked into vertex colours, and where two masses
+  overlap the crossing line is visible at close range.
 - Gait footfall sequences and stride lengths are correct and distance-driven, so
   hooves do not slide. There is no inverse kinematics, so hooves do not
   individually conform to uneven ground; the whole body conforms to the slope
@@ -56,14 +62,29 @@ Stated plainly, so nobody mistakes any of this for finished work:
   back cannot also reach the ground, so at the extremes of a gallop a hoof can
   hang a little short of the surface.
 - The torso articulates at two joints, which is enough for the frame to gather
-  and lengthen, but the shells are overlapping primitives rather than a skinned
-  mesh. It holds up in motion and at the ranges the chase camera uses; it would
-  not survive a close static inspection.
+  and lengthen, but the shells are separate overlapping solids rather than one
+  skinned mesh. They are authored so the smaller sits strictly inside the larger
+  and the surfaces cross behind the shoulder and at the loin, where a horse
+  creases anyway. It holds up in motion and at the ranges the chase camera uses;
+  it would not survive a close static inspection.
+- Mane and tail are thin sheets with a ragged free edge, not strands. They read
+  correctly in silhouette and stream with speed; seen edge-on and close up they
+  are visibly flat.
 - Hoof debris is flat round sprites with no texture and no collision. It reads
   as material thrown from the right place in the right direction, and nothing
   more than that.
-- Trees, rocks, and shrubs are readable at speed but are clearly stylised
-  primitives, not a vegetation family.
+- Grass is three double-sided triangles per tuft. It reads as grass in motion
+  and at a rider's height, and a single tuft held still and close is plainly
+  three triangles. Nothing is textured and nothing is lit per blade.
+- The woodland is three tree shapes at three storeys with per-instance colour
+  variation. It reads as a wood; it does not read as three thousand different
+  trees, and a player who stops and compares two of them will see the repeat.
+- **Scenery trees have no collision.** The compiler owns the collision world and
+  emits a couple of dozen collision-bearing placements; everything the woodland
+  layer adds is scenery a horse can ride through. This is the largest known
+  honesty gap in the current island.
+- Rocks and the region landmarks are still stylised primitives - boxes,
+  cylinders and cones - and are now the least convincing thing in the frame.
 - The synthesised audio confirms rhythm, speed, surface, and contact. It sounds
   synthetic, and a real recording will be better.
 - The crossing wildlife replaced bare boxes and now reads as animals in

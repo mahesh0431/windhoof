@@ -1,5 +1,5 @@
 {
-  "name": "windhoof",
+  "name": "longride",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -18,13 +18,16 @@
     "test:watch": "vitest",
     "test:browser": "playwright test",
     "inspect": "node tools/inspectHorseLab.mjs",
+    "inspect:horse": "node tools/inspectHorse.mjs",
+    "inspect:world": "node tools/inspectWorld.mjs",
     "lint": "eslint .",
     "inspect:island": "node tools/inspectIsland.mjs",
     "inspect:island:spots": "node tools/inspectIsland.mjs --spots",
     "profile:island": "node tools/profileIsland.mjs",
     "journey:walkthrough": "node tools/journeyWalkthrough.mjs",
     "island:capture": "node tools/captureFirstIsland.mjs",
-    "island:journey": "node tools/journeyFirstIsland.mjs"
+    "island:journey": "node tools/journeyFirstIsland.mjs",
+    "inspect:kick": "node tools/inspectKick.mjs"
   },
   "dependencies": {
     "@dimforge/rapier3d-compat": "0.20.0",

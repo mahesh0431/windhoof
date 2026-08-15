@@ -35,13 +35,18 @@ export const PALETTE = {
   foam: new Color("#dfeae6"),
 
   // Sky and atmosphere: late afternoon, low warm sun, long readable shadows.
-  skyZenith: new Color("#4a7fbe"),
-  skyHorizon: new Color("#d6dee2"),
-  skyHaze: new Color("#e9d8b6"),
-  sunLight: new Color("#fff1d6"),
-  bounceLight: new Color("#8fa87e"),
-  skyLight: new Color("#9fc2e8"),
-  fog: new Color("#c9d4d8"),
+  skyZenith: new Color("#3f74b8"),
+  skyHorizon: new Color("#e4d6bd"),
+  skyHaze: new Color("#f0d9ab"),
+  // Golden hour: the sun is low and warm, and it is what gives a landscape
+  // its hour. A neutral white sun renders the same island at noon forever.
+  sunLight: new Color("#ffe0ab"),
+  // Warmer and greener than the ground it stands for: this is light coming back
+  // up off sunlit grass, and a grey-green bounce is what made shaded slopes
+  // read as cold rather than as shaded.
+  bounceLight: new Color("#9cb573"),
+  skyLight: new Color("#a8c6e6"),
+  fog: new Color("#d8d2c2"),
 
   // Vegetation.
   trunk: new Color("#7b6046"),
@@ -61,8 +66,16 @@ export const PALETTE = {
   muzzle: new Color("#4a3020"),
 } as const;
 
-/** Sun direction, normalized, pointing from the world towards the sun. */
-export const SUN_DIRECTION = Object.freeze({ x: -0.46, y: 0.5, z: -0.73 });
+/**
+ * Sun direction, normalized, pointing from the world towards the sun.
+ *
+ * Raised from thirty degrees of elevation to about forty. Thirty gave the long
+ * shadows the brief asks for and also gave every slope facing away from it
+ * almost no direct light at all, so a third of the island read as black bands
+ * lying across the ground rather than as hillside. Forty keeps the shadows long
+ * and readable and keeps the far side of a hill a hillside.
+ */
+export const SUN_DIRECTION = Object.freeze({ x: -0.44, y: 0.66, z: -0.61 });
 
 /**
  * Fog exists for the sea and the horizon, not for the playable ground.

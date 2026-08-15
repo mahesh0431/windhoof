@@ -11,8 +11,15 @@ export function mergeGeometries(
 ): BufferGeometry {
   const positions: number[] = [];
   const normals: number[] = [];
+  const colors: number[] = [];
   const normalMatrixScratch = new Matrix4();
   const vector = new Vector3();
+
+  // Vertex colours are optional per part but not per result: a merge of a
+  // coloured part and a plain one would otherwise hand the shader an attribute
+  // shorter than its position buffer, which renders as garbage rather than as
+  // an error. Parts without colours contribute white, which multiplies out.
+  const anyColored = parts.some((part) => part.geometry.getAttribute("color"));
 
   for (const part of parts) {
     const source = part.geometry.index
@@ -20,6 +27,7 @@ export function mergeGeometries(
       : part.geometry;
     const position = source.getAttribute("position");
     const normal = source.getAttribute("normal");
+    const color = source.getAttribute("color");
     const matrix = part.matrix ?? new Matrix4();
     normalMatrixScratch.copy(matrix);
     normalMatrixScratch.setPosition(0, 0, 0);
@@ -31,6 +39,13 @@ export function mergeGeometries(
       vector.fromBufferAttribute(normal, index).applyMatrix4(normalMatrixScratch);
       vector.normalize();
       normals.push(vector.x, vector.y, vector.z);
+
+      if (!anyColored) continue;
+      if (color) {
+        colors.push(color.getX(index), color.getY(index), color.getZ(index));
+      } else {
+        colors.push(1, 1, 1);
+      }
     }
 
     if (source !== part.geometry) source.dispose();
@@ -39,6 +54,9 @@ export function mergeGeometries(
   const merged = new BufferGeometry();
   merged.setAttribute("position", new BufferAttribute(new Float32Array(positions), 3));
   merged.setAttribute("normal", new BufferAttribute(new Float32Array(normals), 3));
+  if (anyColored) {
+    merged.setAttribute("color", new BufferAttribute(new Float32Array(colors), 3));
+  }
   merged.computeBoundingSphere();
   return merged;
 }

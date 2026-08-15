@@ -1,4 +1,4 @@
-# Windhoof
+# Longride
 
 Working title for a third-person browser exploration game in which the player
 **is a young wild horse** roaming a compact open-world island.
@@ -141,8 +141,8 @@ Then open the printed URL and click once to take pointer lock.
 
 ## Public test build
 
-- Play muted: <https://windhoof.mahesh-palavalli-tech.workers.dev/?mute=1>
-- Releases: <https://github.com/mahesh0431/windhoof/releases>
+- Play muted: <https://longride.mahesh-palavalli-tech.workers.dev/?mute=1>
+- Releases: <https://github.com/mahesh0431/longride/releases>
 
 The deployed build is currently a release candidate. Follow the authored road
 up Blackstone rather than attempting the steep face directly, and report what

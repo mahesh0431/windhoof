@@ -300,6 +300,38 @@ export class CompiledIslandWorld
     }
   }
 
+  /**
+   * Stands a static cylinder on each scenery trunk.
+   *
+   * The compiled world owns collision, and the compiler emits only the couple
+   * of dozen placements it authored. The woodland the renderer grows on top of
+   * that is thousands of trees, and a tree a horse rides through is the single
+   * loudest way a world can tell a player it is not real. So the render layer
+   * hands its trunks over and physics decides what to do with them: the
+   * geometry stays the renderer's, the collision stays here, and nothing about
+   * the compiled manifest changes.
+   */
+  public addSceneryColliders(
+    trunks: readonly {
+      readonly x: number;
+      readonly y: number;
+      readonly z: number;
+      readonly radius: number;
+      readonly height: number;
+    }[],
+  ): number {
+    for (const trunk of trunks) {
+      this.world.createCollider(
+        RAPIER.ColliderDesc.cylinder(trunk.height * 0.5, trunk.radius).setTranslation(
+          trunk.x,
+          trunk.y + trunk.height * 0.5,
+          trunk.z,
+        ),
+      );
+    }
+    return trunks.length;
+  }
+
   private createPlacementColliders(): void {
     for (const placement of this.manifest.placements) {
       this.world.createCollider(

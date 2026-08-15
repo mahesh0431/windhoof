@@ -17,6 +17,7 @@ import {
   type Material,
 } from "three";
 import { mergeGeometries } from "../render/geometryUtils";
+import { createTreeGeometry } from "./treeShapes";
 import type { CompiledDiscovery, WorldManifest } from "../game/world/compiler/worldTypes";
 
 /**
@@ -320,18 +321,29 @@ export function createTraceScenes(
     // whole scene reads as a plank in a field. These are the near half of the
     // cue - a ring of dark trunks that closes the space in and makes the one
     // rubbed trunk the thing in the middle of it.
-    const standTrunk = track(new CylinderGeometry(0.28, 0.42, 8.5, 6));
-    const standBark = trackMaterial(
-      new MeshStandardMaterial({ color: "#3d3227", roughness: 0.97 }),
+    // Real trees, not a dark cylinder with a dark cone balanced on it. The old
+    // pair were nearly black - #3d3227 bark under a #1e3a1c cone - so the stand
+    // read as a ring of black posts rather than as the wood it is standing in.
+    const standGeometry = track(
+      createTreeGeometry(
+        "pine",
+        {
+          trunk: new Color("#5a4630"),
+          canopyLight: new Color("#568a45"),
+          canopyDark: new Color("#2b4d26"),
+        },
+        7,
+      ),
     );
-    const stand = addInstanced("trace-fernwood-stand", standTrunk, standBark, 14, 24);
+    const standMaterial = trackMaterial(
+      new MeshStandardMaterial({
+        roughness: 0.95,
+        flatShading: true,
+        vertexColors: true,
+      }),
+    );
+    const stand = addInstanced("trace-fernwood-stand", standGeometry, standMaterial, 14, 90);
     stand.castShadow = true;
-    const canopyGeometry = track(new ConeGeometry(3.4, 5.2, 6));
-    const canopyMaterial = trackMaterial(
-      new MeshStandardMaterial({ color: "#1e3a1c", roughness: 0.96 }),
-    );
-    const canopies = addInstanced("trace-fernwood-canopy", canopyGeometry, canopyMaterial, 14, 12);
-    canopies.castShadow = true;
     for (let index = 0; index < 14; index += 1) {
       // Scattered on a golden angle at varying radius, so the stand reads as
       // trees rather than as a planted circle - and a gap is left at the
@@ -344,22 +356,16 @@ export function createTraceScenes(
       const lean = ((index % 3) - 1) * 0.05;
       const tall = 0.85 + (index % 4) * 0.16;
 
-      position.set(x, ground + 4.25 * tall, z);
+      // A tree is authored standing on its own origin with a height of one, so
+      // it is seated on the ground and scaled by the height it should be.
+      position.set(x, ground, z);
       quaternion.setFromAxisAngle(axisZ, lean);
-      scale.set(1, tall, 1);
+      scale.setScalar(9.5 * tall);
       matrix.compose(position, quaternion, scale);
       stand.setMatrixAt(index, matrix);
-
-      position.set(x, ground + (8.5 * tall) - 1.4, z);
-      quaternion.setFromAxisAngle(axisY, angle * 1.7);
-      scale.set(tall, tall, tall);
-      matrix.compose(position, quaternion, scale);
-      canopies.setMatrixAt(index, matrix);
     }
     stand.instanceMatrix.needsUpdate = true;
     stand.computeBoundingSphere();
-    canopies.instanceMatrix.needsUpdate = true;
-    canopies.computeBoundingSphere();
 
     // The post itself: dark bark, so the worn band on it is the bright thing
     // rather than the whole trunk being bright and the band invisible against

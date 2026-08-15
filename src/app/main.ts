@@ -1,14 +1,14 @@
 import "../ui/ui.css";
-import { startWindhoof } from "./windhoofApp";
+import { startLongride } from "./longrideApp";
 
-const canvas = document.querySelector<HTMLCanvasElement>("#windhoof-canvas");
-const uiHost = document.querySelector<HTMLElement>("#windhoof-ui");
+const canvas = document.querySelector<HTMLCanvasElement>("#longride-canvas");
+const uiHost = document.querySelector<HTMLElement>("#longride-ui");
 
 if (!canvas || !uiHost) {
-  throw new Error("Windhoof host elements are missing from the document");
+  throw new Error("Longride host elements are missing from the document");
 }
 
-startWindhoof(canvas, uiHost).catch((error: unknown) => {
+startLongride(canvas, uiHost).catch((error: unknown) => {
   const message = error instanceof Error ? (error.stack ?? error.message) : String(error);
   reportStartupFailure(uiHost, message);
 });
@@ -19,30 +19,30 @@ startWindhoof(canvas, uiHost).catch((error: unknown) => {
  * blank canvas tells them none of that, so the failure is stated plainly.
  */
 function reportStartupFailure(host: HTMLElement, message: string): void {
-  document.documentElement.dataset.windhoof = "failed";
-  console.error("[windhoof] startup failed", message);
+  document.documentElement.dataset.longride = "failed";
+  console.error("[longride] startup failed", message);
 
-  const existing = host.querySelector(".wh-loading");
+  const existing = host.querySelector(".lr-loading");
   const panel = existing ?? document.createElement("div");
   if (!existing) {
-    panel.className = "wh-loading";
+    panel.className = "lr-loading";
     host.append(panel);
   }
 
   panel.innerHTML = "";
   const inner = document.createElement("div");
-  inner.className = "wh-loading-inner";
+  inner.className = "lr-loading-inner";
 
   const title = document.createElement("h1");
-  title.className = "wh-loading-title";
-  title.textContent = "WINDHOOF";
+  title.className = "lr-loading-title";
+  title.textContent = "LONGRIDE";
 
   const note = document.createElement("div");
-  note.className = "wh-loading-note";
-  note.textContent = "Windhoof could not start";
+  note.className = "lr-loading-note";
+  note.textContent = "Longride could not start";
 
   const detail = document.createElement("pre");
-  detail.className = "wh-error";
+  detail.className = "lr-error";
   detail.textContent = message;
 
   inner.append(title, note, detail);

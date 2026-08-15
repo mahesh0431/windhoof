@@ -104,6 +104,14 @@ export interface LabHarnessState {
   readonly terrainTriangles?: number;
   readonly sceneryElements?: number;
   readonly boundaryRadius?: number;
+  /** Every wild horse, and the mood of any that are currently awake. */
+  readonly wildHorseReports?: readonly {
+    readonly x: number;
+    readonly z: number;
+    readonly grazing: boolean;
+    readonly live: boolean;
+    readonly mood: string | null;
+  }[];
 }
 
 export interface LabHarness {
@@ -195,7 +203,7 @@ export interface HarnessScene {
 
 declare global {
   interface Window {
-    __windhoofLab?: LabHarness;
+    __longrideLab?: LabHarness;
   }
 }
 
@@ -268,11 +276,11 @@ export function installLabHarness(dependencies: HarnessDependencies): {
     resumeGraphics: () => dependencies.resumeGraphics?.() ?? false,
   };
 
-  window.__windhoofLab = harness;
+  window.__longrideLab = harness;
 
   return {
     dispose() {
-      delete window.__windhoofLab;
+      delete window.__longrideLab;
     },
   };
 }

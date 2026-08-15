@@ -180,8 +180,18 @@ export function validateFirstIslandManifest(
     const earlierMaximum = Math.max(...mandatory
       .filter((discovery) => discovery.id !== finalTrace.id)
       .map((discovery) => discovery.position.y));
-    if (finalTrace.position.y < earlierMaximum + 20) {
-      add(`discoveries.${finalTrace.id}`, "final trace must stand 20 metres above earlier traces");
+    // The rule is "the herd stands on the summit, visibly above everything the
+    // player has already found". Twenty metres was that rule written as a
+    // constant, and a constant is only right for the island it was measured on:
+    // halve the island and a summit that is still a summit fails a rule about
+    // summits. It is now a fraction of the island's own width, which is the
+    // thing the number was always standing in for.
+    const summitRelief = manifest.island.sizeMeters / 51.2;
+    if (finalTrace.position.y < earlierMaximum + summitRelief) {
+      add(
+        `discoveries.${finalTrace.id}`,
+        `final trace must stand ${summitRelief.toFixed(1)} metres above earlier traces`,
+      );
     }
   }
 

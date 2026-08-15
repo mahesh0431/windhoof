@@ -34,6 +34,7 @@ export type GameEvent =
   | { readonly type: "HorseLanded"; readonly hard: boolean }
   | { readonly type: "HorseCalled" }
   | { readonly type: "HorseReset" }
+  | { readonly type: "HorseShoved"; readonly speed: number }
   | { readonly type: "PauseChanged"; readonly paused: boolean }
   | {
       readonly type: "DiscoveryStateChanged";
@@ -81,4 +82,17 @@ export type GameCommand =
   | { readonly type: "ResetToSafeGround" }
   | { readonly type: "StartNewJourney" }
   | { readonly type: "SetCameraSensitivity"; readonly value: number }
-  | { readonly type: "SetReducedMotion"; readonly enabled: boolean };
+  | { readonly type: "SetReducedMotion"; readonly enabled: boolean }
+  | {
+      /**
+       * Something in the world hit the horse hard enough to move it.
+       *
+       * The direction is a unit vector in world space; the speed is in metres a
+       * second. The simulation decides what that does to the horse - the layer
+       * that noticed the hit does not get to move the player itself.
+       */
+      readonly type: "ShoveHorse";
+      readonly x: number;
+      readonly z: number;
+      readonly speed: number;
+    };

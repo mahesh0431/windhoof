@@ -20,7 +20,7 @@ import {
   createHorseRenderState,
   interpolateHorseRenderState,
 } from "./horse/createRenderState";
-import { stepHorse } from "./horse/horseController";
+import { applyHorseShove, stepHorse } from "./horse/horseController";
 import { createInitialHorseState, type HorseState } from "./horse/horseState";
 import { DEFAULT_HORSE_TUNING, type HorseTuning } from "./horse/horseTuning";
 import { SimulationInputLatch } from "./inputLatch";
@@ -98,6 +98,14 @@ export class IslandSimulation {
         break;
       case "ResetToSafeGround":
         this.applyImmediateReset();
+        break;
+      case "ShoveHorse":
+        // Refused while paused, and refused mid-reset: both are states where
+        // the player is not in control of the horse, and neither should be able
+        // to bank a shove that lands the moment they get it back.
+        if (this.paused) break;
+        this.horseState = applyHorseShove(this.horseState, command, this.tuning);
+        this.pendingEvents.push({ type: "HorseShoved", speed: command.speed });
         break;
       case "StartNewJourney":
       case "SetCameraSensitivity":

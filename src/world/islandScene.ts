@@ -20,10 +20,20 @@ import {
   type IslandField,
 } from "./islandField";
 import { islandAtmosphere } from "./islandAtmosphere";
+import { applyCloudShadows, createCloudUniforms } from "./cloudShadows";
 import { beginIslandGroundCover } from "./islandGroundCover";
-import { createIslandPlacements } from "./islandPlacements";
+import { createIslandNearGrass, type IslandNearGrass } from "./islandNearGrass";
+import { createIslandWoodland, type IslandWoodland } from "./islandWoodland";
+import {
+  createIslandWildlife,
+  type IslandWildlife,
+  type PlayerSense,
+} from "./islandWildlife";
+import {
+  createIslandPlacements,
+  type IslandPlacements,
+} from "./islandPlacements";
 import { createJourneyMarkers, type JourneyMarkers } from "./journeyMarkers";
-import { createTraceScenes, type TraceScenes } from "./traceScenes";
 import { createRegionLandmarks, type RegionLandmarks } from "./regionLandmarks";
 import {
   beginTerrainColouring,
@@ -67,8 +77,17 @@ export interface IslandScene {
   /** The living journey cues: tracks, mist, flocks, wildlife. */
   readonly journey: JourneyMarkers;
   /** The five herd-trace scenes, and the herd itself. */
-  readonly traces: TraceScenes;
   /** Non-colliding ground-cover instances, and the triangles they cost. */
+  /** The near-grass window, so its cost can be read from outside. */
+  readonly nearGrass: IslandNearGrass;
+  /** The scenery wood, so its cost can be read from outside. */
+  readonly woodland: IslandWoodland;
+  /** Wild horses and birds, so their count can be read from outside. */
+  readonly wildlife: IslandWildlife;
+  /** Clump scenery, including the trees and stone physics has to stop at. */
+  readonly placements: IslandPlacements;
+  /** The authored silhouettes, including the stone physics has to stop at. */
+  readonly landmarks: RegionLandmarks;
   readonly groundCoverTufts: number;
   readonly groundCoverTriangles: number;
   /** Palette anchors from the manifest that the renderer recognised. */
@@ -77,7 +96,21 @@ export interface IslandScene {
   readonly renderRetainCount: number;
   /** Topology fingerprints actually drawn, keyed by chunk id. */
   readonly topologyFingerprints: ReadonlyMap<string, string>;
-  update(elapsedSeconds: number, focusX: number, focusY: number, focusZ: number): void;
+  /**
+   * `focus` is what to draw around; `player` is where the horse actually is.
+   *
+   * They are the same thing during play and deliberately different under the
+   * evidence observer, which parks the camera five hundred metres away while
+   * the horse goes on simulating where it stands. Anything that reacts to the
+   * player - the wild horses do - has to read the second, not the first.
+   */
+  update(
+    elapsedSeconds: number,
+    focusX: number,
+    focusY: number,
+    focusZ: number,
+    player?: PlayerSense,
+  ): void;
   dispose(): void;
 }
 
@@ -130,7 +163,7 @@ export async function createIslandScene(
   const sky = await resources.job("sky-dome", () => createSkyDome());
   scene.add(sky);
 
-  const sun = new DirectionalLight(PALETTE.sunLight, 2.2);
+  const sun = new DirectionalLight(PALETTE.sunLight, 2.05);
   sun.position.set(SUN_DIRECTION.x * 60, SUN_DIRECTION.y * 60, SUN_DIRECTION.z * 60);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -149,11 +182,16 @@ export async function createIslandScene(
   scene.add(sun);
   scene.add(sun.target);
 
-  // Weaker fill than the Horse Lab. The lab is a small plot where the ground is
-  // a minor part of the frame; on the island it is most of it, and at the lab's
-  // fill level every ground family washed towards the same pale value, which
-  // took the region reading and the terrain modelling with it.
-  const fill = new HemisphereLight(PALETTE.skyLight, PALETTE.bounceLight, 1.25);
+  // Fill is what decides whether shade is a colour or a hole.
+  //
+  // It was cut to 1.25 to stop every ground family washing to the same pale
+  // value, and that worked until there was a canopy overhead: under a wood, the
+  // sun contributes nothing and 1.25 of cool sky over Fernwood's dark ground
+  // rendered the whole region as a black silhouette. The reading it was
+  // protecting is now carried by the region ramps and by the cover, which are
+  // far better placed to carry it, so the fill can go back up to where shade
+  // stays legible ground.
+  const fill = new HemisphereLight(PALETTE.skyLight, PALETTE.bounceLight, 2.6);
   scene.add(fill);
 
   // The global field, in two halves. Reassembling the compiled samples and
@@ -180,11 +218,13 @@ export async function createIslandScene(
   // One material for all sixteen chunks. Colour is per-vertex, so the region
   // masks, moisture, slope and worn routes all arrive in the vertex buffer and
   // cost nothing extra to draw.
+  const clouds = createCloudUniforms();
   const terrainMaterial = new MeshStandardMaterial({
     vertexColors: true,
     roughness: 0.96,
     metalness: 0,
   });
+  applyCloudShadows(terrainMaterial, clouds);
 
   // One job per chunk: derived attributes, geometry, and the chunk's single
   // render retain, taken only once the geometry that depends on it exists. The
@@ -232,17 +272,15 @@ export async function createIslandScene(
   );
   scene.add(placements.group);
 
-  // The five places the herd left something behind, each built individually.
-  // Done before the generic cue layer so it can name what it has claimed and
-  // that layer can stand off those discoveries instead of doubling them.
-  const traces: TraceScenes = await resources.job("trace-scenes", () =>
-    createTraceScenes(manifest, (x, z) => field.heightAt(x, z)),
-  );
-  scene.add(traces.group);
+  // The five herd-trace scenes used to be built here, and the scripted herd
+  // standing on the crown with them. They were the ending of a journey this
+  // island no longer tells - nine merged horses waiting on a summit for a
+  // player to arrive at them, plus the props marking the way. What lives here
+  // now is scattered and unscripted: see islandWildlife.ts.
 
   const journey = await resources.job("journey-markers", () =>
     createJourneyMarkers(manifest, (x, z) => field.heightAt(x, z), {
-      skipDiscoveryIds: traces.handledIds,
+      skipDiscoveryIds: new Set<string>(),
     }),
   );
   scene.add(journey.group);
@@ -258,6 +296,28 @@ export async function createIslandScene(
   }
   const groundCover = cover.finish();
   scene.add(groundCover.group);
+
+  // The carpet underfoot, built as a window that follows the player rather than
+  // as more of the island-wide scatter. See islandNearGrass.ts for why those
+  // have to be two different things.
+  const nearGrass: IslandNearGrass = await resources.job("near-grass", () =>
+    createIslandNearGrass(manifest, field),
+  );
+  scene.add(nearGrass.group);
+
+  // The wood the regions are named after. Scenery, not obstacles: see
+  // islandWoodland.ts for what that costs and why it is drawn that way.
+  const woodland: IslandWoodland = await resources.job("woodland", () =>
+    createIslandWoodland(manifest, field),
+  );
+  scene.add(woodland.group);
+
+  // Wild horses and birds, scattered across the island rather than staged at
+  // authored points. See islandWildlife.ts.
+  const wildlife: IslandWildlife = await resources.job("wildlife", () =>
+    createIslandWildlife(manifest, field),
+  );
+  scene.add(wildlife.group);
 
   // The authored silhouettes. Built after the field exists, because every one
   // of them has to be seated on the ground the compiler actually graded.
@@ -294,28 +354,41 @@ export async function createIslandScene(
     chunkMeshes,
     terrainTriangles,
     sceneryElements:
-      placements.elementCount +
-      journey.elementCount +
-      landmarks.elementCount +
-      traces.elementCount,
+      placements.elementCount + journey.elementCount + landmarks.elementCount,
     journey,
-    traces,
     renderRetainCount: releaseRenderRetains.length,
     topologyFingerprints,
+    nearGrass,
+    woodland,
+    wildlife,
+    placements,
+    landmarks,
     groundCoverTufts: groundCover.tuftCount,
     groundCoverTriangles: groundCover.triangleCount,
     recognisedAnchors: atmosphere.recognisedAnchors,
 
-    update(elapsedSeconds, focusX, focusY, focusZ) {
+    update(elapsedSeconds, focusX, focusY, focusZ, player) {
       // The dome travels with the player; crossing 500 metres of ground must
       // not walk them towards the edge of the sky. The sea deliberately does
       // not: its surf band is baked per-vertex against the real sea bed, so
       // moving it would slide the foam off the actual shoreline.
       sky.position.set(focusX, 0, focusZ);
       groundCover.setFocus(focusX, focusZ);
+      groundCover.setTime(elapsedSeconds);
+      clouds.time.value = elapsedSeconds;
+      nearGrass.setFocus(focusX, focusZ);
+      nearGrass.setTime(elapsedSeconds);
+      woodland.setFocus(focusX, focusZ);
+      woodland.setTime(elapsedSeconds);
+      // Falls back to the focus point standing still, which is what priming the
+      // scene before the first frame and the evidence observer both want: the
+      // herd is posed, and nothing decides to kick anybody.
+      wildlife.update(
+        elapsedSeconds,
+        player ?? { x: focusX, y: focusY, z: focusZ, deltaSeconds: 0 },
+      );
       sea.update(elapsedSeconds);
       journey.update(elapsedSeconds);
-      traces.update(elapsedSeconds);
 
       // Snap the shadow volume to whole shadow-map texels. Without this the
       // shadow edges crawl continuously while the player rides, which is far
@@ -342,9 +415,11 @@ export async function createIslandScene(
       terrainMaterial.dispose();
       placements.dispose();
       journey.dispose();
-      traces.dispose();
       landmarks.dispose();
       groundCover.dispose();
+      nearGrass.dispose();
+      woodland.dispose();
+      wildlife.dispose();
       sea.dispose();
       // The sky dome owns a SphereGeometry and a ShaderMaterial that nothing
       // else references; `createSkyDome` hands back a bare Mesh, so releasing

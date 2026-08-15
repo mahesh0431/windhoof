@@ -38,6 +38,8 @@ function horseAt(
     lastSafePose: { position: { ...position }, yaw: 0 },
     condition: "normal",
     recoveryTicksRemaining: 0,
+    shoveX: 0,
+    shoveZ: 0,
     ...overrides,
   };
 }

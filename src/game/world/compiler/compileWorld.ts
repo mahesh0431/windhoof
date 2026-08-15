@@ -37,8 +37,15 @@ function baseTerrainHeight(spec: WorldSpec, x: number, z: number): number {
   const islandRadius = half * 0.9;
   const radius = Math.hypot(x, z);
   const shore = clamp((islandRadius - radius) / (half * 0.15), 0, 1);
-  const latticeX = (x + half) / 18;
-  const latticeZ = (z + half) / 18;
+  // The lattice is the wavelength of the ground's own roughness, in metres.
+  //
+  // At 18 it put a bump every eighteen metres, which on a 1,024-metre island
+  // was texture and on a 512-metre one is terrain: the horse met a rise or a
+  // drop faster than it could commit to a stride, and riding turned into
+  // stumbling over corrugations. Longer waves at lower amplitude give ground
+  // that rolls, which is what a horse is for.
+  const latticeX = (x + half) / 34;
+  const latticeZ = (z + half) / 34;
   const x0 = Math.floor(latticeX);
   const z0 = Math.floor(latticeZ);
   const tx = latticeX - x0;
@@ -51,7 +58,7 @@ function baseTerrainHeight(spec: WorldSpec, x: number, z: number): number {
     (integerNoise(spec.seed, x0 + 1, z0) - integerNoise(spec.seed, x0, z0)) * smoothX;
   const noise = south + (north - south) * smoothZ - 0.5;
   const northRise = ((z + half) / spec.island.sizeMeters) * 18;
-  return spec.island.seaLevelMeters - 3 + shore * (7 + northRise + noise * 2.4);
+  return spec.island.seaLevelMeters - 3 + shore * (7 + northRise + noise * 1.5);
 }
 
 function regionalTerrainHeight(

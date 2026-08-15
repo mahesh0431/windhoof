@@ -17,7 +17,7 @@ gates on a human 15–30 minute blind journey that nobody has ridden.
 | Manifest hash | `fnv1a64-2eae5335cb5544fc` |
 | Schema version | 4 |
 | Generator | 0.5.0 |
-| World id | `windhoof-first-island` |
+| World id | `longride-first-island` |
 | Size | 1,024 m, 64 chunks, fully resident |
 | Spawn | `(0, 6, -340)`, Saltwind Coast |
 
@@ -160,7 +160,7 @@ Three bugs this found:
 1. `getExtension` on a *lost* context returns null, so a restore looked up when
    it was needed could never find the one thing that could undo the loss. The
    extension is now taken once while the context is alive.
-2. `.wh-ui` is transparent to the pointer and every interactive surface opts
+2. `.lr-ui` is transparent to the pointer and every interactive surface opts
    back in. The recovery panel did not, so **the only way out of a restored
    context was unclickable for a real player**, not just for automation.
 3. The frame loop drew and stepped while the context was gone. It now holds.

@@ -25,8 +25,8 @@ import { createServer } from "vite";
 const OUTPUT_DIR = path.resolve("docs/evidence/island/profile");
 /** 1080p presentation. Device pixel ratio is capped at 1.5 by the renderer. */
 const VIEWPORT = { width: 1920, height: 1080 };
-const RUN_BUDGET_MS = Number(process.env.WINDHOOF_RUN_BUDGET_MS ?? 300_000);
-const LABEL = process.env.WINDHOOF_PROFILE_LABEL ?? "run";
+const RUN_BUDGET_MS = Number(process.env.LONGRIDE_RUN_BUDGET_MS ?? 300_000);
+const LABEL = process.env.LONGRIDE_PROFILE_LABEL ?? "run";
 
 const samples = [];
 const consoleErrors = [];
@@ -186,20 +186,20 @@ async function profile(baseUrl) {
   page.on("pageerror", (error) => consoleErrors.push(`pageerror: ${error.message}`));
 
   await page.goto(automationUrl(baseUrl), { waitUntil: "domcontentloaded" });
-  await page.waitForFunction(() => window.__windhoofLab?.ready === true, null, {
+  await page.waitForFunction(() => window.__longrideLab?.ready === true, null, {
     timeout: 90_000,
   });
-  await page.addStyleTag({ content: ".wh-focus { display: none !important; }" });
+  await page.addStyleTag({ content: ".lr-focus { display: none !important; }" });
 
   // Read before riding: these are boot-time measurements and the log is fixed
   // size, so there is nothing to gain by reading them late.
-  preparationJobs = await page.evaluate(() => window.__windhoofLab.preparationJobs());
+  preparationJobs = await page.evaluate(() => window.__longrideLab.preparationJobs());
 
   const lab = {
-    state: () => page.evaluate(() => window.__windhoofLab.state()),
-    move: (x, y) => page.evaluate(([a, b]) => window.__windhoofLab.setMove(a, b), [x, y]),
-    gallop: (v) => page.evaluate((value) => window.__windhoofLab.setGallop(value), v),
-    yaw: (v) => page.evaluate((value) => window.__windhoofLab.setCameraYaw(value), v),
+    state: () => page.evaluate(() => window.__longrideLab.state()),
+    move: (x, y) => page.evaluate(([a, b]) => window.__longrideLab.setMove(a, b), [x, y]),
+    gallop: (v) => page.evaluate((value) => window.__longrideLab.setGallop(value), v),
+    yaw: (v) => page.evaluate((value) => window.__longrideLab.setCameraYaw(value), v),
   };
 
   const plan = await page.evaluate(async () => {

@@ -1,8 +1,8 @@
-# WorldClaw method adapted for Windhoof
+# WorldClaw method adapted for Longride
 
 ## Commitment
 
-Windhoof follows WorldClaw's published coarse-to-fine, global-to-regional
+Longride follows WorldClaw's published coarse-to-fine, global-to-regional
 construction method. It does not claim to run Tencent's unreleased WorldClaw
 implementation.
 
@@ -126,7 +126,7 @@ testable.
 
 ## Difference between world production and game development
 
-WorldClaw's public method produces static explicit scenes. Windhoof adds the
+WorldClaw's public method produces static explicit scenes. Longride adds the
 systems it does not provide:
 
 - Horse locomotion and animation state
@@ -137,6 +137,6 @@ systems it does not provide:
 - UI and accessibility contracts
 - Automated traversal and browser playtests
 
-The WorldClaw stages govern how the island is constructed. Windhoof's milestone
+The WorldClaw stages govern how the island is constructed. Longride's milestone
 gates govern when that island is playable enough to expand.
 

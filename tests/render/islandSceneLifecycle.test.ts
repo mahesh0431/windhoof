@@ -143,7 +143,6 @@ describe("chunk preparation jobs", () => {
     for (const chunk of manifest.chunks) expect(names).toContain(`terrain-chunk-${chunk.id}`);
     expect(names.filter((name) => name.startsWith("ground-cover-sweep-"))).toHaveLength(4);
     expect(names).toContain("placements");
-    expect(names).toContain("trace-scenes");
     expect(names).toContain("journey-markers");
     expect(names).toContain("region-landmarks");
     expect(names).toContain("sea");

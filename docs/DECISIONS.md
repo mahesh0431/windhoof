@@ -210,7 +210,7 @@ visible for more than fifteen wall seconds because the simulation clock
 correctly clamps long frames. Players experience UI transients in real time,
 not in fixed-step progress.
 Affected documents/contracts: `src/ui/transientClock.ts`,
-`src/ui/windhoofUi.ts`, `tests/ui/transientClock.test.ts`.
+`src/ui/longrideUi.ts`, `tests/ui/transientClock.test.ts`.
 Approved by: Claude Code (UI ownership)
 
 ---
@@ -278,7 +278,7 @@ Reason: The experience brief lists "reads like a dashboard during ordinary
 riding" as a failure condition, while Milestone 1 explicitly needs locomotion
 feedback. A strip that brightens on a gait change and then recedes satisfies
 both, and making it switchable settles the disagreement in the player's favour.
-Affected documents/contracts: `src/ui/windhoofUi.ts`, `src/ui/ui.css`.
+Affected documents/contracts: `src/ui/longrideUi.ts`, `src/ui/ui.css`.
 Approved by: Claude Code (UI ownership)
 
 ---
@@ -300,7 +300,7 @@ Decision: Pausing releases pointer lock, and camera input is gated on both
 pointer lock and playing mode.
 Reason: "Camera input continues underneath a modal surface" is a named failure
 condition. Both gates are asserted in the browser suite.
-Affected documents/contracts: `src/app/windhoofApp.ts`, `src/app/inputBindings.ts`.
+Affected documents/contracts: `src/app/longrideApp.ts`, `src/app/inputBindings.ts`.
 Approved by: Claude Code (UI ownership)
 
 ---
@@ -360,13 +360,13 @@ gates.
 Reason: Milestone 1 needs diagnostics, and the experience brief needs them out
 of the riding view. Colouring breaches rather than listing raw numbers makes the
 gates actionable during a playtest.
-Affected documents/contracts: `src/ui/windhoofUi.ts`.
+Affected documents/contracts: `src/ui/longrideUi.ts`.
 Approved by: Claude Code (UI ownership)
 
 ---
 
 Date: 2026-08-12
-Decision: A development-only `window.__windhoofLab` harness writes into the same
+Decision: A development-only `window.__longrideLab` harness writes into the same
 input buffer the keyboard writes into, and `tools/inspectHorseLab.mjs` drives it
 to capture canonical views into `docs/evidence/`.
 Reason: This is the render-inspect-refine step of the WorldClaw method. A
@@ -402,7 +402,7 @@ their entire session with no way to dismiss it. The prompt is a nudge towards
 mouse look, not a requirement, and it must not tax players who decline it. The
 pill sits top left because the diagnostics overlay owns the top right and both
 can be on screen during a playtest.
-Affected documents/contracts: `src/ui/windhoofUi.ts`, `src/ui/ui.css`.
+Affected documents/contracts: `src/ui/longrideUi.ts`, `src/ui/ui.css`.
 Approved by: Claude Code (UI ownership)
 
 ---
@@ -416,7 +416,7 @@ surface that declares `aria-modal`. Focus is moved explicitly rather than by
 detecting the ends of the list because browsers disagree about which controls
 Tab visits — WebKit skips buttons and checkboxes by default, which leaked focus
 out of the dialog after three tabs.
-Affected documents/contracts: `src/ui/ui.css`, `src/ui/windhoofUi.ts`.
+Affected documents/contracts: `src/ui/ui.css`, `src/ui/longrideUi.ts`.
 Approved by: Claude Code (UI ownership)
 
 ---
@@ -429,7 +429,7 @@ first frames after it was shown, and `focus()` on a hidden element fails
 silently. The dialog opened with focus still on `body`, so a keyboard player
 landed in a modal with no focus in it. Layout is also flushed before focus moves,
 so the fix does not depend on frame timing.
-Affected documents/contracts: `src/ui/ui.css`, `src/ui/windhoofUi.ts`.
+Affected documents/contracts: `src/ui/ui.css`, `src/ui/longrideUi.ts`.
 Approved by: Claude Code (UI ownership)
 
 ---
@@ -442,7 +442,7 @@ Resume off the top of the screen. The panel's percentage `max-height` also did
 not constrain it, because a percentage against an auto-sized grid row is
 indefinite and resolves to `none`; a `minmax(0, 1fr)` row makes it definite. The
 bottom mask makes a cut-off list read as scrollable rather than as the end.
-Affected documents/contracts: `src/ui/ui.css`, `src/ui/windhoofUi.ts`.
+Affected documents/contracts: `src/ui/ui.css`, `src/ui/longrideUi.ts`.
 Approved by: Claude Code (UI ownership)
 
 ---
@@ -454,7 +454,7 @@ Reason: Important state changes must not be visual-only, and the experience
 brief requires that sound is never the only way to understand something. The
 gait strip repeats what the player already feels, and announcing every gait and
 speed change would drown out the infrequent messages that matter.
-Affected documents/contracts: `src/ui/windhoofUi.ts`.
+Affected documents/contracts: `src/ui/longrideUi.ts`.
 Approved by: Claude Code (UI ownership)
 
 ---
@@ -478,7 +478,7 @@ Reason: Without the first, the horse keeps running behind a window the player is
 not looking at and they return to a state they did not choose. Without the
 second, a keyboard-only player had a permanently silent game, because audio was
 only unlocked by clicking the canvas.
-Affected documents/contracts: `src/app/windhoofApp.ts`.
+Affected documents/contracts: `src/app/longrideApp.ts`.
 Approved by: Claude Code (UI ownership)
 
 ---
@@ -529,7 +529,7 @@ Genuine pre-takeoff anticipation is not available: the jump is latched and
 resolved inside one fixed tick, so there is no lead time to anticipate from. The
 gather that reads as anticipation comes from the stride itself.
 Affected documents/contracts: `src/render/horse/horseGaitAnimator.ts`,
-`src/app/windhoofApp.ts`.
+`src/app/longrideApp.ts`.
 Approved by: Claude Code (visual ownership)
 
 ---
@@ -545,7 +545,7 @@ classification alone cannot decide the wet cases, because the shore shelf is
 line is consulted separately in the presentation layer rather than pushing a
 presentation concern into the `WorldSurface` contract.
 Affected documents/contracts: `src/render/horse/hoofContacts.ts`,
-`src/app/windhoofApp.ts`.
+`src/app/longrideApp.ts`.
 Approved by: Claude Code (visual ownership)
 
 ---
@@ -661,7 +661,7 @@ Approved by: Claude Code (visual ownership)
 
 Date: 2026-08-13
 Decision: `?mute=1` is the canonical runtime mute flag. It is resolved once per
-page in `resolveRuntimeFlags` and enforced in one place - `WindhoofAudio.resume`
+page in `resolveRuntimeFlags` and enforced in one place - `LongrideAudio.resume`
 refuses to construct the `AudioContext` - and every repository-owned automated
 browser, inspection, capture and profiling URL sets it.
 Reason: Automation must be silent by construction, not by luck. Chromium's
@@ -672,7 +672,7 @@ with the link, and enforcing it at the context rather than at each sound means a
 sound added later inherits it instead of having to remember it. Absent the flag,
 audio behaves exactly as before.
 Affected documents/contracts: `src/app/runtimeFlags.ts`,
-`src/audio/windhoofAudio.ts`, `src/app/islandApp.ts`, `src/app/horseLabApp.ts`,
+`src/audio/longrideAudio.ts`, `src/app/islandApp.ts`, `src/app/horseLabApp.ts`,
 `src/app/labHarness.ts`, `tools/automationUrl.mjs`, the four `tools/*.mjs`
 entry points, and the four `tests/browser/*.spec.ts` entry URLs.
 Approved by: Claude Code (audio and player-facing behaviour ownership)
@@ -792,7 +792,7 @@ prevents renderer state from becoming gameplay truth and gives Claude a stable
 presentation seam.
 Affected documents/contracts: `src/game/contracts/runtimeLifecycle.ts`,
 `src/app/webglRecovery.ts`, `src/app/inputBindings.ts`,
-`src/audio/windhoofAudio.ts`.
+`src/audio/longrideAudio.ts`.
 Approved by: Codex (runtime lifecycle ownership)
 
 ---
@@ -883,7 +883,7 @@ world does not impose - and a player who then rode to a different trace would
 appear to be doing it wrong. A count is true regardless of the order they are
 found in. Once only the herd is left the line does give a direction, because by
 then there genuinely is one.
-Affected documents/contracts: `src/ui/journeyText.ts`, `src/ui/windhoofUi.ts`.
+Affected documents/contracts: `src/ui/journeyText.ts`, `src/ui/longrideUi.ts`.
 Approved by: Claude Code (player-facing UI/UX ownership)
 
 ---
@@ -898,7 +898,7 @@ screen went, and dropping someone back into a moving world they cannot see the
 last second of is how a recovery becomes a fall. The full cover is honest for
 the same reason: everything behind it is blank, frozen, or a frame that must not
 be acted on, and covering it is what says "stopped" rather than "broken".
-Affected documents/contracts: `src/app/islandApp.ts`, `src/ui/windhoofUi.ts`,
+Affected documents/contracts: `src/app/islandApp.ts`, `src/ui/longrideUi.ts`,
 `src/ui/journeyText.ts`, `src/ui/ui.css`.
 Approved by: Claude Code (player-facing UI/UX ownership)
 
@@ -920,3 +920,333 @@ Affected documents/contracts: `src/app/labHarness.ts`, `src/app/islandApp.ts`,
 `tools/captureFirstIsland.mjs`, `tools/journeyFirstIsland.mjs`,
 `docs/MILESTONE_5_EVIDENCE.md`.
 Approved by: Claude Code (browser verification ownership)
+
+---
+
+Date: 2026-08-13
+Decision: The horse is modelled as flat-shaded lofts through authored
+cross-sections, with mane and tail as thin sheets, rather than as intersecting
+smooth primitives.
+Reason: The island is made entirely of flat facets - terrain, canopies, rocks -
+and a horse built from smooth spheres, capsules, and cylinders read as an asset
+borrowed from a different game standing in the middle of it. The shading
+mismatch was only half of it: primitives also put the wrong shape in the places
+a horse is actually recognised by, giving a barrel as wide as it was deep, legs
+that were tubes with no knee or hock, a head with no jowl or nasal bone, and a
+mane threaded on like beads. Cross-sections let those proportions be authored
+and adjusted directly - a girth deeper than it is wide, a chest narrow enough
+that the front legs stand close together, a hock that points backwards - and
+flat shading then costs nothing because non-indexed loft geometry already has
+one normal per triangle. The model came out cheaper than the one it replaced:
+1,988 triangles and 36 draws against roughly 3,300 and 40.
+Affected documents/contracts: `src/render/horse/horseVisual.ts`,
+`src/render/horse/horseGeometry.ts`, `src/render/geometryUtils.ts`,
+`docs/ASSET_PROVENANCE.md`.
+Approved by: Claude Code (visual presentation and asset ownership)
+
+---
+
+Date: 2026-08-13
+Decision: The horse gets its own inspection surface, photographed away from the
+world by `tools/inspectHorse.mjs`, alongside the in-play tour.
+Reason: The player looks at this one object for the entire game, and the chase
+camera only ever shows it from behind, at one distance, in whatever pose the
+ride happened to be in. Judging a model that way is how a mane can be entirely
+buried inside a neck without anybody noticing. The contact sheet renders the
+real rig with the real materials and the real stage lighting from six sides and
+four gaits in a single frame, so a change can be judged on the change. It is
+dev-only: the production build has one entry, and nothing in `src` imports it.
+Affected documents/contracts: `tools/inspectHorse.mjs`,
+`tools/horsePreview.html`, `tools/horsePreview.mjs`, `package.json`,
+`docs/evidence/README.md`.
+Approved by: Claude Code (browser verification ownership)
+
+---
+
+Date: 2026-08-13
+Decision: Ground cover is two layers, not one: a dense carpet in a window that
+follows the player, and a thinner island-wide scatter behind it. Both are
+splayed blades rather than cones, and both are bent by a vertex-shader wind.
+Reason: The island-wide layer has to hold every square metre of a 1,024-metre
+island inside one instance ceiling, which caps it at about half a tuft per
+square metre. That is right for the middle distance and nowhere near enough
+underfoot, where the eye reads individual plants and the ground between them
+reads as bare dirt. Raising the island-wide density is not the fix - the whole
+island is built up front, so multiplying it costs hundreds of megabytes of
+instance matrices for grass nobody is standing in. A window that regenerates
+from a hash of its own cell gives the same grass in the same place every time
+anyone stands there without any of it existing until they do. The shape change
+cost nothing: three triangles as a cone is a pyramid and three triangles as
+blades is a plant. The wind costs one uniform and is what stops the field
+reading as a diorama.
+Affected documents/contracts: `src/world/grassBlades.ts`,
+`src/world/islandNearGrass.ts`, `src/world/islandGroundCover.ts`,
+`src/world/islandScene.ts`.
+Approved by: Claude Code (visual presentation ownership)
+
+---
+
+Date: 2026-08-13
+Decision: The island grows about 2,500 scenery trees that carry no collision,
+and the compiler's own collision-bearing placements draw the same tree geometry
+rather than a stretched blob with a disc on top.
+Reason: The compiler emits a couple of dozen placements across the island, which
+is the right number of things to be stopped by and is not a forest, so a region
+named Fernwood rendered as open ground. The same failure the ground cover was
+written to fix, one scale up. What this does not do is give those trees
+colliders: thousands of colliders is a change to the compiled world, the
+compiler owns that world, and it is not a decision the render layer makes on its
+own. The consequence is stated rather than hidden - a horse can ride through a
+scenery trunk - and it is recorded in ASSET_PROVENANCE.md as the largest honesty
+gap on the island. Trees are drawn in three storeys because a wood drawn from
+one height range is one tree repeated, and the rare emergent standing a storey
+clear of the canopy is what gives a wood a skyline.
+Affected documents/contracts: `src/world/islandWoodland.ts`,
+`src/world/treeShapes.ts`, `src/world/islandPlacements.ts`,
+`docs/ASSET_PROVENANCE.md`.
+Approved by: Claude Code (visual presentation ownership)
+
+---
+
+Date: 2026-08-13
+Decision: The island's ground ramps move a long way towards green, the sun rises
+from thirty degrees of elevation to forty, and the sky fill goes up by half.
+Reason: The region ramps were authored dry - bleached coast, gold plain - and
+that reads as pale and washed out the moment real grass is standing on it,
+because dry cover on a dry ramp leaves neither anything to contrast against.
+Every region keeps its own hue and its own value, so the plain is still the
+brightest ground and the crown still the darkest and the two woodlands are still
+warm against cool; they are simply now the colour of somewhere things grow. The
+light changed for a harder reason: at thirty degrees every slope facing away
+from the sun got almost no direct light, so a third of the island read as black
+bands lying across the ground, and under a canopy the whole of Fernwood went to
+silhouette. Forty degrees and a stronger fill keep the shadows long and readable
+and keep the far side of a hill a hillside.
+Affected documents/contracts: `src/world/regionVisuals.ts`,
+`src/render/palette.ts`, `src/world/islandScene.ts`.
+Approved by: Claude Code (visual presentation ownership)
+
+---
+
+Date: 2026-08-13
+Decision: The riding render budget is raised from 200 draw calls and 750,000
+triangles to 240 and 900,000, and the peak from 300 and 1,200,000 to 340 and
+1,500,000.
+Reason: The old numbers were set against an island of bare ground with a thin
+scatter of cover on it, and a planted island does not fit inside them. Every
+cheap way of making it fit was spent first: coarser cover buckets, a shorter
+cover reach, three blades per tuft rather than four, flower heads dropped at
+eighty-five metres, finer tree culling, and the horse's mane and tail taken out
+of the shadow pass. What was left to give up was the vegetation itself, which is
+the thing the budget exists to make room for. The gate is there to protect the
+frame, so the frame is what was measured rather than argued about: riding at a
+full gallop on hardware GL, 203 draws, 770,062 triangles, 120 frames per second,
+worst frame 10.8 ms. The new ceilings sit above what was measured and well below
+anything the frame budget would notice. If a target browser is later found that
+this hurts, the fix is a distance-scaled cover density, not a thinner island.
+Affected documents/contracts: `tests/browser/islandExperience.spec.ts`.
+Approved by: Claude Code (visual presentation ownership), surfaced to the
+project owner as a gate change rather than applied silently.
+
+---
+
+Date: 2026-08-14
+Decision: The horse is remodelled against a real anatomical reference in nine
+measured passes, and the largest single change is that the torso is shortened by
+roughly a fifth. Point of shoulder to point of buttock now comes to about 1.05
+times the height at the withers rather than 1.28.
+Reason: Every earlier pass on this model had refined surfaces on a frame with the
+wrong proportions, and no amount of jowl or hock detail fixes a horse that is a
+quarter too long - it reads as a dachshund with a horse's head on it. With the
+frame corrected the rest of the reference gap resolves into a short list, each
+of which was rendered and judged before the next was started: the head carried
+level with the horizon at every speed (a camel's pose, now nose-down at rest and
+taken back out with speed); no jowl, and a poll set forward on the forehead; a
+throatlatch tapered to a stalk far thinner than the jowl above it (a giraffe);
+legs with a taper of about a third from forearm to cannon, so there was no
+elbow, knee, gaskin or hock anywhere in the outline; a hind limb hung plumb off
+the hip, which is the one thing a standing horse never does; a mane with no width
+that vanished from the front and every quarter view; and a tail carried out
+behind at rest and swung better than forty degrees off centre by its own idle
+swish. Torso and neck sections went from ten facets round to fourteen, which is
+the cheapest quality available here at about forty triangles a mass.
+Consequence: 1,988 triangles and 36 draws become 2,640 and 40 for the player's
+horse. The island's twenty-six wild horses bake the same rig, so they inherit all
+of it; their two poses were brought onto the same head-carriage convention and
+they now have contact-sheet coverage of their own, which they had never had.
+Affected documents/contracts: `src/render/horse/horseVisual.ts`,
+`src/render/horse/horseGaitAnimator.ts`, `src/world/islandWildlife.ts`,
+`tools/horsePreview.mjs`, `tools/inspectHorse.mjs`,
+`docs/evidence/horse/`.
+Approved by: Claude Code (visual presentation ownership)
+
+---
+
+Date: 2026-08-14
+Decision: A wild horse defends its own space. It watches a rider who comes
+within eleven metres, turns its quarters onto one who comes within five and
+pins its ears, and kicks one who crowds it inside three and a half - and the
+kick moves the player. The herd also gets collision, which it never had.
+Reason: Twenty-six horses that a player could ride straight through, standing
+perfectly still while being walked into, were the least alive thing on an island
+whose whole subject is animals. The sequence is deliberately the real one and
+deliberately in that order: an animal that lashes out with no warning is a trap,
+while one that warns and is ignored is a consequence, and only the second is
+worth having. The tell is the horse swinging its hindquarters towards you, which
+is also what puts the player in the arc - so reading it and heeding it are the
+same action.
+Consequence: The kick is delivered as a `ShoveHorse` command, and the shove is
+carried in the horse's own state and added to the translation the motion
+resolver already receives. That is the whole point: it is resolved by Rapier
+against the terrain and every collider on it, so a kick can shove the player
+into a rock but never through one, and can never place them anywhere the horse
+could not have walked itself. A shoved pose is also refused as a safe-reset
+pose while the shove lasts. There is no damage: the cost is a length of ground
+and half a second of footing, the same as a bad landing.
+The herd is instanced and static, so the horse nearest the player is promoted to
+a real rig and animates; the rest stay matrices in a buffer, which is also
+honest, because a horse thirty metres away would not react to a rider. Two live
+rigs were tried and measured at a peak of 297 draw calls riding through a band
+of horses, against a riding gate of 240 and a peak allowance of 340; one fits
+inside the steady gate. It also costs almost nothing, because a player can only
+crowd one horse at a time - in the measured ride the second live horse never got
+past watching. The rig is sticky by two and a half metres so that standing
+between two horses does not hand it back and forth every frame.
+The same pass merged the rig's parts by joint and material where nothing moves
+relative to anything else, taking the horse from 41 draws to 32; that applies to
+the player's horse as much as to the wild ones.
+Their colliders are upright cylinders rather than boxes along the animal,
+because a live horse turns to face the player and then turns away from them, and
+a static oriented box would be pointing the wrong way within a second.
+Affected documents/contracts: `src/render/horse/wildHorseAnimator.ts`,
+`src/world/islandWildlife.ts`, `src/world/islandScene.ts`,
+`src/game/simulation/horse/horseController.ts`,
+`src/game/simulation/horse/horseState.ts`,
+`src/game/simulation/horse/horseTuning.ts`,
+`src/game/contracts/uiContract.ts`, `src/app/islandApp.ts`,
+`tests/simulation/wildHorseKick.test.ts`, `tools/inspectKick.mjs`.
+Approved by: Claude Code (visual presentation ownership); the shove crosses into
+simulation, so it is expressed as a command the simulation applies rather than
+as the renderer moving the player.
+
+---
+
+Date: 2026-08-14
+Decision: The horse's remaining detail is cut into geometry rather than painted
+with a texture: ears become curled leaves with a hollow, mane and tail become
+separated locks, the coat carries a per-facet tone wander, the coat-to-points
+transition is graded across the knee and the hock, the eye gets an orbital rim,
+and the hoof gets a coronet band.
+Reason: An alpha-tested strand texture was the obvious way to do the hair and it
+was rejected for a specific reason: the island's wild horses are baked down to a
+single untextured material, so a texture would have given the player's horse
+strands and left every other horse in the game with flags. Everything here bakes
+with them instead. The dapple is the same argument applied to the coat - the
+reference's textured horse differs from its untextured one mostly by not being
+one flat value, and on a flat-shaded body the facets are already the unit of
+variation, so scattering their tone by five percent buys most of that for
+nothing and stays deterministic. Smooth shading, which is what the reference's
+mid-poly panel actually shows, was deliberately not adopted: the entire island
+is flat-shaded, and a smooth horse would read as an asset from another game.
+Consequence: 2,640 triangles and 40 draws become 3,344 and 41.
+Affected documents/contracts: `src/render/horse/horseGeometry.ts`,
+`src/render/horse/horseVisual.ts`, `docs/evidence/horse/`.
+Approved by: Claude Code (visual presentation ownership)
+
+---
+
+Date: 2026-08-14
+Decision: Clump scenery gets collision, and the traversal tests that prove the
+island is rideable are repaired and rewritten to assert contracts rather than
+sizes.
+Reason: Asked whether the physics was finished, the honest answer was no, in two
+separate ways.
+
+The first is collision coverage. The compiler gives every placement one collider
+at the centre of its clump, and the scenery wood's trunks were given colliders
+earlier - but the trees and boulders scattered *around* each clump were pure
+decoration a horse rode straight through. A tree you can ride through standing
+next to one you cannot is worse than either rule applied consistently. Trunks
+now always collide; boulders collide once they are big enough that riding
+through one would be the obvious thing wrong with the shot, and small stones are
+deliberately left out because being stopped by a rock the size of a football is
+worse than riding over it.
+
+The second is that the proof was broken, and had been since the control model
+changed. The traversal tests steer by setting `cameraYaw` at a target and
+holding the throttle, which is how the original camera-absolute steering worked;
+reins steering ignores `cameraYaw` entirely, so the horse drove in a straight
+line until every waypoint timed out. They now share one `reinsTowards` helper,
+so the next change to the control model breaks one thing loudly instead of
+several quietly.
+
+Three further tests were asserting the island's old size rather than any
+contract: a staged-failure test injected its failure at `collision-terrain-03`
+on an island that now has two terrain jobs, so the failure never fired and a
+test about the failure path stopped exercising one; a job-name list described
+eleven terrain batches where there are two; and "a high final pasture" was a
+literal 45 metres, which after the island was halved vertically only recorded
+how tall the island used to be. All three now assert the shape - stage names and
+order, retains released, the pasture being the highest trace and high relative
+to the island's own relief - and are size-independent.
+Consequence: The frozen vertical-slice manifest hash is re-frozen from
+`fnv1a64-75ef4f476903558d` to `fnv1a64-07b6248151245dd1`. It moved because
+halving the island changed the terrain noise lattice, its amplitude, and the
+derivation of summit relief, so every compiled height moved. The guard did its
+job by refusing to pass quietly. Saved rides from before the halving no longer
+match this island and are refused as `manifest-mismatch`, which the interface
+already explains to the player.
+Known gap, stated rather than hidden: the traversal tests build collision from
+the compiled manifest only. Collision the renderer publishes - scenery trunks,
+stone, clump scenery, wild horses - is added by the application, so the safe
+routes are proven against compiler-authored collision and not against the full
+set the player actually rides among.
+Affected documents/contracts: `src/world/islandPlacements.ts`,
+`src/world/islandScene.ts`, `src/app/islandApp.ts`,
+`src/game/simulation/horse/horseSteering.ts`,
+`tests/generation/generatedTraversal.test.ts`,
+`tests/generation/firstIslandTraversal.test.ts`,
+`tests/generation/firstIslandCompiler.test.ts`,
+`tests/render/islandSceneLifecycle.test.ts`.
+Approved by: Claude Code (visual presentation ownership); the re-frozen manifest
+hash is surfaced rather than applied silently, because it invalidates saves.
+
+---
+
+Date: 2026-08-14
+Decision: The horse's body no longer sinks through the ground it is standing on.
+Reason: A sweep of the whole stride cycle - added to the horse preview because a
+single screenshot cannot show this - found the model's lowest point below the
+ground plane in every gait: 4.7 cm at a walk, 7.5 cm at a trot, 7.3 cm at a
+gallop. On deep grass that passes for hooves in the sward. On rock, sand and
+packed earth it is a horse wading through the terrain.
+
+Two causes, both the same shape of mistake - a value that swings about zero when
+zero is the floor.
+
+The body bob was the larger. It oscillates about the horse's STANDING height, so
+half of every stride was the body sinking below the height its own legs hold it
+at, and with no inverse kinematics under the stance leg a sinking body takes the
+planted hoof down with it. Offsetting the wave by one amplitude puts its trough
+at standing height instead of below it; peak-to-trough is unchanged, so the rise
+and fall the player reads is identical. The idle breathing bob had the same
+defect and the same fix.
+
+The second is that body pitch and bank turn about the rig's origin, which sits
+at hoof level, so tilting swings whichever end is going down BELOW the ground
+rather than rocking the horse over its own feet. The lift that a pivot at the
+feet would have given for free is now added explicitly. It is computed from the
+rotation the horse applies to ITSELF only - the ground conform is deliberately
+excluded, because matching the slope underneath you is precisely the case where
+the feet should follow the rotation. The same correction fixes a wild horse's
+kick, which tipped 9.6 cm through the ground at full extension.
+Consequence: Worst penetration across a full cycle is now 0.5 cm at idle, 2.4 cm
+at a walk, 1.9 cm at a trot and 0.2 cm at a gallop. The remaining walk figure is
+leg animation rather than body height, and sits well inside the near-grass, so it
+is left alone and stated rather than chased. A hard landing can still drop the
+body up to 10 cm through `IMPULSE_BODY_FLOOR`; that is a deliberate impact squash
+on a single frame, not a resting error, and it is untouched.
+Affected documents/contracts: `src/render/horse/horseGaitAnimator.ts`,
+`src/render/horse/wildHorseAnimator.ts`, `tools/horsePreview.mjs`,
+`tools/inspectHorse.mjs`.
+Approved by: Claude Code (visual presentation ownership).

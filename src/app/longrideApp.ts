@@ -1,11 +1,11 @@
 import { startHorseLab } from "./horseLabApp";
 import { startIsland } from "./islandApp";
 
-export interface WindhoofApp {
+export interface LongrideApp {
   dispose(): void;
 }
 
-export type WindhoofStage = "island" | "lab";
+export type LongrideStage = "island" | "lab";
 
 /**
  * Which world to boot.
@@ -16,16 +16,16 @@ export type WindhoofStage = "island" | "lab";
  * that plot, and moving it onto new terrain would quietly invalidate the
  * comparison the gate exists to make.
  */
-export function resolveStage(search: string): WindhoofStage {
+export function resolveStage(search: string): LongrideStage {
   const stage = new URLSearchParams(search).get("stage");
   return stage === "lab" || stage === "horse-lab" ? "lab" : "island";
 }
 
-export async function startWindhoof(
+export async function startLongride(
   canvas: HTMLCanvasElement,
   uiHost: HTMLElement,
-): Promise<WindhoofApp> {
+): Promise<LongrideApp> {
   const stage = resolveStage(typeof location === "undefined" ? "" : location.search);
-  document.documentElement.dataset.windhoofStage = stage;
+  document.documentElement.dataset.longrideStage = stage;
   return stage === "lab" ? startHorseLab(canvas, uiHost) : startIsland(canvas, uiHost);
 }

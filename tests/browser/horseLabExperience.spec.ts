@@ -29,10 +29,10 @@ async function boot(page: Page): Promise<void> {
   // evidence: they have to keep testing the plot they were written for.
   // Automated runs are always muted, alongside whatever else the URL carries.
   await page.goto("/?stage=lab&mute=1");
-  await page.waitForFunction(() => window.__windhoofLab?.ready === true, null, {
+  await page.waitForFunction(() => window.__longrideLab?.ready === true, null, {
     timeout: 45_000,
   });
-  await expect(page.locator("html")).toHaveAttribute("data-windhoof", "running");
+  await expect(page.locator("html")).toHaveAttribute("data-longride", "running");
 }
 
 function expectNoConsoleErrors(page: Page): void {
@@ -51,13 +51,13 @@ test("boots into a rendered riding view with a restrained interface", async ({ p
   expect(canvasSize.height).toBeGreaterThan(200);
 
   // The loading panel gives way to the world.
-  await expect(page.locator(".wh-loading")).toHaveCount(0, { timeout: 15_000 });
+  await expect(page.locator(".lr-loading")).toHaveCount(0, { timeout: 15_000 });
 
   // Nothing heavyweight is on screen during ordinary riding: no pause dialog,
   // no diagnostics, and only the low-opacity gait strip.
-  await expect(page.locator(".wh-pause")).toHaveAttribute("data-visible", "false");
-  await expect(page.locator(".wh-diagnostics")).toBeHidden();
-  await expect(page.locator(".wh-gait")).toBeVisible();
+  await expect(page.locator(".lr-pause")).toHaveAttribute("data-visible", "false");
+  await expect(page.locator(".lr-diagnostics")).toBeHidden();
+  await expect(page.locator(".lr-gait")).toBeVisible();
 
   expectNoConsoleErrors(page);
 });
@@ -68,12 +68,12 @@ test("prompts for pointer focus and teaches movement before anything else", asyn
   await boot(page);
 
   // Without pointer lock the player is told how to get it.
-  await expect(page.locator(".wh-focus")).toHaveAttribute("data-visible", "true", {
+  await expect(page.locator(".lr-focus")).toHaveAttribute("data-visible", "true", {
     timeout: 10_000,
   });
 
   // The first thing said is how to move, and only after a beat of silence.
-  const hint = page.locator(".wh-hint");
+  const hint = page.locator(".lr-hint");
   await expect(hint).toHaveAttribute("data-visible", "true", { timeout: 10_000 });
   await expect(hint).toHaveText(/W A S D/);
 
@@ -85,7 +85,7 @@ test("the focus prompt is keyboard-reachable and stops dimming the view once rid
 }) => {
   await boot(page);
 
-  const prompt = page.locator(".wh-focus");
+  const prompt = page.locator(".lr-focus");
   await expect(prompt).toHaveAttribute("data-visible", "true", { timeout: 10_000 });
 
   // It is a real button, so a keyboard player can reach and activate it.
@@ -95,8 +95,8 @@ test("the focus prompt is keyboard-reachable and stops dimming the view once rid
 
   // A keyboard-only player never clicks. Once they are moving, the full-screen
   // scrim must give way rather than dimming their whole session.
-  await page.evaluate(() => window.__windhoofLab!.setMove(0, 1));
-  await page.waitForFunction(() => window.__windhoofLab!.state().speed > 1, null, {
+  await page.evaluate(() => window.__longrideLab!.setMove(0, 1));
+  await page.waitForFunction(() => window.__longrideLab!.state().speed > 1, null, {
     timeout: 10_000,
   });
   await expect(prompt).toHaveAttribute("data-compact", "true");
@@ -114,13 +114,13 @@ test("the focus prompt is keyboard-reachable and stops dimming the view once rid
 test("important state changes are announced, not only drawn", async ({ page }) => {
   await boot(page);
 
-  await expect(page.locator(".wh-notice")).toHaveAttribute("aria-live", "polite");
-  await expect(page.locator(".wh-notice")).toHaveAttribute("role", "status");
-  await expect(page.locator(".wh-hint")).toHaveAttribute("aria-live", "polite");
+  await expect(page.locator(".lr-notice")).toHaveAttribute("aria-live", "polite");
+  await expect(page.locator(".lr-notice")).toHaveAttribute("role", "status");
+  await expect(page.locator(".lr-hint")).toHaveAttribute("aria-live", "polite");
 
   // The gait strip repeats something the player already feels; announcing every
   // change would drown out the messages that matter.
-  await expect(page.locator(".wh-gait")).toHaveAttribute("aria-hidden", "true");
+  await expect(page.locator(".lr-gait")).toHaveAttribute("aria-hidden", "true");
 
   expectNoConsoleErrors(page);
 });
@@ -129,18 +129,18 @@ test("leaving the window pauses instead of riding on unattended", async ({ page 
   await boot(page);
 
   await page.evaluate(() => {
-    window.__windhoofLab!.setMove(0, 1);
-    window.__windhoofLab!.setGallop(true);
+    window.__longrideLab!.setMove(0, 1);
+    window.__longrideLab!.setGallop(true);
   });
-  await page.waitForFunction(() => window.__windhoofLab!.state().speed > 5, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().speed > 5, null, {
     timeout: 15_000,
   });
 
   await page.evaluate(() => window.dispatchEvent(new Event("blur")));
   await page.waitForTimeout(300);
 
-  expect(await page.evaluate(() => window.__windhoofLab!.state().mode)).toBe("paused");
-  await expect(page.locator(".wh-pause")).toHaveAttribute("data-visible", "true");
+  expect(await page.evaluate(() => window.__longrideLab!.state().mode)).toBe("paused");
+  await expect(page.locator(".lr-pause")).toHaveAttribute("data-visible", "true");
 
   expectNoConsoleErrors(page);
 });
@@ -149,23 +149,23 @@ test("reaches every gait and keeps the horse on readable ground", async ({ page 
   await boot(page);
 
   await page.evaluate(() => {
-    window.__windhoofLab!.setMove(0, 1);
-    window.__windhoofLab!.setGallop(true);
+    window.__longrideLab!.setMove(0, 1);
+    window.__longrideLab!.setGallop(true);
   });
 
   // The gait label flips to "gallop" a little above canter speed, so wait for
   // the speed itself rather than for the label.
-  await page.waitForFunction(() => window.__windhoofLab!.state().speed > 15, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().speed > 15, null, {
     timeout: 25_000,
   });
 
-  const state = await page.evaluate(() => window.__windhoofLab!.state());
+  const state = await page.evaluate(() => window.__longrideLab!.state());
   expect(state.gait).toBe("gallop");
   expect(state.grounded).toBe(true);
   expect(Number.isFinite(state.position.y)).toBe(true);
 
   // The gait strip reports what the simulation reports.
-  await expect(page.locator(".wh-gait-name")).toHaveText("gallop");
+  await expect(page.locator(".lr-gait-name")).toHaveText("gallop");
 
   expectNoConsoleErrors(page);
 });
@@ -176,24 +176,24 @@ test("cannot gallop off the edge of the stage", async ({ page }) => {
 
   // Ride straight out to sea for as long as it takes to reach the boundary.
   await page.evaluate(() => {
-    window.__windhoofLab!.setCameraYaw(0);
-    window.__windhoofLab!.setMove(0, 1);
-    window.__windhoofLab!.setGallop(true);
+    window.__longrideLab!.setCameraYaw(0);
+    window.__longrideLab!.setMove(0, 1);
+    window.__longrideLab!.setGallop(true);
   });
 
   // First prove the horse entered a real gallop, then wait for collision to
   // reduce actual locomotion to rest. The capsule stops the root slightly
   // inside the ring, so a guessed radial threshold is less robust than the
   // player-visible outcome.
-  await page.waitForFunction(() => window.__windhoofLab!.state().speed > 12, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().speed > 12, null, {
     timeout: 20_000,
   });
-  await page.waitForFunction(() => window.__windhoofLab!.state().speed < 1, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().speed < 1, null, {
     timeout: 30_000,
   });
   await page.waitForTimeout(3000);
 
-  const state = await page.evaluate(() => window.__windhoofLab!.state());
+  const state = await page.evaluate(() => window.__longrideLab!.state());
   const radius = Math.hypot(state.position.x, state.position.z);
 
   // Held by the boundary, still standing on ground, not falling forever.
@@ -207,28 +207,28 @@ test("cannot gallop off the edge of the stage", async ({ page }) => {
   // Recovery at the boundary must return to an inland anchor, not save the
   // stopped beach pose and merely display a reassuring toast.
   await page.evaluate(() => {
-    window.__windhoofLab!.setMove(0, 0);
-    window.__windhoofLab!.setGallop(false);
-    window.__windhoofLab!.press("resetPressed");
+    window.__longrideLab!.setMove(0, 0);
+    window.__longrideLab!.setGallop(false);
+    window.__longrideLab!.press("resetPressed");
   });
   await page.waitForTimeout(250);
-  const reset = await page.evaluate(() => window.__windhoofLab!.state());
+  const reset = await page.evaluate(() => window.__longrideLab!.state());
   expect(Math.hypot(reset.position.x, reset.position.z)).toBeLessThan(94);
   expect(reset.speed).toBe(0);
 
   // Reach the boundary once more to verify ordinary steering recovery too.
   await page.evaluate(() => {
-    window.__windhoofLab!.setCameraYaw(0);
-    window.__windhoofLab!.setMove(0, 1);
-    window.__windhoofLab!.setGallop(true);
+    window.__longrideLab!.setCameraYaw(0);
+    window.__longrideLab!.setMove(0, 1);
+    window.__longrideLab!.setGallop(true);
   });
-  await page.waitForFunction(() => window.__windhoofLab!.state().speed > 12, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().speed > 12, null, {
     timeout: 20_000,
   });
-  await page.waitForFunction(() => window.__windhoofLab!.state().speed < 1, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().speed < 1, null, {
     timeout: 30_000,
   });
-  const secondBoundary = await page.evaluate(() => window.__windhoofLab!.state());
+  const secondBoundary = await page.evaluate(() => window.__longrideLab!.state());
   const secondRadius = Math.hypot(secondBoundary.position.x, secondBoundary.position.z);
 
   // Turning back toward the island must release the boundary without forcing
@@ -236,21 +236,21 @@ test("cannot gallop off the edge of the stage", async ({ page }) => {
   await page.evaluate(() => {
     // A pure lateral input turns along the coast even when mouse-look is not
     // available (keyboard-only and automated play remain recoverable).
-    window.__windhoofLab!.setMove(1, 0);
-    window.__windhoofLab!.setGallop(false);
+    window.__longrideLab!.setMove(1, 0);
+    window.__longrideLab!.setGallop(false);
   });
-  await page.waitForFunction(() => window.__windhoofLab!.state().speed > 2, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().speed > 2, null, {
     timeout: 8000,
   });
   await page.waitForFunction(
     (startingRadius) => {
-      const position = window.__windhoofLab!.state().position;
+      const position = window.__longrideLab!.state().position;
       return Math.hypot(position.x, position.z) < startingRadius - 0.5;
     },
     secondRadius,
     { timeout: 8000 },
   );
-  const recovered = await page.evaluate(() => window.__windhoofLab!.state());
+  const recovered = await page.evaluate(() => window.__longrideLab!.state());
   expect(Math.hypot(recovered.position.x, recovered.position.z)).toBeLessThan(
     secondRadius - 0.5,
   );
@@ -267,7 +267,7 @@ test("the chase camera pulls in for obstruction and recovers afterwards", async 
   await boot(page);
 
   const observed = await page.evaluate(async () => {
-    const lab = window.__windhoofLab!;
+    const lab = window.__longrideLab!;
     const sleep = (ms: number) =>
       new Promise((resolve) => window.setTimeout(resolve, ms));
 
@@ -331,30 +331,30 @@ test("pause opens a modal surface, releases the mouse, and stops camera input", 
   await page.waitForTimeout(600);
 
   await page.keyboard.press("Escape");
-  await expect(page.locator(".wh-pause")).toHaveAttribute("data-visible", "true", {
+  await expect(page.locator(".lr-pause")).toHaveAttribute("data-visible", "true", {
     timeout: 5000,
   });
 
-  const paused = await page.evaluate(() => window.__windhoofLab!.state().mode);
+  const paused = await page.evaluate(() => window.__longrideLab!.state().mode);
   expect(paused).toBe("paused");
 
   // The mouse is not captured underneath the modal surface.
   expect(await page.evaluate(() => document.pointerLockElement !== null)).toBe(false);
 
   // Camera input is inert while paused: the yaw the horse steers by must not move.
-  const before = await page.evaluate(() => window.__windhoofLab!.cameraYaw());
+  const before = await page.evaluate(() => window.__longrideLab!.cameraYaw());
   await page.mouse.move(200, 200);
   await page.mouse.move(900, 500);
   await page.waitForTimeout(300);
-  const after = await page.evaluate(() => window.__windhoofLab!.cameraYaw());
+  const after = await page.evaluate(() => window.__longrideLab!.cameraYaw());
   expect(after).toBeCloseTo(before, 6);
 
   // No onboarding chatter while paused.
-  await expect(page.locator(".wh-hint")).toHaveAttribute("data-visible", "false");
+  await expect(page.locator(".lr-hint")).toHaveAttribute("data-visible", "false");
 
-  await page.locator(".wh-button", { hasText: "Resume" }).click();
-  await expect(page.locator(".wh-pause")).toHaveAttribute("data-visible", "false");
-  expect(await page.evaluate(() => window.__windhoofLab!.state().mode)).not.toBe("paused");
+  await page.locator(".lr-button", { hasText: "Resume" }).click();
+  await expect(page.locator(".lr-pause")).toHaveAttribute("data-visible", "false");
+  expect(await page.evaluate(() => window.__longrideLab!.state().mode)).not.toBe("paused");
 
   expectNoConsoleErrors(page);
 });
@@ -363,30 +363,30 @@ test("returning to safe ground from the pause menu is unmistakable", async ({ pa
   await boot(page);
 
   await page.evaluate(() => {
-    window.__windhoofLab!.setMove(0, 1);
-    window.__windhoofLab!.setGallop(true);
+    window.__longrideLab!.setMove(0, 1);
+    window.__longrideLab!.setGallop(true);
   });
   await page.waitForFunction(
-    () => window.__windhoofLab!.state().position.z > -55,
+    () => window.__longrideLab!.state().position.z > -55,
     null,
     { timeout: 20_000 },
   );
   await page.evaluate(() => {
-    window.__windhoofLab!.setMove(0, 0);
-    window.__windhoofLab!.setGallop(false);
+    window.__longrideLab!.setMove(0, 0);
+    window.__longrideLab!.setGallop(false);
   });
 
   await page.keyboard.press("Escape");
-  await expect(page.locator(".wh-pause")).toHaveAttribute("data-visible", "true");
-  await page.locator(".wh-button", { hasText: "Return to safe ground" }).click();
+  await expect(page.locator(".lr-pause")).toHaveAttribute("data-visible", "true");
+  await page.locator(".lr-button", { hasText: "Return to safe ground" }).click();
 
   // The player is told, in words, that the reset happened.
-  await expect(page.locator(".wh-notice")).toHaveAttribute("data-visible", "true", {
+  await expect(page.locator(".lr-notice")).toHaveAttribute("data-visible", "true", {
     timeout: 4000,
   });
-  await expect(page.locator(".wh-notice")).toHaveText(/safe ground/i);
+  await expect(page.locator(".lr-notice")).toHaveText(/safe ground/i);
 
-  const state = await page.evaluate(() => window.__windhoofLab!.state());
+  const state = await page.evaluate(() => window.__longrideLab!.state());
   expect(state.speed).toBeLessThan(0.5);
   expect(state.grounded).toBe(true);
 
@@ -396,7 +396,7 @@ test("returning to safe ground from the pause menu is unmistakable", async ({ pa
 test("the pause dialog keeps keyboard focus inside itself", async ({ page }) => {
   await boot(page);
   await page.keyboard.press("Escape");
-  await expect(page.locator(".wh-pause")).toHaveAttribute("data-visible", "true");
+  await expect(page.locator(".lr-pause")).toHaveAttribute("data-visible", "true");
 
   // Opening the dialog puts focus on the primary action.
   expect(await page.evaluate(() => document.activeElement?.textContent)).toBe("Resume");
@@ -405,7 +405,7 @@ test("the pause dialog keeps keyboard focus inside itself", async ({ page }) => 
   for (let step = 0; step < 40; step += 1) {
     await page.keyboard.press("Tab");
     const inside = await page.evaluate(
-      () => document.querySelector(".wh-panel")?.contains(document.activeElement) ?? false,
+      () => document.querySelector(".lr-panel")?.contains(document.activeElement) ?? false,
     );
     expect(inside, `focus escaped the dialog after ${step + 1} tabs`).toBe(true);
   }
@@ -414,7 +414,7 @@ test("the pause dialog keeps keyboard focus inside itself", async ({ page }) => 
   for (let step = 0; step < 12; step += 1) {
     await page.keyboard.press("Shift+Tab");
     const inside = await page.evaluate(
-      () => document.querySelector(".wh-panel")?.contains(document.activeElement) ?? false,
+      () => document.querySelector(".lr-panel")?.contains(document.activeElement) ?? false,
     );
     expect(inside).toBe(true);
   }
@@ -428,15 +428,15 @@ test("the pause surface keeps its primary action reachable on a short window", a
   await page.setViewportSize({ width: 1024, height: 520 });
   await boot(page);
   await page.keyboard.press("Escape");
-  await expect(page.locator(".wh-pause")).toHaveAttribute("data-visible", "true");
+  await expect(page.locator(".lr-pause")).toHaveAttribute("data-visible", "true");
 
-  const resume = page.locator(".wh-button", { hasText: "Resume" });
+  const resume = page.locator(".lr-button", { hasText: "Resume" });
   await expect(resume).toBeInViewport();
 
   // The settings list is the part that overflows, and it must be scrollable
   // rather than simply cut off.
   const scrollable = await page.evaluate(() => {
-    const node = document.querySelector<HTMLElement>(".wh-panel-scroll");
+    const node = document.querySelector<HTMLElement>(".lr-panel-scroll");
     if (!node) return null;
     return { scrollHeight: node.scrollHeight, clientHeight: node.clientHeight };
   });
@@ -444,7 +444,7 @@ test("the pause surface keeps its primary action reachable on a short window", a
   expect(scrollable!.scrollHeight).toBeGreaterThan(scrollable!.clientHeight);
 
   // The panel itself must not overflow the window.
-  const panel = await page.locator(".wh-panel").boundingBox();
+  const panel = await page.locator(".lr-panel").boundingBox();
   expect(panel!.height).toBeLessThanOrEqual(520);
 
   expectNoConsoleErrors(page);
@@ -455,46 +455,46 @@ test("settings change presentation immediately and persist across a reload", asy
 }) => {
   await boot(page);
   await page.keyboard.press("Escape");
-  await expect(page.locator(".wh-pause")).toHaveAttribute("data-visible", "true");
+  await expect(page.locator(".lr-pause")).toHaveAttribute("data-visible", "true");
 
   // Reduced motion is a real accessibility control, not decoration.
-  await page.locator("#wh-reducedMotion").check();
-  await expect(page.locator(".wh-ui")).toHaveAttribute("data-reduced-motion", "true");
+  await page.locator("#lr-reducedMotion").check();
+  await expect(page.locator(".lr-ui")).toHaveAttribute("data-reduced-motion", "true");
 
-  await page.locator("#wh-textScale").fill("1.35");
-  await page.locator("#wh-textScale").dispatchEvent("input");
-  await expect(page.locator(".wh-ui")).toHaveAttribute("style", /--wh-text-scale: 1.35/);
+  await page.locator("#lr-textScale").fill("1.35");
+  await page.locator("#lr-textScale").dispatchEvent("input");
+  await expect(page.locator(".lr-ui")).toHaveAttribute("style", /--lr-text-scale: 1.35/);
 
-  await page.locator("#wh-gaitIndicator").selectOption("off");
-  await page.locator(".wh-button", { hasText: "Resume" }).click();
-  await expect(page.locator(".wh-gait")).toBeHidden();
+  await page.locator("#lr-gaitIndicator").selectOption("off");
+  await page.locator(".lr-button", { hasText: "Resume" }).click();
+  await expect(page.locator(".lr-gait")).toBeHidden();
 
   const stored = await page.evaluate(() =>
-    window.localStorage.getItem("windhoof.presentation.v1"),
+    window.localStorage.getItem("longride.presentation.v1"),
   );
   expect(stored).toContain('"reducedMotion":true');
 
   await boot(page);
-  await expect(page.locator(".wh-ui")).toHaveAttribute("data-reduced-motion", "true");
-  await expect(page.locator(".wh-gait")).toBeHidden();
+  await expect(page.locator(".lr-ui")).toHaveAttribute("data-reduced-motion", "true");
+  await expect(page.locator(".lr-gait")).toBeHidden();
 
   expectNoConsoleErrors(page);
 });
 
 test("diagnostics stay out of the way until asked for", async ({ page }) => {
   await boot(page);
-  await expect(page.locator(".wh-diagnostics")).toBeHidden();
+  await expect(page.locator(".lr-diagnostics")).toBeHidden();
 
   await page.keyboard.press("F3");
-  await expect(page.locator(".wh-diagnostics")).toBeVisible();
-  await expect(page.locator(".wh-diagnostics")).toContainText("draw calls");
+  await expect(page.locator(".lr-diagnostics")).toBeVisible();
+  await expect(page.locator(".lr-diagnostics")).toContainText("draw calls");
 
   // The overlay reports live values, not placeholders.
-  const rows = await page.locator(".wh-diagnostics-row").allTextContents();
+  const rows = await page.locator(".lr-diagnostics-row").allTextContents();
   expect(rows.some((row) => /fps\d/.test(row.replace(/\s/g, "")))).toBe(true);
 
   await page.keyboard.press("F3");
-  await expect(page.locator(".wh-diagnostics")).toBeHidden();
+  await expect(page.locator(".lr-diagnostics")).toBeHidden();
 
   expectNoConsoleErrors(page);
 });
@@ -502,9 +502,9 @@ test("diagnostics stay out of the way until asked for", async ({ page }) => {
 test("the controls list is discoverable from the pause surface", async ({ page }) => {
   await boot(page);
   await page.keyboard.press("Escape");
-  await page.locator(".wh-tab", { hasText: "Controls" }).click();
+  await page.locator(".lr-tab", { hasText: "Controls" }).click();
 
-  const controls = page.locator(".wh-keys");
+  const controls = page.locator(".lr-keys");
   await expect(controls).toBeVisible();
   for (const key of ["W A S D", "Shift", "Space", "Esc", "R", "C"]) {
     await expect(controls).toContainText(key);
@@ -517,12 +517,12 @@ test("stays inside the milestone's draw-call and triangle budgets", async ({ pag
   await boot(page);
 
   await page.evaluate(() => {
-    window.__windhoofLab!.setMove(0, 1);
-    window.__windhoofLab!.setGallop(true);
+    window.__longrideLab!.setMove(0, 1);
+    window.__longrideLab!.setGallop(true);
   });
   await page.waitForTimeout(4000);
 
-  const state = await page.evaluate(() => window.__windhoofLab!.state());
+  const state = await page.evaluate(() => window.__longrideLab!.state());
   expect(state.drawCalls).toBeLessThan(200);
   expect(state.triangles).toBeLessThan(750_000);
 
@@ -541,11 +541,11 @@ test("moves as a body at gallop, not as a model on a rail", async ({ page }) => 
   await boot(page);
 
   await page.evaluate(() => {
-    window.__windhoofLab!.setCameraYaw(0);
-    window.__windhoofLab!.setMove(0, 1);
-    window.__windhoofLab!.setGallop(true);
+    window.__longrideLab!.setCameraYaw(0);
+    window.__longrideLab!.setMove(0, 1);
+    window.__longrideLab!.setGallop(true);
   });
-  await page.waitForFunction(() => window.__windhoofLab!.state().speed > 15, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().speed > 15, null, {
     timeout: 25_000,
   });
 
@@ -554,7 +554,7 @@ test("moves as a body at gallop, not as a model on a rail", async ({ page }) => 
   for (let frame = 0; frame < 90; frame += 1) {
     samples.push(
       await page.evaluate(() => {
-        const state = window.__windhoofLab!.state();
+        const state = window.__longrideLab!.state();
         return { height: state.rigBodyHeight, spine: state.rigSpineFlex };
       }),
     );
@@ -579,7 +579,7 @@ test("standing still is still, and the horse settles when it stops", async ({ pa
 
   const samples: number[] = [];
   for (let frame = 0; frame < 40; frame += 1) {
-    samples.push(await page.evaluate(() => window.__windhoofLab!.state().rigBodyHeight));
+    samples.push(await page.evaluate(() => window.__longrideLab!.state().rigBodyHeight));
     await page.waitForTimeout(25);
   }
 
@@ -594,21 +594,21 @@ test("the ground answers the hooves and the debris clears again", async ({ page 
   await boot(page);
 
   await page.evaluate(() => {
-    window.__windhoofLab!.setCameraYaw(0);
-    window.__windhoofLab!.setMove(0, 1);
-    window.__windhoofLab!.setGallop(true);
+    window.__longrideLab!.setCameraYaw(0);
+    window.__longrideLab!.setMove(0, 1);
+    window.__longrideLab!.setGallop(true);
   });
 
-  await page.waitForFunction(() => window.__windhoofLab!.state().debrisLive > 0, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().debrisLive > 0, null, {
     timeout: 25_000,
   });
 
   // Stop, and the debris must die rather than accumulate for the session.
   await page.evaluate(() => {
-    window.__windhoofLab!.setMove(0, 0);
-    window.__windhoofLab!.setGallop(false);
+    window.__longrideLab!.setMove(0, 0);
+    window.__longrideLab!.setGallop(false);
   });
-  await page.waitForFunction(() => window.__windhoofLab!.state().debrisLive === 0, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().debrisLive === 0, null, {
     timeout: 15_000,
   });
 

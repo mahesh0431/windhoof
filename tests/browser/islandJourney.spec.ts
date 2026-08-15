@@ -40,7 +40,7 @@ function expectNoConsoleErrors(page: Page): void {
 async function seedSave(page: Page, save: unknown): Promise<void> {
   await page.evaluate(async (value) => {
     await new Promise<void>((resolve, reject) => {
-      const open = indexedDB.open("windhoof", 1);
+      const open = indexedDB.open("longride", 1);
       open.addEventListener("upgradeneeded", () => {
         if (!open.result.objectStoreNames.contains("game-saves")) {
           open.result.createObjectStore("game-saves");
@@ -59,10 +59,10 @@ async function seedSave(page: Page, save: unknown): Promise<void> {
 
 async function boot(page: Page): Promise<void> {
   await page.goto("/?mute=1");
-  await page.waitForFunction(() => window.__windhoofLab?.ready === true, null, {
+  await page.waitForFunction(() => window.__longrideLab?.ready === true, null, {
     timeout: 90_000,
   });
-  await expect(page.locator("html")).toHaveAttribute("data-windhoof", "running");
+  await expect(page.locator("html")).toHaveAttribute("data-longride", "running");
 }
 
 /** A save the island can use: two mandatory places already known. */
@@ -92,7 +92,7 @@ function compatibleSave() {
 test("a first ride is pointed inland and offered nothing it cannot do", async ({ page }) => {
   await boot(page);
 
-  const state = await page.evaluate(() => window.__windhoofLab!.state());
+  const state = await page.evaluate(() => window.__longrideLab!.state());
   expect(state.journey?.startKind).toBe("fresh");
   expect(state.journey?.known).toEqual([]);
   expect(state.journey?.completedMandatory).toBe(0);
@@ -101,14 +101,14 @@ test("a first ride is pointed inland and offered nothing it cannot do", async ({
   // The opening has no discovery to name, so the line has to carry the whole
   // instruction: ride inland, then call. Without it a new player is standing on
   // a beach with no reason to go anywhere.
-  const goal = page.locator(".wh-goal");
+  const goal = page.locator(".lr-goal");
   await expect(goal).toHaveAttribute("data-visible", "true");
-  await expect(page.locator(".wh-goal-text")).toHaveText(/call for the herd/i);
+  await expect(page.locator(".lr-goal-text")).toHaveText(/call for the herd/i);
 
   // Nothing to interact with, so nothing is offered.
-  await expect(page.locator(".wh-prompt")).toHaveAttribute("data-visible", "false");
-  await expect(page.locator(".wh-discovery")).toHaveAttribute("data-visible", "false");
-  await expect(page.locator(".wh-bearing")).toHaveAttribute("data-visible", "false");
+  await expect(page.locator(".lr-prompt")).toHaveAttribute("data-visible", "false");
+  await expect(page.locator(".lr-discovery")).toHaveAttribute("data-visible", "false");
+  await expect(page.locator(".lr-bearing")).toHaveAttribute("data-visible", "false");
 
   expectNoConsoleErrors(page);
 });
@@ -119,21 +119,21 @@ test("the journey withdraws from the riding view rather than living on it", asyn
   // The opening line is a moment, not a banner. Riding for a while must leave
   // the view clear, which is the whole reason the journey is not a HUD.
   await page.evaluate(() => {
-    window.__windhoofLab!.setMove(0, 1);
-    window.__windhoofLab!.setGallop(true);
+    window.__longrideLab!.setMove(0, 1);
+    window.__longrideLab!.setGallop(true);
   });
-  await page.waitForFunction(() => window.__windhoofLab!.state().speed > 4, null, {
+  await page.waitForFunction(() => window.__longrideLab!.state().speed > 4, null, {
     timeout: 45_000,
   });
   await page.waitForTimeout(9_000);
 
-  await expect(page.locator(".wh-goal")).toHaveAttribute("data-visible", "false");
-  await expect(page.locator(".wh-prompt")).toHaveAttribute("data-visible", "false");
+  await expect(page.locator(".lr-goal")).toHaveAttribute("data-visible", "false");
+  await expect(page.locator(".lr-prompt")).toHaveAttribute("data-visible", "false");
 
   // And it is still available on demand, where looking it up costs nothing.
-  await page.evaluate(() => window.__windhoofLab!.command({ type: "Pause" }));
-  await expect(page.locator(".wh-pause")).toHaveAttribute("data-visible", "true");
-  await expect(page.locator(".wh-journey-summary")).toBeVisible();
+  await page.evaluate(() => window.__longrideLab!.command({ type: "Pause" }));
+  await expect(page.locator(".lr-pause")).toHaveAttribute("data-visible", "true");
+  await expect(page.locator(".lr-journey-summary")).toBeVisible();
 
   expectNoConsoleErrors(page);
 });
@@ -143,7 +143,7 @@ test("a remembered ride resumes where it was, and says so", async ({ page }) => 
   await seedSave(page, compatibleSave());
   await boot(page);
 
-  const state = await page.evaluate(() => window.__windhoofLab!.state());
+  const state = await page.evaluate(() => window.__longrideLab!.state());
   expect(state.journey?.startKind).toBe("resumed");
   expect(state.journey?.completedMandatory).toBe(2);
   expect(state.journey?.persistenceStatus).toBe("saved");
@@ -154,14 +154,14 @@ test("a remembered ride resumes where it was, and says so", async ({ page }) => 
     "spring-resting-hollow",
   ]);
 
-  await expect(page.locator(".wh-notice")).toHaveAttribute("data-visible", "true");
-  await expect(page.locator(".wh-notice")).toHaveText(/remembers you/i);
+  await expect(page.locator(".lr-notice")).toHaveAttribute("data-visible", "true");
+  await expect(page.locator(".lr-notice")).toHaveText(/remembers you/i);
 
   // Both prerequisites are met, but the overlook has not been noticed yet, so
   // the world genuinely has nowhere to point. It says that rather than naming a
   // place the player has never seen - which would be handing them a discovery
   // instead of letting them find it.
-  await expect(page.locator(".wh-goal-text")).toHaveText(/nothing calls to you/i);
+  await expect(page.locator(".lr-goal-text")).toHaveText(/nothing calls to you/i);
   expect(state.journey?.objectiveId).toBeNull();
 
   expectNoConsoleErrors(page);
@@ -174,7 +174,7 @@ test("a ride this island cannot use is kept, explained, and only replaced on req
   await seedSave(page, { ...compatibleSave(), manifestHash: "fnv1a64-0000000000000000" });
   await boot(page);
 
-  const state = await page.evaluate(() => window.__windhoofLab!.state());
+  const state = await page.evaluate(() => window.__longrideLab!.state());
   expect(state.journey?.startKind).toBe("quarantined");
   // An unusable ride must not leak progress into this one.
   expect(state.journey?.known).toEqual([]);
@@ -184,28 +184,28 @@ test("a ride this island cannot use is kept, explained, and only replaced on req
   expect(state.journey?.persistenceWritesEnabled).toBe(false);
   expect(state.journey?.persistenceStatus).toBe("incompatible");
 
-  const storage = page.locator(".wh-storage");
+  const storage = page.locator(".lr-storage");
   await expect(storage).toHaveAttribute("data-visible", "true");
-  await expect(page.locator(".wh-storage-reason")).toHaveText(/this island has changed/i);
+  await expect(page.locator(".lr-storage-reason")).toHaveText(/this island has changed/i);
   // The world changed under the player; the wording must not read as a fault or
   // as a crash, because it is neither.
-  await expect(page.locator(".wh-storage-panel")).not.toHaveText(/error|failed|corrupt/i);
+  await expect(page.locator(".lr-storage-panel")).not.toHaveText(/error|failed|corrupt/i);
   // Nothing may claim to have been saved before the player has agreed to it.
-  await expect(page.locator(".wh-save")).toHaveAttribute("data-visible", "false");
+  await expect(page.locator(".lr-save")).toHaveAttribute("data-visible", "false");
 
-  const accept = page.locator(".wh-storage-actions .wh-button").first();
+  const accept = page.locator(".lr-storage-actions .lr-button").first();
   await expect(accept).toHaveText(/begin a new ride/i);
   await accept.click();
 
   await page.waitForFunction(
-    () => window.__windhoofLab!.state().journey?.persistenceWritesEnabled === true,
+    () => window.__longrideLab!.state().journey?.persistenceWritesEnabled === true,
     null,
     { timeout: 20_000 },
   );
   await expect(storage).toHaveAttribute("data-visible", "false");
-  const accepted = await page.evaluate(() => window.__windhoofLab!.state());
+  const accepted = await page.evaluate(() => window.__longrideLab!.state());
   expect(["ready", "saving", "saved"]).toContain(accepted.journey?.persistenceStatus);
-  await expect(page.locator(".wh-notice")).toHaveText(/begun again/i);
+  await expect(page.locator(".lr-notice")).toHaveText(/begun again/i);
 
   expectNoConsoleErrors(page);
 });
@@ -223,21 +223,21 @@ test("a browser with no stable says so and offers nothing it cannot do", async (
   });
   await boot(page);
 
-  const state = await page.evaluate(() => window.__windhoofLab!.state());
+  const state = await page.evaluate(() => window.__longrideLab!.state());
   expect(state.journey?.startKind).toBe("unavailable");
   expect(state.journey?.persistenceWritesEnabled).toBe(false);
 
-  const storage = page.locator(".wh-storage");
+  const storage = page.locator(".lr-storage");
   await expect(storage).toHaveAttribute("data-visible", "true");
-  await expect(page.locator(".wh-storage-title")).toHaveText(/keeps no stable/i);
+  await expect(page.locator(".lr-storage-title")).toHaveText(/keeps no stable/i);
   // No acknowledgement is offered, because there is nothing to acknowledge:
   // the only reachable action is to carry on.
-  const actions = page.locator(".wh-storage-actions .wh-button:visible");
+  const actions = page.locator(".lr-storage-actions .lr-button:visible");
   await expect(actions).toHaveCount(1);
   await expect(actions).toHaveText(/ride on/i);
   // Hidden rather than merely unstyled, so assistive technology does not offer
   // it either.
-  await expect(page.locator('.wh-storage-actions .wh-button[data-variant="primary"]')).toBeHidden();
+  await expect(page.locator('.lr-storage-actions .lr-button[data-variant="primary"]')).toBeHidden();
 
   // The ride itself is unaffected.
   expect(state.grounded).toBe(true);
@@ -252,11 +252,11 @@ test("nonsense in the save store is survivable", async ({ page }) => {
   await seedSave(page, { saveVersion: 1, worldId: 42, notASave: true });
   await boot(page);
 
-  const state = await page.evaluate(() => window.__windhoofLab!.state());
+  const state = await page.evaluate(() => window.__longrideLab!.state());
   expect(state.journey?.startKind).toBe("quarantined");
   expect(state.journey?.known).toEqual([]);
   expect(state.journey?.persistenceWritesEnabled).toBe(false);
-  await expect(page.locator(".wh-storage-reason")).toHaveText(/could not be read/i);
+  await expect(page.locator(".lr-storage-reason")).toHaveText(/could not be read/i);
   // Riding still works, which is the part that matters.
   expect(state.grounded).toBe(true);
 

@@ -23,10 +23,10 @@ import { HorseGaitAnimator } from "../render/horse/horseGaitAnimator";
 import { createHoofContacts } from "../render/horse/hoofContacts";
 import { createHorseRig } from "../render/horse/horseVisual";
 import { createRenderer } from "../render/renderer";
-import { WindhoofAudio } from "../audio/windhoofAudio";
+import { LongrideAudio } from "../audio/longrideAudio";
 import { RuntimeMetrics } from "../diagnostics/runtimeMetrics";
 import { PresentationSettingsStore } from "../ui/presentationSettings";
-import { createWindhoofUi, type JourneyStart } from "../ui/windhoofUi";
+import { createLongrideUi, type JourneyStart } from "../ui/longrideUi";
 import { createIslandScene } from "../world/islandScene";
 import { regionDisplayName } from "../world/regionVisuals";
 import { FIRST_ISLAND_SPEC } from "../world/firstIslandSpec";
@@ -35,7 +35,7 @@ import { installLabHarness } from "./labHarness";
 import { WebglRecoveryController } from "./webglRecovery";
 import { resolveRuntimeFlags } from "./runtimeFlags";
 import { createPreparationLog } from "./preparationLog";
-import type { WindhoofApp } from "./windhoofApp";
+import type { LongrideApp } from "./longrideApp";
 
 /**
  * Why a stored ride could not be continued, said to the player.
@@ -46,7 +46,7 @@ import type { WindhoofApp } from "./windhoofApp";
  */
 const RESET_REASONS: Readonly<Record<string, string>> = {
   corrupt: "Your last ride could not be read.",
-  "unsupported-version": "Your last ride came from a newer Windhoof.",
+  "unsupported-version": "Your last ride came from a newer Longride.",
   "wrong-world": "Your last ride was on a different island.",
   "generator-mismatch": "This island has been remade since your last ride.",
   "manifest-mismatch": "This island has changed since your last ride.",
@@ -95,6 +95,17 @@ const WET_GROUND_BAND = 0.35;
 const REGION_POLL_SECONDS = 0.25;
 
 /**
+ * How hard a wild horse's kick throws the player, in metres a second.
+ *
+ * Enough to be unmistakable and to break whatever the player was doing, and not
+ * enough to be a punishment: at seven the horse is moved about a length and
+ * loses its footing for half a second, which is the same cost as a bad landing.
+ * There is no damage in this game and a kick does not add any - it is the world
+ * telling the player something, in the only way a horse can.
+ */
+const KICK_SHOVE_SPEED = 7;
+
+/**
  * The compiled island.
  *
  * Everything authoritative here belongs to somebody else: the manifest comes
@@ -108,7 +119,7 @@ const REGION_POLL_SECONDS = 0.25;
 export async function startIsland(
   canvas: HTMLCanvasElement,
   uiHost: HTMLElement,
-): Promise<WindhoofApp> {
+): Promise<LongrideApp> {
   const settings = new PresentationSettingsStore();
   const saveAdapter = openSaveStore();
   const storedSavePromise = saveAdapter.read().then(
@@ -135,7 +146,7 @@ export async function startIsland(
   const graphicsStatus = (): GraphicsLifecycleSnapshot =>
     graphicsRecovery?.snapshot() ?? { status: "ready", generation: 0 };
 
-  const ui = createWindhoofUi(uiHost, settings, {
+  const ui = createLongrideUi(uiHost, settings, {
     onCommand: (command) => applyCommand(command),
     onRequestFocus: () => requestFocus(),
     // The player taking the reins back after a restored context. The game
@@ -185,10 +196,10 @@ export async function startIsland(
 
   // Prepare first, in bounded per-chunk jobs. Physics would otherwise prepare
   // the whole island synchronously inside its own constructor.
-  performance.mark("windhoof:prepare-start");
+  performance.mark("longride:prepare-start");
   const repository = new IslandChunkRepository(manifest);
   await repository.prepareAll({ yieldBetweenChunks: yieldToBrowser });
-  performance.mark("windhoof:prepare-end");
+  performance.mark("longride:prepare-end");
 
   // Boot phases are marked so a profiling pass can attribute the one
   // unavoidable main-thread block at startup to the layer that actually causes
@@ -199,20 +210,41 @@ export async function startIsland(
   // on every chunk first, the scene then takes exactly one render retain per
   // chunk against the same prepared topology, and only once both halves exist
   // can the repository activate anything.
-  performance.mark("windhoof:collision-start");
+  performance.mark("longride:collision-start");
   const world = await CompiledIslandWorld.createStaged(manifest, repository, runJob);
-  performance.mark("windhoof:collision-end");
-  performance.mark("windhoof:scene-start");
+  performance.mark("longride:collision-end");
+  performance.mark("longride:scene-start");
   const scene = await createIslandScene(manifest, {
     topology: (chunkId) => world.terrainTopology(chunkId),
     retainRenderChunk: (chunkId) => repository.retain(chunkId, "render"),
     job: runJob,
   });
-  performance.mark("windhoof:scene-end");
+  // The wood the renderer grew is scenery the player can be stopped by. Physics
+  // owns collision, so the trunks cross the seam and it builds the colliders.
+  const sceneryColliders = await runJob("collision-woodland", () =>
+    world.addSceneryColliders([
+      ...scene.woodland.trunks,
+      // Landmark stone. The biggest masses on the island, and the ones a player
+      // is most likely to ride straight at.
+      ...scene.landmarks.colliders,
+      // The wild horses. A horse is a solid animal and the player is meant to
+      // have to ride around one; without this they can stand inside a horse,
+      // which is both wrong and makes being kicked unreadable, because there is
+      // no distance at which the kick obviously should have missed.
+      ...scene.wildlife.horseColliders,
+      // Clump scenery: the trees standing in a thicket and the boulders piled
+      // beside it. The compiler's own placement gives each clump ONE collider
+      // at its centre, so everything scattered around that centre was ridden
+      // straight through - a tree you can pass through standing next to one you
+      // cannot is worse than either rule applied consistently.
+      ...scene.placements.colliders,
+    ]),
+  );
+  performance.mark("longride:scene-end");
   repository.activateAll();
-  performance.measure("windhoof:prepare", "windhoof:prepare-start", "windhoof:prepare-end");
-  performance.measure("windhoof:collision", "windhoof:collision-start", "windhoof:collision-end");
-  performance.measure("windhoof:scene", "windhoof:scene-start", "windhoof:scene-end");
+  performance.measure("longride:prepare", "longride:prepare-start", "longride:prepare-end");
+  performance.measure("longride:collision", "longride:collision-start", "longride:collision-end");
+  performance.measure("longride:scene", "longride:scene-start", "longride:scene-end");
 
   // Riding does not begin until every chunk is active on both sides. Milestone 3
   // keeps the whole slice resident, so anything short of this is an invariant
@@ -336,7 +368,7 @@ export async function startIsland(
   chaseCamera.setYaw(spawnYaw);
 
   const flags = resolveRuntimeFlags();
-  const audio = new WindhoofAudio({ muted: flags.muted });
+  const audio = new LongrideAudio({ muted: flags.muted });
   const bindings = createInputBindings(canvas, chaseCamera, {
     isRiding: () => currentMode === "playing" || currentMode === "recovering",
     isPointerLocked: () => document.pointerLockElement === canvas,
@@ -633,6 +665,13 @@ export async function startIsland(
       programs: renderer.info.programs?.length ?? 0,
       groundCoverTufts: scene.groundCoverTufts,
       groundCoverTriangles: scene.groundCoverTriangles,
+      trees: scene.woodland.treeCount,
+      wildHorses: scene.wildlife.horseCount,
+      wildHorseReports: scene.wildlife.describeHorses(),
+      birds: scene.wildlife.birdCount,
+      treeColliders: sceneryColliders,
+      nearGrassBlades: scene.nearGrass.liveBlades(),
+      nearGrassPending: scene.nearGrass.pendingPatches(),
       chunks: repository.snapshot(),
       renderRetainCount: scene.renderRetainCount,
       // Three scalars, so reading them every frame during a profile costs
@@ -715,7 +754,7 @@ export async function startIsland(
     // player keeps every control they had a moment ago and can ride off part
     // way through if they want to.
     if (result.ui.journeyComplete && !latestSnapshot.journeyComplete) {
-      scene.traces.gather(horse.position.x, horse.position.z, elapsedSeconds);
+      // Nothing to gather: the scripted herd is gone.
     }
     latestSnapshot = result.ui;
 
@@ -821,11 +860,19 @@ export async function startIsland(
       camera.position.copy(observer.position);
       camera.lookAt(observer.target);
       camera.updateMatrixWorld();
+      // The observer moves the camera, not the horse. The herd still reacts to
+      // where the horse is actually standing.
       scene.update(
         elapsedSeconds,
         observer.position.x,
         observer.position.y,
         observer.position.z,
+        {
+          x: horse.position.x,
+          y: horse.position.y,
+          z: horse.position.z,
+          deltaSeconds: paused ? 0 : delta,
+        },
       );
     } else {
       if (!paused) {
@@ -841,7 +888,32 @@ export async function startIsland(
           delta,
         );
       }
-      scene.update(elapsedSeconds, horse.position.x, horse.position.y, horse.position.z);
+      scene.update(
+        elapsedSeconds,
+        horse.position.x,
+        horse.position.y,
+        horse.position.z,
+        {
+          x: horse.position.x,
+          y: horse.position.y,
+          z: horse.position.z,
+          deltaSeconds: paused ? 0 : delta,
+        },
+      );
+    }
+
+    // A kick that connected is a world event, not a rendering one: the scene
+    // reports that hooves reached the player and the simulation decides what
+    // that does to them.
+    for (const kick of scene.wildlife.consumeKicks()) {
+      simulation.command({
+        type: "ShoveHorse",
+        x: kick.awayX,
+        z: kick.awayZ,
+        speed: KICK_SHOVE_SPEED,
+      });
+      audio.land(true);
+      chaseCamera.impulse(1);
     }
     renderer.render(scene.scene, camera);
 
@@ -878,7 +950,7 @@ export async function startIsland(
   }
 
   window.requestAnimationFrame(frame);
-  document.documentElement.dataset.windhoof = "running";
+  document.documentElement.dataset.longride = "running";
 
   return {
     dispose() {

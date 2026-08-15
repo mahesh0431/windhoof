@@ -2,7 +2,6 @@ import {
   CircleGeometry,
   Color,
   Group,
-  IcosahedronGeometry,
   InstancedMesh,
   Matrix4,
   MeshStandardMaterial,
@@ -11,8 +10,9 @@ import {
   type BufferGeometry,
 } from "three";
 import type { WorldManifest } from "../game/world/compiler/worldTypes";
-import { roughenGeometry } from "../render/geometryUtils";
 import { PALETTE } from "../render/palette";
+import { createRockGeometry } from "./rockShapes";
+import { createTreeGeometry, type TreeSpecies } from "./treeShapes";
 import {
   scatterDensityFor,
   scatterMixFor,
@@ -46,11 +46,38 @@ export interface IslandPlacements {
   readonly drawCalls: number;
   /** Elements actually instanced, for budget evidence. */
   readonly elementCount: number;
+  /**
+   * Scenery solid enough that a horse should be stopped by it.
+   *
+   * The compiler gives every placement a collision radius and physics builds a
+   * cylinder for it, but that covers the CENTRE of a clump only. Everything
+   * scattered around it - the trees standing in the thicket, the boulders piled
+   * beside the core - was pure decoration a horse rode straight through, which
+   * is the same gap the scenery wood had before its trunks crossed this seam.
+   *
+   * Published, not created: physics owns collision. Small stones are left out
+   * deliberately; being stopped by a rock the size of a football is worse than
+   * riding over it.
+   */
+  readonly colliders: readonly PlacementCollider[];
   dispose(): void;
 }
 
+export interface PlacementCollider {
+  readonly x: number;
+  readonly y: number;
+  readonly z: number;
+  readonly radius: number;
+  readonly height: number;
+}
+
+/** Below this radius a boulder is something a horse steps over, not around. */
+const SOLID_ROCK_RADIUS = 0.75;
+
 interface ClusterElement {
   readonly kind: "rock" | "foliage" | "trunk";
+  /** Set on trunks: which tree is standing here. */
+  readonly species?: TreeSpecies;
   readonly x: number;
   readonly y: number;
   readonly z: number;
@@ -147,31 +174,33 @@ function clusterElements(
     const spread = radius * archetype.spread * falloff;
 
     if (archetype.kind === "trunk") {
+      // One real tree, not a stretched blob with a disc balanced on top of it.
+      //
+      // This used to emit a trunk element and a separate crown element, and it
+      // is what put the bad trees on the island: a squashed icosahedron for the
+      // bole and another one for the canopy reads as a lollipop from any angle
+      // and reads as a pole from the side. The scenery wood already had to
+      // build a proper tree for itself, so these use the same one - a placement
+      // tree and a scenery tree standing next to each other now belong to the
+      // same forest.
+      //
       // Trunks keep their full height wherever they stand: a half-height tree
       // at the edge of a thicket reads as a mistake, not as depth.
-      const trunkHeight = height * archetype.rise * (0.85 + next() * 0.4);
-      const trunkRadius = Math.max(0.15, spread);
+      const treeHeight = height * archetype.rise * (0.85 + next() * 0.4) * 2.6;
+      const species: TreeSpecies = next() > 0.66 ? "pine" : "broadleaf";
       elements.push({
         kind: "trunk",
+        species,
         x,
         y: centreY,
         z,
-        radius: trunkRadius,
-        height: trunkHeight,
+        radius: Math.max(0.15, spread),
+        height: treeHeight,
         yaw: next() * Math.PI * 2,
-        tint: next() > 0.5 ? new Color(PALETTE.trunk) : new Color(PALETTE.trunkShade),
-      });
-      // And a crown on top of it. A bare pole is not a tree; the first island
-      // captures had the fernwood reading as a field of tent stakes.
-      elements.push({
-        kind: "foliage",
-        x,
-        y: centreY + trunkHeight * 0.52,
-        z,
-        radius: Math.max(0.9, trunkRadius * 5.4 + radius * 0.16),
-        height: trunkHeight * 0.72,
-        yaw: next() * Math.PI * 2,
-        tint: tints[Math.floor(next() * tints.length)] ?? tints[0] ?? new Color("#4f7440"),
+        // Instance colour multiplies a tree whose own colours are already in
+        // its vertices, so this varies one tree from the next rather than
+        // painting it.
+        tint: new Color(0.88 + next() * 0.22, 0.9 + next() * 0.18, 0.86 + next() * 0.2),
       });
       continue;
     }
@@ -371,8 +400,18 @@ export function createIslandPlacements(
     kind: ClusterElement["kind"],
     geometry: BufferGeometry,
     roughness: number,
+    options: {
+      readonly species?: TreeSpecies;
+      readonly upright?: boolean;
+      /** The geometry carries its own vertex colours. */
+      readonly shaded?: boolean;
+    } = {},
   ): void => {
-    const members = elements.filter((element) => element.kind === kind);
+    const members = elements.filter(
+      (element) =>
+        element.kind === kind &&
+        (options.species === undefined || element.species === options.species),
+    );
     if (members.length === 0) {
       geometry.dispose();
       return;
@@ -381,7 +420,14 @@ export function createIslandPlacements(
     // Instance colour multiplies the material colour, so the base stays white.
     // A brown material with a brown instance colour renders near-black; that
     // cost the Horse Lab an inspection round to find.
-    const material = new MeshStandardMaterial({ roughness, metalness: 0 });
+    const material = new MeshStandardMaterial({
+      roughness,
+      metalness: 0,
+      // Trees carry their own trunk and canopy colours in their vertices, so
+      // one mesh is a whole tree; everything else is a single tinted mass.
+      flatShading: options.upright === true || options.shaded === true,
+      vertexColors: options.upright === true || options.shaded === true,
+    });
     materials.push(material);
 
     const mesh = new InstancedMesh(geometry, material, members.length);
@@ -396,9 +442,18 @@ export function createIslandPlacements(
     const axis = new Vector3(0, 1, 0);
 
     members.forEach((element, index) => {
-      position.set(element.x, element.y + element.height * 0.5, element.z);
+      // A tree is authored standing on its own origin with a height of one, so
+      // it is seated on the ground and scaled uniformly by its height. A blob
+      // is authored around its centre and stretched to fill its footprint.
+      const upright = options.upright === true;
+      position.set(
+        element.x,
+        upright ? element.y : element.y + element.height * 0.5,
+        element.z,
+      );
       quaternion.setFromAxisAngle(axis, element.yaw);
-      scale.set(element.radius, element.height * 0.5, element.radius);
+      if (upright) scale.setScalar(element.height);
+      else scale.set(element.radius, element.height * 0.5, element.radius);
       matrix.compose(position, quaternion, scale);
       mesh.setMatrixAt(index, matrix);
       mesh.setColorAt(index, element.tint);
@@ -408,9 +463,62 @@ export function createIslandPlacements(
     group.add(mesh);
   };
 
-  addFamily("island-rock", "rock", roughenGeometry(new IcosahedronGeometry(1, 1), 0.22), 0.95);
-  addFamily("island-foliage", "foliage", roughenGeometry(new IcosahedronGeometry(1, 1), 0.16), 0.88);
-  addFamily("island-trunk", "trunk", new IcosahedronGeometry(1, 1), 0.9);
+  // Boulders carry their own top-lit gradient, so a field of them is a field of
+  // rocks rather than a field of one grey shape at several sizes.
+  addFamily("island-rock", "rock", createRockGeometry(7, { detail: 1, jagged: 0.34 }), 0.95, {
+    upright: false,
+    shaded: true,
+  });
+  // Bushes, not balls. A roughened icosahedron is a sphere with a dent in it,
+  // and a thicket built out of them reads as a heap of green boulders - or, at
+  // the sizes the compiler asks for, as something round and alive standing in
+  // the grass. The scrub shape is three overlapping masses on the ground, which
+  // is what the thing being drawn actually is.
+  addFamily(
+    "island-foliage",
+    "foliage",
+    createTreeGeometry(
+      "scrub",
+      {
+        trunk: new Color("#6d5338"),
+        canopyLight: new Color("#7d9a4a"),
+        canopyDark: new Color("#3a5a2c"),
+      },
+      9,
+    ),
+    0.9,
+    { upright: true, shaded: true },
+  );
+  addFamily(
+    "island-tree-broadleaf",
+    "trunk",
+    createTreeGeometry(
+      "broadleaf",
+      {
+        trunk: new Color("#6d5338"),
+        canopyLight: new Color("#8cb14e"),
+        canopyDark: new Color("#3b5c31"),
+      },
+      1,
+    ),
+    0.92,
+    { species: "broadleaf", upright: true },
+  );
+  addFamily(
+    "island-tree-pine",
+    "trunk",
+    createTreeGeometry(
+      "pine",
+      {
+        trunk: new Color("#5a4630"),
+        canopyLight: new Color("#568a45"),
+        canopyDark: new Color("#2b4d26"),
+      },
+      2,
+    ),
+    0.92,
+    { species: "pine", upright: true },
+  );
 
   // Spring water. Flat, still, and darker than the sea, so it reads as fresh
   // water lying in a hollow rather than as a piece of coastline.
@@ -440,10 +548,32 @@ export function createIslandPlacements(
     group.add(pools);
   }
 
+  // Trees always; boulders only once they are big enough that riding through
+  // one would be the obvious thing wrong with the shot.
+  const colliders: PlacementCollider[] = elements
+    .filter(
+      (element) =>
+        element.kind === "trunk" ||
+        (element.kind === "rock" && element.radius >= SOLID_ROCK_RADIUS),
+    )
+    .map((element) => ({
+      x: element.x,
+      // Sunk a little, so the cylinder sits inside the shape rather than
+      // standing proud of it on sloping ground.
+      y: element.y - 0.2,
+      radius:
+        element.kind === "trunk"
+          ? Math.max(0.22, element.radius * 0.55)
+          : element.radius * 0.85,
+      height: element.kind === "trunk" ? element.height : element.height * 1.2,
+      z: element.z,
+    }));
+
   return {
     group,
     drawCalls: group.children.length,
     elementCount: elements.length + discovery.pools.length,
+    colliders,
     dispose() {
       for (const geometry of geometries) geometry.dispose();
       for (const material of materials) material.dispose();

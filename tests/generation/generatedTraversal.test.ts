@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import exampleJson from "../../docs/contracts/world-spec.example.json";
 import { NEUTRAL_HORSE_INPUT } from "../../src/game/contracts/input";
 import { stepHorse } from "../../src/game/simulation/horse/horseController";
+import { reinsTowards } from "../../src/game/simulation/horse/horseSteering";
 import { createInitialHorseState } from "../../src/game/simulation/horse/horseState";
 import { compileWorld } from "../../src/game/world/compiler/compileWorld";
 import type { WorldSpec } from "../../src/game/world/compiler/worldTypes";
@@ -83,15 +84,13 @@ describe("generated island traversal", () => {
           expect(readiness.missingPhysicsChunkIds).toEqual([]);
           state = stepHorse(
             state,
-            {
-              ...NEUTRAL_HORSE_INPUT,
-              // Long endpoint-to-endpoint legs are the actual streaming test:
-              // they open to full gallop, then gather before the turn instead
-              // of braking at every compiler subdivision.
-              moveY: distance < 18 && state.speed > 8 ? -1 : 1,
-              cameraYaw: Math.atan2(dx, dz),
-              gallopHeld: distance > 24,
-            },
+            // Long endpoint-to-endpoint legs are the actual streaming test:
+            // they open to full gallop, then gather before the turn instead of
+            // braking at every compiler subdivision.
+            reinsTowards(state, waypoint.x, waypoint.z, {
+              slowWithin: 18,
+              gallopBeyond: 24,
+            }),
             resolver,
           ).state;
           if (state.speed > 12) gallopTicks += 1;
@@ -140,7 +139,11 @@ describe("generated island traversal", () => {
     for (const route of safeRoutes) {
       for (const waypoint of route.waypoints.slice(1)) {
         let reached = false;
-        for (let tick = 0; tick < 360; tick += 1) {
+        // Reins take longer than the camera-absolute steering this budget was
+        // written for: a horse now has to turn onto a heading rather than
+        // simply being pointed at one, and it cannot turn at all at a gallop.
+        // The question here is whether the ground is rideable, not how fast.
+        for (let tick = 0; tick < 900; tick += 1) {
           const dx = waypoint.x - state.position.x;
           const dz = waypoint.z - state.position.z;
           if (Math.hypot(dx, dz) < 2.5) {
@@ -149,11 +152,7 @@ describe("generated island traversal", () => {
           }
           state = stepHorse(
             state,
-            {
-              ...NEUTRAL_HORSE_INPUT,
-              moveY: 1,
-              cameraYaw: Math.atan2(dx, dz),
-            },
+            reinsTowards(state, waypoint.x, waypoint.z, { slowWithin: 8 }),
             resolver,
           ).state;
           expect(Number.isFinite(state.position.y)).toBe(true);

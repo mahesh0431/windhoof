@@ -40,7 +40,7 @@ const EXPECTED_SCENES = {
 /** Two scenes closer than this are not separate places to a player. */
 const MINIMUM_SCENE_SEPARATION_METRES = 40;
 const VIEWPORT = { width: 1600, height: 900 };
-const RUN_BUDGET_MS = Number(process.env.WINDHOOF_RUN_BUDGET_MS ?? 900_000);
+const RUN_BUDGET_MS = Number(process.env.LONGRIDE_RUN_BUDGET_MS ?? 900_000);
 
 const beats = [];
 const failures = [];
@@ -111,12 +111,12 @@ async function walkthrough(baseUrl) {
   page.on("pageerror", (error) => consoleErrors.push(`pageerror: ${error.message}`));
 
   const lab = {
-    state: () => page.evaluate(() => window.__windhoofLab.state()),
-    move: (x, y) => page.evaluate(([a, b]) => window.__windhoofLab.setMove(a, b), [x, y]),
-    gallop: (on) => page.evaluate((v) => window.__windhoofLab.setGallop(v), on),
-    press: (action) => page.evaluate((a) => window.__windhoofLab.press(a), action),
-    yaw: (value) => page.evaluate((v) => window.__windhoofLab.setCameraYaw(v), value),
-    command: (command) => page.evaluate((c) => window.__windhoofLab.command(c), command),
+    state: () => page.evaluate(() => window.__longrideLab.state()),
+    move: (x, y) => page.evaluate(([a, b]) => window.__longrideLab.setMove(a, b), [x, y]),
+    gallop: (on) => page.evaluate((v) => window.__longrideLab.setGallop(v), on),
+    press: (action) => page.evaluate((a) => window.__longrideLab.press(a), action),
+    yaw: (value) => page.evaluate((v) => window.__longrideLab.setCameraYaw(v), value),
+    command: (command) => page.evaluate((c) => window.__longrideLab.command(c), command),
   };
   const wait = (seconds) => page.waitForTimeout(seconds * 1000);
 
@@ -140,13 +140,13 @@ async function walkthrough(baseUrl) {
 
   const boot = async () => {
     await page.goto(automationUrl(baseUrl), { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(() => window.__windhoofLab?.ready === true, null, {
+    await page.waitForFunction(() => window.__longrideLab?.ready === true, null, {
       timeout: 120_000,
     });
-    await page.waitForSelector("html[data-windhoof='running']");
+    await page.waitForSelector("html[data-longride='running']");
     // The focus scrim is a click target, not part of the journey; it would sit
     // over every frame otherwise.
-    await page.addStyleTag({ content: ".wh-focus { display: none !important; }" });
+    await page.addStyleTag({ content: ".lr-focus { display: none !important; }" });
     await wait(0.6);
   };
 
@@ -160,27 +160,27 @@ async function walkthrough(baseUrl) {
       const text = (selector) =>
         document.querySelector(selector)?.textContent?.trim() ?? null;
       return {
-        goalVisible: visible(".wh-goal"),
-        goalText: text(".wh-goal-text"),
-        promptVisible: visible(".wh-prompt"),
-        promptText: text(".wh-prompt-text"),
-        discoveryVisible: visible(".wh-discovery"),
-        discoveryName: text(".wh-discovery-name"),
-        discoveryBody: text(".wh-discovery-body"),
-        bearingVisible: visible(".wh-bearing"),
-        bearingDistance: text(".wh-bearing-distance"),
-        saveVisible: visible(".wh-save"),
-        noticeVisible: visible(".wh-notice"),
-        noticeText: text(".wh-notice"),
-        storageVisible: visible(".wh-storage"),
-        storageTitle: text(".wh-storage-title"),
-        storageReason: text(".wh-storage-reason"),
-        storageActions: [...document.querySelectorAll(".wh-storage-actions .wh-button")]
+        goalVisible: visible(".lr-goal"),
+        goalText: text(".lr-goal-text"),
+        promptVisible: visible(".lr-prompt"),
+        promptText: text(".lr-prompt-text"),
+        discoveryVisible: visible(".lr-discovery"),
+        discoveryName: text(".lr-discovery-name"),
+        discoveryBody: text(".lr-discovery-body"),
+        bearingVisible: visible(".lr-bearing"),
+        bearingDistance: text(".lr-bearing-distance"),
+        saveVisible: visible(".lr-save"),
+        noticeVisible: visible(".lr-notice"),
+        noticeText: text(".lr-notice"),
+        storageVisible: visible(".lr-storage"),
+        storageTitle: text(".lr-storage-title"),
+        storageReason: text(".lr-storage-reason"),
+        storageActions: [...document.querySelectorAll(".lr-storage-actions .lr-button")]
           .filter((button) => !button.hidden)
           .map((button) => button.textContent?.trim() ?? ""),
-        journeySummary: text(".wh-journey-summary"),
-        journeyItems: [...document.querySelectorAll(".wh-journey-item")].map((item) => ({
-          name: item.querySelector(".wh-journey-item-name")?.textContent?.trim() ?? "",
+        journeySummary: text(".lr-journey-summary"),
+        journeyItems: [...document.querySelectorAll(".lr-journey-item")].map((item) => ({
+          name: item.querySelector(".lr-journey-item-name")?.textContent?.trim() ?? "",
           state: item.dataset.state ?? "",
         })),
       };
@@ -346,9 +346,9 @@ async function walkthrough(baseUrl) {
    * beats within a few metres of each other are one place wearing three names.
    */
   const scenes = await page.evaluate(() => ({
-    manifestHash: window.__windhoofLab.state().manifestHash,
+    manifestHash: window.__longrideLab.state().manifestHash,
     discoveries: Object.fromEntries(
-      window.__windhoofLab.scenes().map((scene) => [
+      window.__longrideLab.scenes().map((scene) => [
         scene.id,
         {
           x: Number(scene.position.x.toFixed(1)),
@@ -467,7 +467,7 @@ async function walkthrough(baseUrl) {
   const answered = await page
     .waitForFunction(
       () =>
-        window.__windhoofLab
+        window.__longrideLab
           .state()
           .journey?.known.some((entry) => entry.id === "first-herd-trace") === true,
       null,
@@ -542,7 +542,7 @@ async function walkthrough(baseUrl) {
   // Autosave is asynchronous, so it is waited for rather than assumed.
   const saved = await page
     .waitForFunction(
-      () => window.__windhoofLab.state().journey?.persistenceStatus === "saved",
+      () => window.__longrideLab.state().journey?.persistenceStatus === "saved",
       null,
       { timeout: 20_000 },
     )
@@ -613,7 +613,7 @@ async function walkthrough(baseUrl) {
   // compatibility rules decide the outcome exactly as they would in the wild.
   await page.evaluate(async () => {
     await new Promise((resolve, reject) => {
-      const open = indexedDB.open("windhoof", 1);
+      const open = indexedDB.open("longride", 1);
       open.addEventListener("success", () => {
         const database = open.result;
         const transaction = database.transaction("game-saves", "readwrite");
@@ -624,7 +624,7 @@ async function walkthrough(baseUrl) {
             // the case that will actually happen to a player as the world keeps
             // being authored. Everything but the manifest hash is genuine, so
             // the production compatibility rules make the real decision.
-            worldId: "windhoof-vertical-slice",
+            worldId: "longride-vertical-slice",
             worldSeed: 483921,
             generatorVersion: "0.2.0",
             manifestHash: "fnv1a64-0000000000000000",
@@ -658,10 +658,10 @@ async function walkthrough(baseUrl) {
 
   // Accepting is the only thing that authorises a write. Everything before this
   // point has left the stored ride untouched.
-  await page.locator('.wh-storage-actions .wh-button[data-variant="primary"]').click();
+  await page.locator('.lr-storage-actions .lr-button[data-variant="primary"]').click();
   await page
     .waitForFunction(
-      () => window.__windhoofLab.state().journey?.persistenceWritesEnabled === true,
+      () => window.__longrideLab.state().journey?.persistenceWritesEnabled === true,
       null,
       { timeout: 25_000 },
     )

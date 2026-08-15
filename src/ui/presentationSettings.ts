@@ -20,7 +20,7 @@ export interface PresentationSettings {
   readonly gaitIndicator: "auto" | "always" | "off";
 }
 
-const STORAGE_KEY = "windhoof.presentation.v1";
+const STORAGE_KEY = "longride.presentation.v1";
 
 export function defaultPresentationSettings(): PresentationSettings {
   const prefersReducedMotion =

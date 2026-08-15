@@ -2,7 +2,7 @@
 
 ## Architecture statement
 
-Windhoof is a deterministic finite-island compiler feeding a separate
+Longride is a deterministic finite-island compiler feeding a separate
 Three.js/Rapier game runtime. It is not an infinite sandbox, scene editor, or
 monolithic Three.js scene containing game logic.
 

@@ -3,7 +3,7 @@
 ## Purpose
 
 WorldClaw's useful idea is global planning followed by selective regional
-realization. Windhoof adopts that production pattern without Blender or an
+realization. Longride adopts that production pattern without Blender or an
 unreleased generation stack. The exact method mapping is canonicalized in
 [WORLDCLAW_WEB_METHOD.md](WORLDCLAW_WEB_METHOD.md).
 
