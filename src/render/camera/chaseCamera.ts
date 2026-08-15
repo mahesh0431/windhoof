@@ -210,7 +210,7 @@ export class ChaseCamera {
     // player first commits to speed, instead of only at the top of gallop.
     const fovCurve = speedRatio * speedRatio * (3 - 2 * speedRatio);
     const targetFov =
-      this.settings.baseFieldOfView + fovCurve * 9 * motionScale;
+      this.settings.baseFieldOfView + fovCurve * 12 * motionScale;
     this.fieldOfView = MathUtils.damp(this.fieldOfView, targetFov, 2.6, dt);
     if (Math.abs(this.camera.fov - this.fieldOfView) > 0.01) {
       this.camera.fov = this.fieldOfView;

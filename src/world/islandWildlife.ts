@@ -240,8 +240,6 @@ export function createIslandWildlife(
     }
   }
 
-  const grazingHorses = placements.filter((entry) => entry.grazing);
-  const standingHorses = placements.filter((entry) => !entry.grazing);
   const matrix = new Matrix4();
   const position = new Vector3();
   const quaternion = new Quaternion();
@@ -250,79 +248,93 @@ export function createIslandWildlife(
 
   /** One horse, whether it is currently a matrix in a buffer or a real rig. */
   interface WildHorse {
-    /** Mutable: a companion follows the player; everything else stands still. */
+    /** Mutable: horses wander, graze and follow; position IS these fields. */
     x: number;
     y: number;
     z: number;
+    /** Where it lives. Wandering stays within a few strides of home. */
+    readonly homeX: number;
+    readonly homeZ: number;
     readonly scale: number;
     readonly coat: Color;
-    readonly grazing: boolean;
-    readonly mesh: InstancedMesh;
+    /** True while the head is down eating; the pose the instance shows. */
+    grazing: boolean;
+    /** Same slot index in both pose meshes; one shows, the other is scale-0. */
     readonly slot: number;
     /** Current facing. A live horse turns; the instance is written back to match. */
     yaw: number;
+    /** Seconds until this horse next changes what it is doing. */
+    nextChange: number;
+    /** Non-null while drifting: where it is ambling to. */
+    walkTo: { x: number; z: number } | null;
     live: LiveHorse | null;
   }
 
   const horses: WildHorse[] = [];
 
-  const addHorses = (
-    name: string,
-    geometry: BufferGeometry,
-    members: typeof placements,
-  ): void => {
-    if (members.length === 0) return;
-    const mesh = new InstancedMesh(geometry, horseMaterial, members.length);
+  // Both pose meshes carry a slot for EVERY horse, so any horse can lift or
+  // drop its head by swapping which mesh shows it - the ambient life below is
+  // built on that swap. The unused slot sits at scale zero.
+  const buildPoseMesh = (name: string, geometry: BufferGeometry): InstancedMesh => {
+    const mesh = new InstancedMesh(geometry, horseMaterial, placements.length);
     mesh.name = name;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
-    // A live horse turns and kicks well outside the bounds computed here, and
-    // the herd never moves otherwise, so a stale sphere would pop it out of
-    // view exactly when the player is closest to it.
+    // The herd wanders and a live horse kicks well outside the bounds computed
+    // here; a stale sphere would pop a horse out of view at close range.
     mesh.frustumCulled = false;
-    members.forEach((entry, index) => {
-      const yaw = (index * 2.399) % (Math.PI * 2);
-      // Wild stock runs smaller than a ridden horse, and varying it stops the
-      // population reading as one model stamped twenty-six times.
-      const size = 0.88 + ((index * 37) % 23) / 100;
-      const y = field.heightAt(entry.x, entry.z);
-      position.set(entry.x, y, entry.z);
-      quaternion.setFromAxisAngle(up, yaw);
-      scale.setScalar(size);
-      matrix.compose(position, quaternion, scale);
-      mesh.setMatrixAt(index, matrix);
-      mesh.setColorAt(index, entry.coat);
-      horses.push({
-        x: entry.x,
-        y,
-        z: entry.z,
-        scale: size,
-        coat: entry.coat,
-        grazing: entry.grazing,
-        mesh,
-        slot: index,
-        yaw,
-        live: null,
-      });
-    });
-    mesh.instanceMatrix.needsUpdate = true;
-    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-    mesh.computeBoundingSphere();
     group.add(mesh);
+    return mesh;
+  };
+  const poseMeshes = {
+    grazing: buildPoseMesh("wild-horses-grazing", grazing),
+    standing: buildPoseMesh("wild-horses-standing", standing),
   };
 
-  addHorses("wild-horses-grazing", grazing, grazingHorses);
-  addHorses("wild-horses-standing", standing, standingHorses);
+  placements.forEach((entry, index) => {
+    const yaw = (index * 2.399) % (Math.PI * 2);
+    // Wild stock runs smaller than a ridden horse, and varying it stops the
+    // population reading as one model stamped twenty-six times.
+    const size = 0.88 + ((index * 37) % 23) / 100;
+    const y = field.heightAt(entry.x, entry.z);
+    horses.push({
+      x: entry.x,
+      y,
+      z: entry.z,
+      homeX: entry.x,
+      homeZ: entry.z,
+      scale: size,
+      coat: entry.coat,
+      grazing: entry.grazing,
+      slot: index,
+      yaw,
+      // Deterministic stagger so the herd never changes in unison.
+      nextChange: 4 + ((index * 61) % 17),
+      walkTo: null,
+      live: null,
+    });
+    poseMeshes.grazing.setColorAt(index, entry.coat);
+    poseMeshes.standing.setColorAt(index, entry.coat);
+  });
 
-  /** Writes a horse back into its instance buffer, or hides it entirely. */
+  /** Writes a horse into the mesh for its pose, and hides it in the other. */
   const writeInstance = (horse: WildHorse, visible: boolean): void => {
+    const shown = horse.grazing ? poseMeshes.grazing : poseMeshes.standing;
+    const hidden = horse.grazing ? poseMeshes.standing : poseMeshes.grazing;
     position.set(horse.x, horse.y, horse.z);
     quaternion.setFromAxisAngle(up, horse.yaw);
     scale.setScalar(visible ? horse.scale : 0);
     matrix.compose(position, quaternion, scale);
-    horse.mesh.setMatrixAt(horse.slot, matrix);
-    horse.mesh.instanceMatrix.needsUpdate = true;
+    shown.setMatrixAt(horse.slot, matrix);
+    scale.setScalar(0);
+    matrix.compose(position, quaternion, scale);
+    hidden.setMatrixAt(horse.slot, matrix);
+    shown.instanceMatrix.needsUpdate = true;
+    hidden.instanceMatrix.needsUpdate = true;
   };
+  for (const horse of horses) writeInstance(horse, true);
+  if (poseMeshes.grazing.instanceColor) poseMeshes.grazing.instanceColor.needsUpdate = true;
+  if (poseMeshes.standing.instanceColor) poseMeshes.standing.instanceColor.needsUpdate = true;
 
   // --- the two horses that are allowed to be alive at once -------------------
   const liveHorses: LiveHorse[] = [];
@@ -365,6 +377,71 @@ export function createIslandWildlife(
    * beat anyway; a crowd would dilute it.
    */
   let companion: WildHorse | null = null;
+
+  /**
+   * The herd's ambient life: grazing, lifting heads, ambling a few strides.
+   *
+   * Instanced horses cannot articulate, so their life is made of the three
+   * things a matrix CAN do - change pose mesh (head down, head up), turn, and
+   * drift. Which is, from thirty metres, most of what a real grazing herd
+   * does: long stillness, a head coming up to look at nothing, a slow amble to
+   * better grass. Timers are seeded from each horse's slot so the herd never
+   * moves in unison, and wandering is kept within a couple of strides of home
+   * so each horse stays honest to its static collider.
+   */
+  const AMBLE_SPEED = 0.55;
+  const WANDER_RADIUS = 2.2;
+  const updateAmbient = (dt: number): void => {
+    for (const horse of horses) {
+      if (horse.live) continue;
+
+      if (horse.walkTo) {
+        const dx = horse.walkTo.x - horse.x;
+        const dz = horse.walkTo.z - horse.z;
+        const remaining = Math.hypot(dx, dz);
+        if (remaining < 0.15) {
+          horse.walkTo = null;
+        } else {
+          const heading = Math.atan2(dx, dz);
+          const turn = Math.atan2(
+            Math.sin(heading - horse.yaw),
+            Math.cos(heading - horse.yaw),
+          );
+          horse.yaw += turn * Math.min(1, dt * 1.6);
+          horse.x += Math.sin(horse.yaw) * AMBLE_SPEED * dt;
+          horse.z += Math.cos(horse.yaw) * AMBLE_SPEED * dt;
+          horse.y = field.heightAt(horse.x, horse.z);
+        }
+        writeInstance(horse, true);
+        continue;
+      }
+
+      horse.nextChange -= dt;
+      if (horse.nextChange > 0) continue;
+      // Deterministic choice from the horse's own slot and how many decisions
+      // it has made, so the same island lives the same life every run.
+      const roll = hash3(manifest.seed, horse.slot, Math.round(horse.x * 7 + horse.z * 3), 83);
+      const pick = (roll & 0xff) / 255;
+      if (pick < 0.42) {
+        // Change of mind: head up, or back down to the grass.
+        horse.grazing = !horse.grazing;
+      } else if (pick < 0.62) {
+        // A look around: turn a little.
+        horse.yaw += (((roll >>> 8) & 0xff) / 255 - 0.5) * 1.6;
+      } else {
+        // Amble to better grass, a stride or two from home.
+        const angle = (((roll >>> 8) & 0xffff) / 65535) * Math.PI * 2;
+        const reach = 0.6 + (((roll >>> 24) & 0xff) / 255) * WANDER_RADIUS;
+        horse.walkTo = {
+          x: horse.homeX + Math.cos(angle) * reach,
+          z: horse.homeZ + Math.sin(angle) * reach,
+        };
+        horse.grazing = false;
+      }
+      horse.nextChange = 6 + (((roll >>> 16) & 0xff) / 255) * 14;
+      writeInstance(horse, true);
+    }
+  };
 
   const updateHorses = (player: PlayerSense): void => {
     const wanted = new Set(nearestHorses(player.x, player.z));
@@ -488,6 +565,7 @@ export function createIslandWildlife(
 
     update(elapsedSeconds, player) {
       updateHorses(player);
+      updateAmbient(player.deltaSeconds);
 
       for (const flock of flocks) {
         // Where the flock is right now, on its long loop.

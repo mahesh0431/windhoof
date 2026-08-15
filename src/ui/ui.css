@@ -1232,3 +1232,27 @@ body {
     display: none;
   }
 }
+
+/* The places journal in the pause panel: names, quietly. */
+.lr-panel-section {
+  margin: 1.1rem 0 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+.lr-places {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.7rem;
+  max-width: 30rem;
+}
+.lr-places-name {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+.lr-places-empty {
+  font-size: 0.9rem;
+  font-style: italic;
+  opacity: 0.5;
+}

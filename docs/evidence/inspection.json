@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-08-15T05:46:56.462Z",
+  "capturedAt": "2026-08-15T17:44:55.512Z",
   "viewport": {
     "width": 1600,
     "height": 900
@@ -10,10 +10,55 @@
       "name": "01-spawn",
       "note": "Opening frame with the first onboarding hint",
       "state": {
-        "frame": 28,
-        "elapsedSeconds": 1.9923599999999997,
+        "frame": 5,
+        "elapsedSeconds": 0.23882799999999998,
         "mode": "playing",
-        "tick": 119,
+        "tick": 14,
+        "position": {
+          "x": 0,
+          "y": 0.2221544504165649,
+          "z": -69.99999237060547
+        },
+        "yaw": 0,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 14,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 0,
+            "y": 0.2221544504165649,
+            "z": -69.99999237060547
+          },
+          "yaw": 0
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "shoveX": 0,
+        "shoveZ": 0,
+        "cameraDistance": 6.300000000000001,
+        "cameraObstructed": false,
+        "drawCalls": 78,
+        "triangles": 79822,
+        "rigBodyHeight": 0.016019082001322956,
+        "rigSpineFlex": 0,
+        "debrisLive": 0,
+        "audioMuted": true,
+        "audioContextCreated": false,
+        "audioRunning": false
+      }
+    },
+    {
+      "name": "02-diagnostics",
+      "note": "Diagnostics overlay",
+      "state": {
+        "frame": 18,
+        "elapsedSeconds": 1.3314280000000003,
+        "mode": "playing",
+        "tick": 79,
         "position": {
           "x": 0,
           "y": 0.222154688835144,
@@ -24,7 +69,7 @@
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 119,
+        "lastGroundedTick": 79,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
@@ -43,52 +88,7 @@
         "cameraObstructed": false,
         "drawCalls": 78,
         "triangles": 79822,
-        "rigBodyHeight": 0.015460368407141259,
-        "rigSpineFlex": 0,
-        "debrisLive": 0,
-        "audioMuted": true,
-        "audioContextCreated": false,
-        "audioRunning": false
-      }
-    },
-    {
-      "name": "02-diagnostics",
-      "note": "Diagnostics overlay",
-      "state": {
-        "frame": 43,
-        "elapsedSeconds": 3.10066,
-        "mode": "playing",
-        "tick": 186,
-        "position": {
-          "x": 0,
-          "y": 0.2221544504165649,
-          "z": -69.99999237060547
-        },
-        "yaw": 0,
-        "speed": 0,
-        "verticalVelocity": 0,
-        "gait": "idle",
-        "grounded": true,
-        "lastGroundedTick": 186,
-        "airborneTicks": 0,
-        "jumpConsumedSinceGrounded": false,
-        "lastSafePose": {
-          "position": {
-            "x": 0,
-            "y": 0.2221544504165649,
-            "z": -69.99999237060547
-          },
-          "yaw": 0
-        },
-        "condition": "normal",
-        "recoveryTicksRemaining": 0,
-        "shoveX": 0,
-        "shoveZ": 0,
-        "cameraDistance": 6.3,
-        "cameraObstructed": false,
-        "drawCalls": 78,
-        "triangles": 79822,
-        "rigBodyHeight": 0.0004621924840489102,
+        "rigBodyHeight": 0.02334021981592181,
         "rigSpineFlex": 0,
         "debrisLive": 0,
         "audioMuted": true,
@@ -100,28 +100,28 @@
       "name": "03-walk",
       "note": "Walking gait and terrain reading",
       "state": {
-        "frame": 76,
-        "elapsedSeconds": 5.53396,
+        "frame": 50,
+        "elapsedSeconds": 3.8814280000000014,
         "mode": "playing",
-        "tick": 332,
+        "tick": 232,
         "position": {
-          "x": 0.000057638368161860853,
-          "y": 0.2435484647750854,
-          "z": -66.27066040039062
+          "x": -0.000015283891116268933,
+          "y": 0.2446177721023559,
+          "z": -66.16082000732422
         },
         "yaw": 0,
         "speed": 2.2,
         "verticalVelocity": 0,
         "gait": "walk",
         "grounded": true,
-        "lastGroundedTick": 332,
+        "lastGroundedTick": 232,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -129,13 +129,13 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 6.420441202432006,
+        "cameraDistance": 6.4209998617012225,
         "cameraObstructed": false,
         "drawCalls": 79,
         "triangles": 79822,
-        "rigBodyHeight": 0.006601032318676855,
-        "rigSpineFlex": -0.021064670834570955,
-        "debrisLive": 6,
+        "rigBodyHeight": 0.008744022874049634,
+        "rigSpineFlex": -0.013666394533293613,
+        "debrisLive": 9,
         "audioMuted": true,
         "audioContextCreated": false,
         "audioRunning": false
@@ -145,28 +145,28 @@
       "name": "20-focus-pill",
       "note": "Riding without pointer lock; prompt recedes to a pill",
       "state": {
-        "frame": 90,
-        "elapsedSeconds": 6.542260000000002,
+        "frame": 63,
+        "elapsedSeconds": 4.880528000000001,
         "mode": "playing",
-        "tick": 392,
+        "tick": 292,
         "position": {
-          "x": 0.00005889623935217969,
-          "y": 0.26748604774475093,
-          "z": -64.07427215576172
+          "x": -0.0000030904138839105144,
+          "y": 0.26795585155487056,
+          "z": -63.9643669128418
         },
         "yaw": 0,
         "speed": 2.2,
         "verticalVelocity": 0,
         "gait": "walk",
         "grounded": true,
-        "lastGroundedTick": 392,
+        "lastGroundedTick": 292,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -174,13 +174,13 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 6.4235463616328925,
+        "cameraDistance": 6.423577831928918,
         "cameraObstructed": false,
         "drawCalls": 79,
         "triangles": 79822,
-        "rigBodyHeight": 0.0473582325572649,
-        "rigSpineFlex": 0.020486737907872428,
-        "debrisLive": 6,
+        "rigBodyHeight": 0.031169694908816072,
+        "rigSpineFlex": 0.00709465846636667,
+        "debrisLive": 9,
         "audioMuted": true,
         "audioContextCreated": false,
         "audioRunning": false
@@ -190,28 +190,28 @@
       "name": "04-trot",
       "note": "Trot",
       "state": {
-        "frame": 130,
-        "elapsedSeconds": 9.275660000000007,
+        "frame": 99,
+        "elapsedSeconds": 7.673128,
         "mode": "playing",
-        "tick": 556,
+        "tick": 460,
         "position": {
-          "x": -0.0015157997841015458,
-          "y": 0.260165524482727,
-          "z": -52.5374641418457
+          "x": -0.0012809137115254998,
+          "y": 0.26185984611511226,
+          "z": -52.363670349121094
         },
         "yaw": 0,
         "speed": 5,
         "verticalVelocity": 0,
         "gait": "trot",
         "grounded": true,
-        "lastGroundedTick": 556,
+        "lastGroundedTick": 460,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -219,12 +219,12 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 6.579204153790968,
+        "cameraDistance": 6.57923909504156,
         "cameraObstructed": false,
         "drawCalls": 79,
         "triangles": 79822,
-        "rigBodyHeight": 0.07314776431302833,
-        "rigSpineFlex": 0.02841321249269877,
+        "rigBodyHeight": 0.00982635343899661,
+        "rigSpineFlex": -0.04354128511727999,
         "debrisLive": 12,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -235,28 +235,28 @@
       "name": "05-gallop",
       "note": "Full gallop on open ground",
       "state": {
-        "frame": 176,
-        "elapsedSeconds": 12.350660000000017,
+        "frame": 140,
+        "elapsedSeconds": 10.798227999999998,
         "mode": "playing",
-        "tick": 741,
+        "tick": 647,
         "position": {
-          "x": -0.0034038119483739138,
-          "y": 0.3440222263336181,
-          "z": -22.665586471557617
+          "x": -0.00415065698325634,
+          "y": 0.3366801261901855,
+          "z": -23.051944732666016
         },
         "yaw": 0,
-        "speed": 15.990000000000045,
+        "speed": 15.710000000000043,
         "verticalVelocity": 0,
         "gait": "gallop",
         "grounded": true,
-        "lastGroundedTick": 741,
+        "lastGroundedTick": 647,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -264,12 +264,12 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 7.062543341100873,
+        "cameraDistance": 7.051288917200441,
         "cameraObstructed": false,
         "drawCalls": 79,
         "triangles": 79822,
-        "rigBodyHeight": 0.09858655428849751,
-        "rigSpineFlex": -0.24622571499092433,
+        "rigBodyHeight": 0.06768998202927173,
+        "rigSpineFlex": -0.06691322769857486,
         "debrisLive": 16,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -280,28 +280,28 @@
       "name": "06-airborne",
       "note": "Rising after a jump at gallop",
       "state": {
-        "frame": 184,
-        "elapsedSeconds": 12.87556000000002,
+        "frame": 148,
+        "elapsedSeconds": 11.364927999999997,
         "mode": "playing",
-        "tick": 772,
+        "tick": 681,
         "position": {
-          "x": -0.0034531038254499435,
-          "y": 0.7119311809539794,
-          "z": -14.400165557861328
+          "x": -0.004432776942849159,
+          "y": 0.7197713375091552,
+          "z": -13.994251251220703
         },
         "yaw": 0,
         "speed": 16,
         "verticalVelocity": 6.250000000000001,
         "gait": "gallop",
         "grounded": false,
-        "lastGroundedTick": 768,
+        "lastGroundedTick": 677,
         "airborneTicks": 4,
         "jumpConsumedSinceGrounded": true,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -309,12 +309,12 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 7.154061614356101,
+        "cameraDistance": 7.153512828963894,
         "cameraObstructed": false,
         "drawCalls": 79,
         "triangles": 79822,
-        "rigBodyHeight": 0.07470312084768797,
-        "rigSpineFlex": -0.09829993820579609,
+        "rigBodyHeight": 0.11929522739242392,
+        "rigSpineFlex": 0.04330646830348627,
         "debrisLive": 16,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -325,28 +325,28 @@
       "name": "07-landed",
       "note": "Back on the ground",
       "state": {
-        "frame": 196,
-        "elapsedSeconds": 13.65066000000002,
+        "frame": 159,
+        "elapsedSeconds": 12.131528,
         "mode": "playing",
-        "tick": 819,
+        "tick": 727,
         "position": {
-          "x": -0.0018698190106078982,
-          "y": -0.20246510505676274,
-          "z": -1.8602027893066406
+          "x": -0.004432776942849159,
+          "y": -0.1938395977020264,
+          "z": -1.7275869846343994
         },
         "yaw": 0,
         "speed": 16,
         "verticalVelocity": 0,
         "gait": "gallop",
         "grounded": true,
-        "lastGroundedTick": 819,
+        "lastGroundedTick": 727,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -354,13 +354,13 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 7.19355478361942,
+        "cameraDistance": 7.193321602877912,
         "cameraObstructed": false,
         "drawCalls": 79,
         "triangles": 79822,
-        "rigBodyHeight": -0.002698181324364144,
-        "rigSpineFlex": -0.22376378995636637,
-        "debrisLive": 60,
+        "rigBodyHeight": 0.10369643447556193,
+        "rigSpineFlex": 0.06293591010383172,
+        "debrisLive": 32,
         "audioMuted": true,
         "audioContextCreated": false,
         "audioRunning": false
@@ -370,28 +370,28 @@
       "name": "08-stream-approach",
       "note": "Approaching the stream at gallop",
       "state": {
-        "frame": 203,
-        "elapsedSeconds": 14.11726000000002,
+        "frame": 166,
+        "elapsedSeconds": 12.623128000000005,
         "mode": "playing",
-        "tick": 847,
+        "tick": 757,
         "position": {
-          "x": -0.0006125568179413676,
-          "y": -0.14134328365325932,
-          "z": 5.585730075836182
+          "x": -0.004897382576018572,
+          "y": -0.12215428352355961,
+          "z": 6.249968528747559
         },
         "yaw": 0,
         "speed": 16,
         "verticalVelocity": 0,
         "gait": "gallop",
         "grounded": true,
-        "lastGroundedTick": 847,
+        "lastGroundedTick": 757,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -399,13 +399,13 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 7.198185999167695,
+        "cameraDistance": 7.19824266879848,
         "cameraObstructed": false,
         "drawCalls": 79,
         "triangles": 79822,
-        "rigBodyHeight": 0.02282457062508826,
-        "rigSpineFlex": -0.12390098432130155,
-        "debrisLive": 54,
+        "rigBodyHeight": 0.41294326300688966,
+        "rigSpineFlex": 0.1670532980524498,
+        "debrisLive": 48,
         "audioMuted": true,
         "audioContextCreated": false,
         "audioRunning": false
@@ -415,28 +415,28 @@
       "name": "09-stream-jump",
       "note": "Over the stream; deep trench on both flanks",
       "state": {
-        "frame": 217,
-        "elapsedSeconds": 15.067260000000019,
+        "frame": 180,
+        "elapsedSeconds": 13.606628000000006,
         "mode": "playing",
-        "tick": 904,
+        "tick": 816,
         "position": {
-          "x": 0.0009684542892500758,
-          "y": 2.514494609832764,
-          "z": 20.33951187133789
+          "x": -0.014358465559780598,
+          "y": 2.889340114593506,
+          "z": 21.435945510864258
         },
         "yaw": 0,
         "speed": 16,
         "verticalVelocity": 0,
         "gait": "gallop",
         "grounded": true,
-        "lastGroundedTick": 904,
+        "lastGroundedTick": 816,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -444,12 +444,12 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 7.199875180206381,
+        "cameraDistance": 7.1998901201236,
         "cameraObstructed": false,
         "drawCalls": 79,
         "triangles": 79822,
-        "rigBodyHeight": 0.14695811360447403,
-        "rigSpineFlex": 0.08875225430922656,
+        "rigBodyHeight": 0.0918887546712984,
+        "rigSpineFlex": -0.030058073975968654,
         "debrisLive": 34,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -460,28 +460,73 @@
       "name": "10-plateau",
       "note": "On the raised plateau before the drop",
       "state": {
-        "frame": 486,
-        "elapsedSeconds": 35.583959999999934,
+        "frame": 416,
+        "elapsedSeconds": 33.73012800000002,
         "mode": "playing",
-        "tick": 2135,
+        "tick": 2023,
         "position": {
-          "x": 0.0009336445364169776,
-          "y": -0.06739168167114262,
-          "z": 101.44465637207031
+          "x": -0.0013423183700069785,
+          "y": -0.06731073856353764,
+          "z": 101.4444351196289
         },
         "yaw": 0,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 2135,
+        "lastGroundedTick": 2023,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
+          },
+          "yaw": 0
+        },
+        "condition": "normal",
+        "recoveryTicksRemaining": 0,
+        "shoveX": 0,
+        "shoveZ": 0,
+        "cameraDistance": 1.5,
+        "cameraObstructed": true,
+        "drawCalls": 67,
+        "triangles": 79030,
+        "rigBodyHeight": 0.002621386112947145,
+        "rigSpineFlex": 8.014491846382433e-30,
+        "debrisLive": 0,
+        "audioMuted": true,
+        "audioContextCreated": false,
+        "audioRunning": false
+      }
+    },
+    {
+      "name": "11-after-drop",
+      "note": "After dropping off the steep north face",
+      "state": {
+        "frame": 575,
+        "elapsedSeconds": 48.397528000000015,
+        "mode": "playing",
+        "tick": 2903,
+        "position": {
+          "x": -0.0018613040447235107,
+          "y": -0.06735377311706547,
+          "z": 101.4447250366211
+        },
+        "yaw": 0,
+        "speed": 0,
+        "verticalVelocity": 0,
+        "gait": "idle",
+        "grounded": true,
+        "lastGroundedTick": 2903,
+        "airborneTicks": 0,
+        "jumpConsumedSinceGrounded": false,
+        "lastSafePose": {
+          "position": {
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -493,53 +538,8 @@
         "cameraObstructed": true,
         "drawCalls": 67,
         "triangles": 78854,
-        "rigBodyHeight": 0.023771541734031718,
-        "rigSpineFlex": 3.627704872241031e-31,
-        "debrisLive": 0,
-        "audioMuted": true,
-        "audioContextCreated": false,
-        "audioRunning": false
-      }
-    },
-    {
-      "name": "11-after-drop",
-      "note": "After dropping off the steep north face",
-      "state": {
-        "frame": 657,
-        "elapsedSeconds": 50.142559999999996,
-        "mode": "playing",
-        "tick": 3008,
-        "position": {
-          "x": 0.0008865260751917958,
-          "y": -0.06725065708160405,
-          "z": 101.444580078125
-        },
-        "yaw": 0,
-        "speed": 0,
-        "verticalVelocity": 0,
-        "gait": "idle",
-        "grounded": true,
-        "lastGroundedTick": 3008,
-        "airborneTicks": 0,
-        "jumpConsumedSinceGrounded": false,
-        "lastSafePose": {
-          "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
-          },
-          "yaw": 0
-        },
-        "condition": "normal",
-        "recoveryTicksRemaining": 0,
-        "shoveX": 0,
-        "shoveZ": 0,
-        "cameraDistance": 1.5,
-        "cameraObstructed": true,
-        "drawCalls": 68,
-        "triangles": 79238,
-        "rigBodyHeight": 0.0052849463557913,
-        "rigSpineFlex": 8.831228248591372e-63,
+        "rigBodyHeight": 0.023300520559273844,
+        "rigSpineFlex": 1.132456613163753e-61,
         "debrisLive": 0,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -550,28 +550,28 @@
       "name": "12-grove-camera",
       "note": "Camera pulled in by a tree in the grove",
       "state": {
-        "frame": 1203,
-        "elapsedSeconds": 92.67686000000116,
+        "frame": 1076,
+        "elapsedSeconds": 90.84772800000096,
         "mode": "playing",
-        "tick": 5560,
+        "tick": 5450,
         "position": {
-          "x": -0.002067775698378682,
-          "y": -0.06728236675262456,
-          "z": 101.44427490234375
+          "x": -0.001981002278625965,
+          "y": -0.06732814311981206,
+          "z": 101.44436645507812
         },
         "yaw": 0,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 5560,
+        "lastGroundedTick": 5450,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -579,12 +579,12 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 4.128548326366084,
+        "cameraDistance": 3.6524996838344173,
         "cameraObstructed": true,
         "drawCalls": 78,
         "triangles": 79822,
-        "rigBodyHeight": 0.023852633454919253,
-        "rigSpineFlex": 3.851315266460863e-155,
+        "rigBodyHeight": 0.0025971730316784354,
+        "rigSpineFlex": 7.512327579865209e-154,
         "debrisLive": 0,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -595,28 +595,28 @@
       "name": "13-overlook",
       "note": "From the overlook knoll",
       "state": {
-        "frame": 1993,
-        "elapsedSeconds": 152.4021599999992,
+        "frame": 1803,
+        "elapsedSeconds": 150.56422800000016,
         "mode": "playing",
-        "tick": 9144,
+        "tick": 9033,
         "position": {
-          "x": -0.0013958426425233483,
-          "y": -0.06732087135314946,
-          "z": 101.4443588256836
+          "x": -0.002007431350648403,
+          "y": -0.06733243465423588,
+          "z": 101.44446563720703
         },
         "yaw": 0,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 9144,
+        "lastGroundedTick": 9033,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -628,8 +628,8 @@
         "cameraObstructed": true,
         "drawCalls": 66,
         "triangles": 79126,
-        "rigBodyHeight": 0.0031469427376216007,
-        "rigSpineFlex": 7.829809837306191e-285,
+        "rigBodyHeight": 0.015874845800968134,
+        "rigSpineFlex": 1.5962097985627173e-283,
         "debrisLive": 0,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -640,28 +640,28 @@
       "name": "14-boundary",
       "note": "Stopped in the shallows at the stage boundary",
       "state": {
-        "frame": 2401,
-        "elapsedSeconds": 174.99396000000112,
+        "frame": 2151,
+        "elapsedSeconds": 173.23032799999973,
         "mode": "playing",
-        "tick": 10499,
+        "tick": 10393,
         "position": {
-          "x": -0.0021958225406706333,
-          "y": -0.06722335815429692,
-          "z": 101.4443359375
+          "x": -0.002371475799009204,
+          "y": -0.06735651493072514,
+          "z": 101.44474029541016
         },
         "yaw": 0,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 10499,
+        "lastGroundedTick": 10393,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -673,7 +673,7 @@
         "cameraObstructed": false,
         "drawCalls": 78,
         "triangles": 79822,
-        "rigBodyHeight": 0.012726864031375764,
+        "rigBodyHeight": 0.004568875268113819,
         "rigSpineFlex": 5e-324,
         "debrisLive": 0,
         "audioMuted": true,
@@ -685,28 +685,28 @@
       "name": "22-shore-splash",
       "note": "Trotting the water line; hooves throw spray",
       "state": {
-        "frame": 2438,
-        "elapsedSeconds": 177.1511600000012,
+        "frame": 2183,
+        "elapsedSeconds": 175.37212799999978,
         "mode": "playing",
-        "tick": 10629,
+        "tick": 10522,
         "position": {
-          "x": -0.0015242164954543114,
-          "y": -0.06724696159362797,
-          "z": 101.44445037841797
+          "x": -0.001956518739461899,
+          "y": -0.06724874973297124,
+          "z": 101.44461059570312
         },
         "yaw": 0,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 10629,
+        "lastGroundedTick": 10522,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -714,11 +714,11 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 5.303733198074621,
+        "cameraDistance": 5.299263654435241,
         "cameraObstructed": true,
         "drawCalls": 78,
         "triangles": 79822,
-        "rigBodyHeight": 0.011954250713666069,
+        "rigBodyHeight": 0.018666175544486963,
         "rigSpineFlex": 5e-324,
         "debrisLive": 0,
         "audioMuted": true,
@@ -730,28 +730,28 @@
       "name": "21-gallop-profile",
       "note": "Gallop stride from the side, suspension phase (framed=true)",
       "state": {
-        "frame": 2746,
-        "elapsedSeconds": 201.41095999999874,
+        "frame": 2447,
+        "elapsedSeconds": 198.42202799999816,
         "mode": "playing",
-        "tick": 12084,
+        "tick": 11905,
         "position": {
-          "x": -0.0016124903922900558,
-          "y": -0.0673202753067017,
-          "z": 101.44434356689453
+          "x": -0.0013774996623396873,
+          "y": -0.06734054088592534,
+          "z": 101.44438171386719
         },
-        "yaw": -2.958185307179626,
+        "yaw": 1.0449999999999875,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 12084,
+        "lastGroundedTick": 11905,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -759,11 +759,11 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 5.279923978044042,
+        "cameraDistance": 4.7332627631316875,
         "cameraObstructed": true,
         "drawCalls": 78,
         "triangles": 79822,
-        "rigBodyHeight": 0.14092115650392076,
+        "rigBodyHeight": 0.14282564009223284,
         "rigSpineFlex": 5e-324,
         "debrisLive": 0,
         "audioMuted": true,
@@ -775,28 +775,28 @@
       "name": "15-idle",
       "note": "Standing still",
       "state": {
-        "frame": 3046,
-        "elapsedSeconds": 223.36935999999704,
+        "frame": 2716,
+        "elapsedSeconds": 220.43852799999604,
         "mode": "playing",
-        "tick": 13402,
+        "tick": 13226,
         "position": {
-          "x": -86.84889221191406,
-          "y": -0.15393559932708745,
-          "z": 52.299049377441406
+          "x": 93.65545654296875,
+          "y": -0.07353978157043461,
+          "z": 38.73068618774414
         },
-        "yaw": -2.0398519738463037,
+        "yaw": 2.1533333333333076,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 13402,
+        "lastGroundedTick": 13226,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -806,10 +806,10 @@
         "shoveZ": 0,
         "cameraDistance": 1.5,
         "cameraObstructed": true,
-        "drawCalls": 65,
-        "triangles": 78694,
-        "rigBodyHeight": 0.007501545171278896,
-        "rigSpineFlex": 3.041695048699506e-23,
+        "drawCalls": 68,
+        "triangles": 79238,
+        "rigBodyHeight": 0.0026055109224500553,
+        "rigSpineFlex": 5.5103428506010355e-25,
         "debrisLive": 0,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -820,28 +820,28 @@
       "name": "16-horse-profile",
       "note": "Horse silhouette from the side",
       "state": {
-        "frame": 3082,
-        "elapsedSeconds": 225.961059999997,
+        "frame": 2749,
+        "elapsedSeconds": 223.28862799999575,
         "mode": "playing",
-        "tick": 13557,
+        "tick": 13397,
         "position": {
-          "x": -86.84955596923828,
-          "y": -0.15399246215820317,
-          "z": 52.29813766479492
+          "x": 93.65522766113281,
+          "y": -0.07363240718841557,
+          "z": 38.73125457763672
         },
-        "yaw": -2.0398519738463037,
+        "yaw": 2.1533333333333076,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 13557,
+        "lastGroundedTick": 13397,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -849,12 +849,12 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 6.295227781949643,
-        "cameraObstructed": false,
-        "drawCalls": 78,
-        "triangles": 79822,
-        "rigBodyHeight": 0.021752576395253104,
-        "rigSpineFlex": 7.129170629987014e-29,
+        "cameraDistance": 1.5,
+        "cameraObstructed": true,
+        "drawCalls": 66,
+        "triangles": 79126,
+        "rigBodyHeight": 0.011582742422486032,
+        "rigSpineFlex": 3.5766441975113176e-31,
         "debrisLive": 0,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -865,28 +865,28 @@
       "name": "17-pause",
       "note": "Pause and settings surface",
       "state": {
-        "frame": 3097,
-        "elapsedSeconds": 226.934359999997,
+        "frame": 2762,
+        "elapsedSeconds": 224.38032799999564,
         "mode": "paused",
-        "tick": 13595,
+        "tick": 13432,
         "position": {
-          "x": -86.84957122802734,
-          "y": -0.1540946245193482,
-          "z": 52.297889709472656
+          "x": 93.65513610839844,
+          "y": -0.07364277839660649,
+          "z": 38.73131561279297
         },
-        "yaw": -2.0398519738463037,
+        "yaw": 2.1533333333333076,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 13595,
+        "lastGroundedTick": 13432,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -894,12 +894,12 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 6.299445899279666,
-        "cameraObstructed": false,
-        "drawCalls": 78,
-        "triangles": 79822,
-        "rigBodyHeight": 0.020616440756497482,
-        "rigSpineFlex": 5.608253004226593e-31,
+        "cameraDistance": 1.5,
+        "cameraObstructed": true,
+        "drawCalls": 67,
+        "triangles": 79198,
+        "rigBodyHeight": 0.000003783822521454816,
+        "rigSpineFlex": 1.5237819652247703e-33,
         "debrisLive": 0,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -910,28 +910,28 @@
       "name": "18-controls",
       "note": "Controls list",
       "state": {
-        "frame": 3110,
-        "elapsedSeconds": 228.06765999999692,
+        "frame": 2774,
+        "elapsedSeconds": 225.58032799999557,
         "mode": "paused",
-        "tick": 13595,
+        "tick": 13432,
         "position": {
-          "x": -86.84957122802734,
-          "y": -0.1540946245193482,
-          "z": 52.297889709472656
+          "x": 93.65513610839844,
+          "y": -0.07364277839660649,
+          "z": 38.73131561279297
         },
-        "yaw": -2.0398519738463037,
+        "yaw": 2.1533333333333076,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 13595,
+        "lastGroundedTick": 13432,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -939,12 +939,12 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 6.299445899279666,
-        "cameraObstructed": false,
-        "drawCalls": 78,
-        "triangles": 79822,
-        "rigBodyHeight": 0.0032291849440557368,
-        "rigSpineFlex": 1.9161917383054827e-33,
+        "cameraDistance": 1.5,
+        "cameraObstructed": true,
+        "drawCalls": 67,
+        "triangles": 79198,
+        "rigBodyHeight": 0.014033935143560992,
+        "rigSpineFlex": 3.757395168719179e-36,
         "debrisLive": 0,
         "audioMuted": true,
         "audioContextCreated": false,
@@ -955,28 +955,28 @@
       "name": "19-pause-narrow",
       "note": "Pause surface at 1024px",
       "state": {
-        "frame": 3130,
-        "elapsedSeconds": 229.34385999999688,
+        "frame": 2789,
+        "elapsedSeconds": 226.79692799999552,
         "mode": "paused",
-        "tick": 13595,
+        "tick": 13432,
         "position": {
-          "x": -86.84957122802734,
-          "y": -0.1540946245193482,
-          "z": 52.297889709472656
+          "x": 93.65513610839844,
+          "y": -0.07364277839660649,
+          "z": 38.73131561279297
         },
-        "yaw": -2.0398519738463037,
+        "yaw": 2.1533333333333076,
         "speed": 0,
         "verticalVelocity": 0,
         "gait": "idle",
         "grounded": true,
-        "lastGroundedTick": 13595,
+        "lastGroundedTick": 13432,
         "airborneTicks": 0,
         "jumpConsumedSinceGrounded": false,
         "lastSafePose": {
           "position": {
-            "x": 0.000055912787502165884,
-            "y": 0.2223913192749023,
-            "z": -69.90478515625
+            "x": 0.00008180389704648405,
+            "y": 0.22238929271697994,
+            "z": -69.90477752685547
           },
           "yaw": 0
         },
@@ -984,12 +984,12 @@
         "recoveryTicksRemaining": 0,
         "shoveX": 0,
         "shoveZ": 0,
-        "cameraDistance": 6.299445899279666,
-        "cameraObstructed": false,
-        "drawCalls": 78,
-        "triangles": 79822,
-        "rigBodyHeight": 0.006278669699350394,
-        "rigSpineFlex": 3.30316336893453e-36,
+        "cameraDistance": 1.5,
+        "cameraObstructed": true,
+        "drawCalls": 66,
+        "triangles": 79126,
+        "rigBodyHeight": 0.02331602026413206,
+        "rigSpineFlex": 8.684434669164323e-39,
         "debrisLive": 0,
         "audioMuted": true,
         "audioContextCreated": false,

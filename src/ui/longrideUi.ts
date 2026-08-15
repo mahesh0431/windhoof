@@ -201,7 +201,7 @@ export function createLongrideUi(
     () => callbacks.onResumeGraphics?.(),
     () => callbacks.onReloadPage?.(),
   );
-  const pause = buildPausePanel(settings, callbacks, journey.list);
+  const pause = buildPausePanel(settings, callbacks, journey.list, () => [...namedPlaces]);
   const loading = buildLoading();
 
   root.append(
@@ -232,7 +232,36 @@ export function createLongrideUi(
   let noticeUntil = 0;
   let resetFlashUntil = 0;
   let placeUntil = 0;
-  const namedPlaces = new Set<string>();
+  /**
+   * Every place this player has ever stood, across sessions.
+   *
+   * A quiet journal, not a quest log: reaching a place adds its name here and
+   * announces it once, and the pause panel lists what has been seen. Stored
+   * beside the presentation settings because it is memory about the player,
+   * not simulation truth - losing it costs a name fading in again.
+   */
+  const PLACES_KEY = "longride.places.v1";
+  const namedPlaces = new Set<string>(
+    (() => {
+      try {
+        const raw = localStorage.getItem(PLACES_KEY);
+        const parsed: unknown = raw ? JSON.parse(raw) : null;
+        return Array.isArray(parsed)
+          ? parsed.filter((entry): entry is string => typeof entry === "string")
+          : [];
+      } catch {
+        return [];
+      }
+    })(),
+  );
+  const rememberPlace = (name: string): void => {
+    namedPlaces.add(name);
+    try {
+      localStorage.setItem(PLACES_KEY, JSON.stringify([...namedPlaces]));
+    } catch {
+      // Private browsing forgets; the ride is unaffected.
+    }
+  };
   /**
    * Transient chrome is timed against real time, not against the app's
    * `elapsedSeconds`. That value is a simulation clock: it accumulates
@@ -408,7 +437,7 @@ export function createLongrideUi(
       // must not turn the interface into a flickering caption track.
       const currentPlace = frame.place;
       if (currentPlace && !namedPlaces.has(currentPlace)) {
-        namedPlaces.add(currentPlace);
+        rememberPlace(currentPlace);
         setText(placeName, currentPlace);
         placeUntil = presentationSeconds + PLACE_SECONDS;
       }
@@ -1088,6 +1117,7 @@ function buildPausePanel(
   settings: PresentationSettingsStore,
   callbacks: LongrideUiCallbacks,
   journeyList: HTMLElement,
+  seenPlaces: () => readonly string[],
 ) {
   const element = el("div", "lr-pause");
   element.setAttribute("role", "dialog");
@@ -1103,6 +1133,30 @@ function buildPausePanel(
       text: "The field is still there. Take a moment.",
     }),
   );
+
+  // The journal: every place this rider has stood, refreshed when the panel
+  // opens. A list of names, deliberately nothing more - no percentages, no
+  // checkmarks - because remembering where you have been is the reward.
+  const placesTitle = el("h3", "lr-panel-section", { text: "Places you have stood" });
+  const placesList = el("div", "lr-places");
+  const refreshPlaces = (): void => {
+    const seen = seenPlaces();
+    placesList.textContent = "";
+    if (seen.length === 0) {
+      placesList.append(
+        el("span", "lr-places-empty", { text: "Nowhere yet. Ride." }),
+      );
+      return;
+    }
+    for (const name of seen) {
+      placesList.append(el("span", "lr-places-name", { text: name }));
+    }
+  };
+  // Filled on first open, not here: the panel is built before the journal
+  // exists, and the journal cannot exist first because it wants the panel's
+  // own host. `setVisible` refreshes on every open.
+  placesList.append(el("span", "lr-places-empty", { text: "Nowhere yet. Ride." }));
+  panel.append(placesTitle, placesList);
 
   const actions = el("div", "lr-actions");
   const resume = el("button", "lr-button", { text: "Resume", type: "button" });
@@ -1231,6 +1285,7 @@ function buildPausePanel(
     sync,
     setVisible(visible: boolean) {
       const wasVisible = element.dataset.visible === "true";
+      if (visible && !wasVisible) refreshPlaces();
       attr(element, "data-visible", visible);
       // `inert` keeps the hidden dialog out of the tab order entirely, rather
       // than relying on visibility alone.

@@ -112,7 +112,7 @@ export class LongrideAudio {
 
     // Wind rises with speed. This is the cheapest, strongest speed cue there is.
     if (this.windGain && this.windFilter) {
-      this.windGain.gain.setTargetAtTime(0.035 + speedRatio * 0.2, now, 0.2);
+      this.windGain.gain.setTargetAtTime(0.035 + speedRatio * speedRatio * 0.34, now, 0.2);
       this.windFilter.frequency.setTargetAtTime(320 + speedRatio * 900, now, 0.25);
     }
 

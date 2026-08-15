@@ -1311,3 +1311,27 @@ it used to graze and none where it now walks. Revisit if it reads badly in play.
 Affected: `src/render/horse/wildHorseAnimator.ts`, `src/world/islandWildlife.ts`,
 `tests/simulation/wildHorseKick.test.ts`.
 Approved by: Claude Code (visual presentation ownership).
+
+---
+
+Date: 2026-08-15
+Decision: The herd lives its own life, the gallop blows harder, and the island
+remembers where you have stood.
+Reason: Three player-feel changes in one pass. The instanced wild horses now
+graze, lift their heads, look around and amble a couple of strides - built
+entirely from what an instance matrix CAN do (swap pose mesh, turn, drift),
+which from thirty metres is most of what a real grazing herd does. Every horse
+owns a slot in BOTH pose meshes with the unused one at scale zero, so a head
+can come up without rebuilding anything; timers are seeded per-slot so the herd
+never moves in unison, and wandering stays within two strides of home so each
+horse remains honest to its static collider. Wind gain now squares with speed
+and the field-of-view kick is widened, so full gallop feels like commitment.
+The place-name announcements persist to localStorage and the pause panel lists
+every place the rider has ever stood - names only, no percentages, because
+remembering where you have been is the reward.
+Consequence: One boot crash found and fixed in verification: the pause panel is
+built before the journal exists, so its list fills on first open rather than at
+construction.
+Affected: `src/world/islandWildlife.ts`, `src/audio/longrideAudio.ts`,
+`src/render/camera/chaseCamera.ts`, `src/ui/longrideUi.ts`, `src/ui/ui.css`.
+Approved by: Claude Code (visual presentation ownership).
